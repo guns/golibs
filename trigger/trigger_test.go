@@ -3,8 +3,6 @@ package trigger
 import (
 	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestTrigger(t *testing.T) {
@@ -18,15 +16,24 @@ func TestTrigger(t *testing.T) {
 		close(log)
 	}()
 
-	assert.Equal(t, "false", <-log)
+	if "false" != <-log {
+		t.Errorf("%v != %v", "false", <-log)
+	}
+
 	select {
 	case <-trg.Channel():
 		t.Fail()
 	default:
 	}
 
-	trg.Trigger()
-	assert.Equal(t, "true", <-log)
+	// Test idempotency of Trigger
+	for i := 0; i < 5; i++ {
+		go trg.Trigger()
+	}
+
+	if "true" != <-log {
+		t.Errorf("%v != %v", "true", <-log)
+	}
 	select {
 	case <-trg.Channel():
 	default:

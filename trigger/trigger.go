@@ -23,11 +23,11 @@ func (t *Trigger) Activated() bool {
 	return atomic.LoadUint32(&t.status) != 0
 }
 
-// Trigger communicates a state transition. This function must only be called
-// once.
+// Trigger communicates a state transition. This function is idempotent.
 func (t *Trigger) Trigger() {
-	atomic.StoreUint32(&t.status, 1)
-	close(t.ch)
+	if atomic.CompareAndSwapUint32(&t.status, 0, 1) {
+		close(t.ch)
+	}
 }
 
 // Channel returns a read channel that can be used to receive a transition
