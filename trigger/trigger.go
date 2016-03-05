@@ -1,3 +1,5 @@
+// Package trigger provides a simple, but flexible way to communicate state
+// transitions.
 package trigger
 
 import "sync/atomic"
@@ -23,7 +25,7 @@ func (t *Trigger) Activated() bool {
 	return atomic.LoadUint32(&t.status) != 0
 }
 
-// Trigger communicates a state transition. This function is idempotent.
+// Trigger communicates a state transition. This method is idempotent.
 func (t *Trigger) Trigger() {
 	if atomic.CompareAndSwapUint32(&t.status, 0, 1) {
 		close(t.ch)

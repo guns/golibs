@@ -1,3 +1,4 @@
+// Package process provides tools for working with OS processes.
 package process
 
 import (

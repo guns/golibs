@@ -1,3 +1,4 @@
+// Package shell provides conveniences found in a Unix shell.
 package shell
 
 import (
