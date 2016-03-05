@@ -3,29 +3,47 @@ package shell
 import (
 	"os"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestExpandUserDir(t *testing.T) {
 	u, err := ExpandUserDir("")
-	assert.Equal(t, "", u)
-	assert.Nil(t, err)
+	if !(len(u) == 0) {
+		t.Errorf("expected: len(u) == 0, actual: %v", len(u))
+	}
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 
 	u, err = ExpandUserDir("/")
-	assert.Equal(t, "/", u)
-	assert.Nil(t, err)
+	if u != "/" {
+		t.Errorf("%v != %v", u, "/")
+	}
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 
 	u, err = ExpandUserDir("~")
-	assert.Equal(t, os.ExpandEnv("${HOME}"), u)
-	assert.Nil(t, err)
+	if u != os.ExpandEnv("${HOME}") {
+		t.Errorf("%v != %v", u, os.ExpandEnv("${HOME}"))
+	}
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 
 	u, err = ExpandUserDir("~/Mail")
-	assert.Equal(t, os.ExpandEnv("${HOME}/Mail"), u)
-	assert.Nil(t, err)
+	if u != os.ExpandEnv("${HOME}/Mail") {
+		t.Errorf("%v != %v", u, os.ExpandEnv("${HOME}/Mail"))
+	}
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 
 	// FIXME: Not portable
 	u, err = ExpandUserDir("~root/Mail")
-	assert.Equal(t, os.ExpandEnv("/root/Mail"), u)
-	assert.Nil(t, err)
+	if u != os.ExpandEnv("/root/Mail") {
+		t.Errorf("%v != %v", u, os.ExpandEnv("/root/Mail"))
+	}
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 }

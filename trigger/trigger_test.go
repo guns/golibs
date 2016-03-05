@@ -16,8 +16,8 @@ func TestTrigger(t *testing.T) {
 		close(log)
 	}()
 
-	if "false" != <-log {
-		t.Errorf("%v != %v", "false", <-log)
+	if <-log != "false" {
+		t.Errorf("%v != %v", <-log, "false")
 	}
 
 	select {
@@ -31,9 +31,10 @@ func TestTrigger(t *testing.T) {
 		go trg.Trigger()
 	}
 
-	if "true" != <-log {
-		t.Errorf("%v != %v", "true", <-log)
+	if <-log != "true" {
+		t.Errorf("%v != %v", <-log, "true")
 	}
+
 	select {
 	case <-trg.Channel():
 	default:
