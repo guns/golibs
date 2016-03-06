@@ -6,7 +6,7 @@ import "sync/atomic"
 
 /*
 
-A Trigger is a fast, synchronized way to communicate a single state
+A Trigger is a flexible, synchronized way to communicate a single state
 transition.
 
 */

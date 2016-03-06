@@ -2,6 +2,7 @@ package trigger
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 )
 
@@ -56,5 +57,46 @@ func TestConstruct(t *testing.T) {
 
 	if !trg.u.Activated() {
 		t.Errorf("expected: trg.u.Activated()")
+	}
+}
+
+func BenchmarkTrigger(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		trg := New()
+		reply := New()
+		go func() {
+			trg.Wait()
+			reply.Trigger()
+		}()
+		trg.Trigger()
+		reply.Wait()
+	}
+}
+
+func BenchmarkChan(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		trg := make(chan struct{})
+		reply := make(chan struct{})
+		go func() {
+			<-trg
+			close(reply)
+		}()
+		close(trg)
+		<-reply
+	}
+}
+
+func BenchmarkWaitGroup(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		trg := sync.WaitGroup{}
+		trg.Add(1)
+		reply := sync.WaitGroup{}
+		reply.Add(1)
+		go func() {
+			trg.Wait()
+			reply.Done()
+		}()
+		trg.Done()
+		reply.Wait()
 	}
 }
