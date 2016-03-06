@@ -28,7 +28,7 @@ func TestTrigger(t *testing.T) {
 
 	// Test idempotency of Trigger
 	for i := 0; i < 5; i++ {
-		go trg.Trigger()
+		trg.Trigger()
 	}
 
 	if <-log != "true" {
@@ -39,5 +39,22 @@ func TestTrigger(t *testing.T) {
 	case <-trg.Channel():
 	default:
 		t.Fail()
+	}
+}
+
+func TestConstruct(t *testing.T) {
+	trg := struct {
+		t Trigger
+		u Trigger
+	}{Construct(), Construct()}
+
+	trg.u.Trigger()
+
+	if trg.t.Activated() {
+		t.Errorf("expected: !trg.t.Activated()")
+	}
+
+	if !trg.u.Activated() {
+		t.Errorf("expected: trg.u.Activated()")
 	}
 }
