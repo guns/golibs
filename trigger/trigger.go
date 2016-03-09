@@ -7,7 +7,7 @@ import "sync/atomic"
 /*
 
 A Trigger is a flexible, synchronized way to communicate a single state
-transition.
+transition. A Trigger, like sync.Mutex, should never be copied.
 
 */
 type Trigger struct {
