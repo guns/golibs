@@ -36,11 +36,8 @@ func TestHandlerExit(t *testing.T) {
 	go func() {
 		err = ExecuteWithHandlers(HandlerMap{}, exit, func(fexit *trigger.Trigger) (ferr error) {
 			start.Trigger()
-			select {
-			case <-fexit.Channel():
-				ferr = errors.New("FEXIT")
-			}
-			return ferr
+			<-fexit.Channel()
+			return errors.New("FEXIT")
 		})
 		reply.Trigger()
 	}()
