@@ -68,10 +68,10 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 
 	for floop && !exit.Activated() {
 		fexit := trigger.New()
-		fexitReply := trigger.New()
+		fdone := trigger.New()
 		go func() {
 			err = f(fexit)
-			fexitReply.Trigger()
+			fdone.Trigger()
 		}()
 
 		hloop := true
@@ -79,18 +79,22 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 		for hloop {
 			select {
 			// Function exited normally
-			case <-fexitReply.Channel():
+			case <-fdone.Channel():
 				hloop = false
 				floop = false
 			// Emergency exit: terminate function and exit
 			case <-exit.Channel():
 				fexit.Trigger()
-				fexitReply.Wait()
+				fdone.Wait()
 				hloop = false
 				floop = false
 			// Handle signal
 			case sig := <-sigch:
-				h := hmap[sig]
+				h, ok := hmap[sig]
+				if !ok {
+					// hmap was modified from a different goroutine!
+					h = Handler{}
+				}
 				switch h.Action {
 				case None:
 					// Do not disturb f, just call h.Fn
@@ -100,7 +104,7 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 				case Restart:
 					// Terminate f, call h.Fn, restart floop unless f returned an error
 					fexit.Trigger()
-					fexitReply.Wait()
+					fdone.Wait()
 					if h.Fn != nil && !exit.Activated() {
 						h.Fn(sig, exit)
 					}
@@ -111,7 +115,7 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 				case Exit:
 					// Terminate f, call h.Fn, exit
 					fexit.Trigger()
-					fexitReply.Wait()
+					fdone.Wait()
 					if h.Fn != nil && !exit.Activated() {
 						h.Fn(sig, exit)
 					}
