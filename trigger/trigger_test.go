@@ -43,11 +43,11 @@ func TestTrigger(t *testing.T) {
 	}
 }
 
-func TestConstruct(t *testing.T) {
+func TestMake(t *testing.T) {
 	trg := struct {
 		t Trigger
 		u Trigger
-	}{Construct(), Construct()}
+	}{Make(), Make()}
 
 	trg.u.Trigger()
 

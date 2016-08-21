@@ -20,9 +20,9 @@ func New() *Trigger {
 	return &Trigger{ch: make(chan struct{})}
 }
 
-// Construct returns a Trigger value. This is only useful when embedding
-// a Trigger in a struct.
-func Construct() Trigger {
+// Make returns a Trigger value. This is only useful when embedding a Trigger
+// in a struct.
+func Make() Trigger {
 	return Trigger{ch: make(chan struct{})}
 }
 
