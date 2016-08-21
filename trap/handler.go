@@ -47,6 +47,10 @@ const sigChanLen = 8
 //
 // The return value of f is returned
 func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger.Trigger) error) (err error) {
+	if exit == nil {
+		exit = trigger.New()
+	}
+
 	if exit.Activated() {
 		return nil
 	}

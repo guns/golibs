@@ -13,14 +13,14 @@ import (
 
 func TestHandlerReturnsFunctionError(t *testing.T) {
 	expected := errors.New("ERROR")
-	err := ExecuteWithHandlers(HandlerMap{}, trigger.New(), func(_ *trigger.Trigger) error {
+	err := ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.Trigger) error {
 		return expected
 	})
 	if err != expected {
 		t.Errorf("%v != %v", err, expected)
 	}
 
-	err = ExecuteWithHandlers(HandlerMap{}, trigger.New(), func(_ *trigger.Trigger) error {
+	err = ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.Trigger) error {
 		return nil
 	})
 	if err != nil {
@@ -102,7 +102,7 @@ func TestHandlerActionRestartExit(t *testing.T) {
 	}
 
 	go func() {
-		err = ExecuteWithHandlers(hmap, trigger.New(), func(fexit *trigger.Trigger) error {
+		err = ExecuteWithHandlers(hmap, nil, func(fexit *trigger.Trigger) error {
 			atomic.AddInt32(&n, 1)
 			fexit.Wait()
 			return nil
