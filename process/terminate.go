@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-// alive implements `kill -0`. Note that calling alive() on a zombie process
+// IsAlive implements `kill -0`. Note that calling IsAlive() on a zombie process
 // will return true.
-func alive(p *os.Process) bool {
+func IsAlive(p *os.Process) bool {
 	if p == nil {
 		return false
 	}
@@ -20,7 +20,7 @@ func alive(p *os.Process) bool {
 // timeout if it is still alive. The process is not reaped, and zombies are
 // considered to be alive.
 func Terminate(p *os.Process, timeout time.Duration) {
-	if !alive(p) {
+	if !IsAlive(p) {
 		return
 	}
 
@@ -31,7 +31,7 @@ func Terminate(p *os.Process, timeout time.Duration) {
 
 	time.Sleep(timeout)
 
-	if !alive(p) {
+	if !IsAlive(p) {
 		return
 	}
 

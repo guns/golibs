@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
-func TestAlive(t *testing.T) {
+func TestIsAlive(t *testing.T) {
 	cmd := exec.Command("sleep", "1")
 	err := cmd.Start()
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	if !(alive(cmd.Process)) {
-		t.Errorf("expected: alive(cmd.Process)")
+	if !(IsAlive(cmd.Process)) {
+		t.Errorf("expected: IsAlive(cmd.Process)")
 	}
 
 	err = cmd.Process.Kill()
@@ -24,8 +24,8 @@ func TestAlive(t *testing.T) {
 
 	time.Sleep(1 * time.Millisecond)
 
-	if !(alive(cmd.Process)) {
-		t.Errorf("expected: alive(cmd.Process), actual: zombie")
+	if !(IsAlive(cmd.Process)) {
+		t.Errorf("expected: IsAlive(cmd.Process), actual: zombie")
 	}
 
 	err = cmd.Wait()
@@ -33,8 +33,8 @@ func TestAlive(t *testing.T) {
 		t.Errorf("expected err to be an error, but got nil")
 	}
 
-	if alive(cmd.Process) {
-		t.Errorf("expected: !(alive(cmd.Process))")
+	if IsAlive(cmd.Process) {
+		t.Errorf("expected: !(IsAlive(cmd.Process))")
 	}
 }
 
