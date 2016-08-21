@@ -47,7 +47,7 @@ func (t *Trigger) Channel() <-chan struct{} {
 // Wait blocks the current goroutine until this Trigger is activated.
 func (t *Trigger) Wait() {
 	// Check fast path first
-	if !t.Activated() {
+	if atomic.LoadUint32(&t.status) == 0 {
 		<-t.ch
 	}
 }

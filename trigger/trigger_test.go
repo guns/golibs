@@ -60,6 +60,12 @@ func TestConstruct(t *testing.T) {
 	}
 }
 
+//
+// BenchmarkTrigger-4    3000000  578 ns/op  224 B/op  4 allocs/op
+// BenchmarkChan-4       3000000  502 ns/op  192 B/op  2 allocs/op
+// BenchmarkWaitGroup-4  3000000  500 ns/op  32  B/op  2 allocs/op
+//
+
 func BenchmarkTrigger(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		trg := New()
