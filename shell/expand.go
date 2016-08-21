@@ -17,16 +17,16 @@ func ExpandUserDir(s string) (string, error) {
 	var err error
 
 	switch i {
-	case -1:
-		u, err = user.Current() // "~"
+	case -1: // "~"
+		u, err = user.Current()
 		if err != nil {
 			return "", err
 		}
 		return u.HomeDir, nil
-	case 1:
-		u, err = user.Current() // "~/"
-	default:
-		u, err = user.Lookup(s[1:i]) // "~user/"
+	case 1: // "~/"
+		u, err = user.Current()
+	default: // "~user/"
+		u, err = user.Lookup(s[1:i])
 	}
 
 	if err != nil {
