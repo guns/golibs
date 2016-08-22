@@ -94,11 +94,7 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 				floop = false
 			// Handle signal
 			case sig := <-sigch:
-				h, ok := hmap[sig]
-				if !ok {
-					// hmap was modified from a different goroutine!
-					h = Handler{}
-				}
+				h := hmap[sig]
 				switch h.Action {
 				case None:
 					// Do not disturb f, just call h.Fn
