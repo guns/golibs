@@ -18,7 +18,7 @@ func Grow(bs []byte, n int) ([]byte, int) {
 	}
 	newslice := make([]byte, len(bs), newcap)
 	copy(newslice, bs)
-	memset(bs, 0)
+	ClearBytes(bs)
 	return newslice[:newlen], len(bs)
 }
 

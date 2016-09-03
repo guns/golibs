@@ -61,7 +61,7 @@ func (cache *Cache) Clear() {
 	if cache.err == nil {
 		cache.err = errors.New("cannot read cleared Cache")
 	}
-	memset(cache.bytes, 0)
+	ClearBytes(cache.bytes)
 	cache.bytes = nil
 	cache.mutex.Unlock()
 }

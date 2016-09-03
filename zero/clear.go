@@ -6,10 +6,10 @@ import (
 	"unsafe"
 )
 
-// memset sets every byte in a byte slice to n.
-func memset(bs []byte, n byte) {
+// ClearBytes zeroes a byte slice
+func ClearBytes(bs []byte) {
 	for i := range bs {
-		bs[i] = n
+		bs[i] = 0
 	}
 }
 
@@ -25,7 +25,7 @@ type publicBuffer struct {
 // ClearBuffer zeroes ALL data in a bytes.Buffer
 func ClearBuffer(bbuf *bytes.Buffer) {
 	b := (*publicBuffer)(unsafe.Pointer(bbuf))
-	memset(b.buf, 0)
+	ClearBytes(b.buf)
 	b.buf = b.buf[:0]
 	b.off = 0
 	for i := range b.runeBytes {

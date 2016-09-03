@@ -38,7 +38,7 @@ func (w *WriteBuffer) Truncate(n int) {
 	if n < 0 || n > len(w.buf) {
 		panic("zero.WriteBuffer: truncation out of range")
 	}
-	memset(w.buf[n:], 0)
+	ClearBytes(w.buf[n:])
 	w.buf = w.buf[:n]
 }
 
