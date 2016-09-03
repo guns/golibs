@@ -15,7 +15,7 @@ func ClearBytes(bs []byte) {
 }
 
 // Copy of bytes.Buffer
-type publicBuffer struct {
+type go1Buffer struct {
 	buf       []byte            // contents are the bytes buf[off : len(buf)]
 	off       int               // read at &buf[off], write at &buf[len(buf)]
 	runeBytes [utf8.UTFMax]byte // avoid allocation of slice on each WriteByte or Rune
@@ -25,7 +25,7 @@ type publicBuffer struct {
 
 // ClearBuffer zeroes ALL data in a bytes.Buffer
 func ClearBuffer(bbuf *bytes.Buffer) {
-	b := (*publicBuffer)(unsafe.Pointer(bbuf))
+	b := (*go1Buffer)(unsafe.Pointer(bbuf))
 	ClearBytes(b.buf)
 	b.buf = b.buf[:0]
 	b.off = 0
