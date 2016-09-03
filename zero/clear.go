@@ -2,6 +2,7 @@ package zero
 
 import (
 	"bytes"
+	"reflect"
 	"unicode/utf8"
 	"unsafe"
 )
@@ -37,21 +38,15 @@ func ClearBuffer(bbuf *bytes.Buffer) {
 	b.lastRead = 0
 }
 
-// Copy of reflect.stringHeader
-type stringHeader struct {
-	Data unsafe.Pointer
-	Len  int
-}
-
 // ClearString zeroes a string's backing array. This is truly s̶t̶u̶p̶i̶d̶ dangerous.
 // Here are some considerations:
 //	1. The string must be not be in the read-only data segment of the
 //	   program (i.e. it must be dynamically allocated).
-//	2. No one expects an immutable value to change, so expect data races
+//	2. No one expects an immutable value to change, so expect subtle bugs
 //	   if the string is shared.
 func ClearString(s string) {
-	hdr := *(*stringHeader)(unsafe.Pointer(&s))
+	hdr := *(*reflect.StringHeader)(unsafe.Pointer(&s))
 	for i := 0; i < hdr.Len; i++ {
-		*(*byte)(unsafe.Pointer(uintptr(hdr.Data) + uintptr(i))) = 0
+		*(*byte)(unsafe.Pointer(hdr.Data + uintptr(i))) = 0
 	}
 }
