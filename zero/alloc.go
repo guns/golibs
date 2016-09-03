@@ -8,14 +8,18 @@ func Grow(bs []byte, n int) ([]byte, int) {
 	if cap(bs) >= newlen {
 		return bs[:newlen], len(bs)
 	}
+
 	var newcap int
+
 	if newlen < 1024 {
 		newcap = 1024
-	} else if newlen < 2048 {
-		newcap = 2048
 	} else {
-		newcap = newlen + 4096 - (newlen % 4096)
+		newcap = cap(bs)
+		for newcap < newlen {
+			newcap *= 2
+		}
 	}
+
 	newslice := make([]byte, len(bs), newcap)
 	copy(newslice, bs)
 	ClearBytes(bs)
