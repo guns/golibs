@@ -1,45 +1,32 @@
 package trigger
 
 import (
-	"fmt"
 	"sync"
 	"testing"
 )
 
 func TestTrigger(t *testing.T) {
-	log := make(chan string, 2)
-	trg := New()
+	exit := New()
+	start := New()
 
 	go func() {
-		log <- fmt.Sprint(trg.Activated())
-		trg.Wait()
-		log <- fmt.Sprint(trg.Activated())
-		close(log)
+		start.Trigger()
+		<-exit.Channel()
 	}()
 
-	if <-log != "false" {
-		t.Errorf("%v != %v", <-log, "false")
+	start.Wait()
+
+	if exit.Activated() {
+		t.Errorf("expected: !exit.Activated()")
+	}
+	if !start.Activated() {
+		t.Errorf("expected: start.Activated()")
 	}
 
-	select {
-	case <-trg.Channel():
-		t.Fail()
-	default:
-	}
+	exit.Trigger()
 
-	// Test idempotency of Trigger
-	for i := 0; i < 5; i++ {
-		trg.Trigger()
-	}
-
-	if <-log != "true" {
-		t.Errorf("%v != %v", <-log, "true")
-	}
-
-	select {
-	case <-trg.Channel():
-	default:
-		t.Fail()
+	if !exit.Activated() {
+		t.Errorf("expected: exit.Activated()")
 	}
 }
 

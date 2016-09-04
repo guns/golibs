@@ -13,7 +13,7 @@ func TestIsAlive(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	if !(IsAlive(cmd.Process)) {
+	if !IsAlive(cmd.Process) {
 		t.Errorf("expected: IsAlive(cmd.Process)")
 	}
 
@@ -22,10 +22,10 @@ func TestIsAlive(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	time.Sleep(1 * time.Millisecond)
+	time.Sleep(5 * time.Millisecond)
 
-	if !(IsAlive(cmd.Process)) {
-		t.Errorf("expected: IsAlive(cmd.Process), actual: zombie")
+	if !IsAlive(cmd.Process) {
+		t.Errorf("expected: IsAlive(cmd.Process)") // zombies are alive
 	}
 
 	err = cmd.Wait()
@@ -34,76 +34,61 @@ func TestIsAlive(t *testing.T) {
 	}
 
 	if IsAlive(cmd.Process) {
-		t.Errorf("expected: !(IsAlive(cmd.Process))")
+		t.Errorf("expected: !IsAlive(cmd.Process)")
+	}
+
+	if IsAlive(nil) {
+		t.Errorf("expected: !IsAlive(nil)")
 	}
 }
 
 func TestTerminate(t *testing.T) {
-	// SIGTERM
-	cmd := exec.Command("sleep", "1")
-	start := time.Now()
-	err := cmd.Start()
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	reaper := make(chan error, 1)
-	go func() {
-		reaper <- cmd.Wait()
-		close(reaper)
-	}()
-	go Terminate(cmd.Process, 100*time.Millisecond)
-	err = <-reaper
-	elapsed := time.Since(start)
-	if !(elapsed < 10*time.Millisecond) {
-		t.Errorf("expected: elapsed < 10*time.Millisecond, actual: %v (the process did not exit immediately after SIGTERM)", elapsed)
-	}
-	if reflect.TypeOf(err) != reflect.TypeOf(&exec.ExitError{}) {
-		t.Errorf("expected type %v, but got type %v", reflect.TypeOf(&exec.ExitError{}), reflect.TypeOf(err))
-	}
-
-	// SIGKILL
-	cmd = exec.Command("sh", "-c", "trap '' TERM; sleep 1")
-	start = time.Now()
-	err = cmd.Start()
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	reaper2 := make(chan error, 1)
-	go func() {
-		reaper2 <- cmd.Wait()
-		close(reaper2)
-	}()
-	time.Sleep(2 * time.Millisecond) // Give sh a chance to set the trap
-	go Terminate(cmd.Process, 30*time.Millisecond)
-	err = <-reaper2
-	elapsed = time.Since(start)
-	if !(30*time.Millisecond < elapsed && elapsed < 35*time.Millisecond) {
-		t.Errorf("expected: 30ms < elapsed < 35ms, actual: %v (the process ignored SIGTERM, but died on SIGKILL)", elapsed)
-	}
-	if reflect.TypeOf(err) != reflect.TypeOf(&exec.ExitError{}) {
-		t.Errorf("expected type %v, but got type %v", reflect.TypeOf(&exec.ExitError{}), reflect.TypeOf(err))
+	data := []struct {
+		cmd          []string
+		lower, upper time.Duration
+		err          error
+	}{
+		{
+			[]string{"sleep", "1"},
+			0,
+			15 * time.Millisecond,
+			&exec.ExitError{},
+		},
+		{
+			[]string{"sh", "-c", "trap '' TERM; sleep 1"},
+			100 * time.Millisecond,
+			900 * time.Millisecond,
+			&exec.ExitError{},
+		},
+		{
+			[]string{"true"},
+			0,
+			10 * time.Millisecond,
+			nil,
+		},
 	}
 
-	// NOP
-	cmd = exec.Command("true")
-	start = time.Now()
-	err = cmd.Start()
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	reaper3 := make(chan error, 1)
-	go func() {
-		reaper3 <- cmd.Wait()
-		close(reaper3)
-	}()
-	time.Sleep(2 * time.Millisecond) // Give the process a chance to exit
-	go Terminate(cmd.Process, 10*time.Millisecond)
-	err = <-reaper3
-	elapsed = time.Since(start)
-	if !(elapsed < 3*time.Millisecond) {
-		t.Errorf("expected: elapsed < 3ms, actual: %v (the process was already dead before termination)", elapsed)
-	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
+	for _, row := range data {
+		cmd := exec.Command(row.cmd[0], row.cmd[1:]...)
+		start := time.Now()
+		err := cmd.Start()
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+		reaper := make(chan error, 1)
+		go func() {
+			reaper <- cmd.Wait()
+			close(reaper)
+		}()
+		time.Sleep(5 * time.Millisecond) // Process setup time
+		go Terminate(cmd.Process, 100*time.Millisecond)
+		err = <-reaper
+		elapsed := time.Since(start)
+		if !(row.lower <= elapsed && elapsed <= row.upper) {
+			t.Errorf("expected: %v ≤ elapsed ≤ %v, actual: %v", row.lower, row.upper, elapsed)
+		}
+		if reflect.TypeOf(err) != reflect.TypeOf(row.err) {
+			t.Errorf("expected type %v, but got type %v", reflect.TypeOf(row.err), reflect.TypeOf(err))
+		}
 	}
 }

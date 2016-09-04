@@ -58,7 +58,6 @@ func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger
 	sigch := make(chan os.Signal, sigChanLen)
 	defer close(sigch)
 
-	// We don't want to call signal.Notify without specific signals
 	if len(hmap) > 0 {
 		signals := []os.Signal{}
 		for k := range hmap {

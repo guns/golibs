@@ -29,7 +29,7 @@ func TestClearBuffer(t *testing.T) {
 
 	ClearBuffer(buf)
 	if !reflect.DeepEqual(buf, bytes.NewBuffer([]byte{})) {
-		t.Errorf("%v != %v", buf, bytes.NewBuffer([]byte{}))
+		t.Errorf("%#v != %#v", buf, bytes.NewBuffer([]byte{}))
 	}
 }
 
@@ -39,17 +39,14 @@ func TestClearString(t *testing.T) {
 	for i := range bs {
 		bs[i] = byte(rand.Uint32() & 0x7f)
 	}
-	a := string(bs)
-	b := a
+	str := string(bs)
+	copy := str
 	z := "\000\000\000\000\000\000\000\000"
-	if !(a != z) {
-		t.Errorf("expected: a != z, actual: %v == %v", a, z)
+	ClearString(str)
+	if str != z {
+		t.Errorf("%v != %v", str, z)
 	}
-	ClearString(a)
-	if a != z {
-		t.Errorf("%v != %v", a, z)
-	}
-	if b != z {
-		t.Errorf("%v != %v", b, z)
+	if copy != z {
+		t.Errorf("%v != %v", copy, z)
 	}
 }

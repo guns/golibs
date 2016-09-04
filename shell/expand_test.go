@@ -1,49 +1,42 @@
 package shell
 
 import (
-	"os"
+	"fmt"
+	"os/exec"
 	"testing"
 )
 
+// WARNING: UNSAFE! word argument is not shell escaped!
+func unsafeShellSprintf(word string) (string, error) {
+	bs, err := exec.Command("sh", "-c", fmt.Sprintf("printf %%s %#v", word)).Output()
+	if err != nil {
+		return "", err
+	}
+	return string(bs), nil
+}
+
 func TestExpandUserDir(t *testing.T) {
-	u, err := ExpandUserDir("")
-	if !(len(u) == 0) {
-		t.Errorf("expected: len(u) == 0, actual: %v", len(u))
-	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
+	data := []string{"", "/", "~", "~/", "~/Mail", "~root", "~root/", "~root/Mail"}
+
+	for _, row := range data {
+		actual, err := ExpandUserDir(row)
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+		expected, err := unsafeShellSprintf(row)
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+		if actual != expected {
+			t.Errorf("%#v != %#v", actual, expected)
+		}
 	}
 
-	u, err = ExpandUserDir("/")
-	if u != "/" {
-		t.Errorf("%v != %v", u, "/")
+	s, err := ExpandUserDir("~nosuchuser/")
+	if s != "" {
+		t.Errorf("%v != %v", s, "")
 	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-
-	u, err = ExpandUserDir("~")
-	if u != os.ExpandEnv("${HOME}") {
-		t.Errorf("%v != %v", u, os.ExpandEnv("${HOME}"))
-	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-
-	u, err = ExpandUserDir("~/Mail")
-	if u != os.ExpandEnv("${HOME}/Mail") {
-		t.Errorf("%v != %v", u, os.ExpandEnv("${HOME}/Mail"))
-	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-
-	// FIXME: Not portable
-	u, err = ExpandUserDir("~root/Mail")
-	if u != os.ExpandEnv("/root/Mail") {
-		t.Errorf("%v != %v", u, os.ExpandEnv("/root/Mail"))
-	}
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
+	if err == nil {
+		t.Errorf("expected err to be an error, but got nil")
 	}
 }
