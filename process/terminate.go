@@ -35,6 +35,5 @@ func Terminate(p *os.Process, timeout time.Duration) {
 		return
 	}
 
-	// If SIGKILL fails, what's really to be done?
-	_ = p.Kill()
+	_ = p.Kill() // errcheck: If SIGKILL fails, what's really to be done?
 }

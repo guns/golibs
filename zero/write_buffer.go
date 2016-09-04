@@ -127,7 +127,7 @@ func (w *WriteBuffer) WriteByte(b byte) error {
 // zeroed as needed.
 func (w *WriteBuffer) WriteRune(r rune) (int, error) {
 	if r < utf8.RuneSelf {
-		_ = w.WriteByte(byte(r)) // never fails
+		_ = w.WriteByte(byte(r)) // errcheck: never fails
 		return 1, nil
 	}
 	bs, i := Grow(w.buf, utf8.UTFMax)
