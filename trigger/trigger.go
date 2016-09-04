@@ -11,8 +11,8 @@ transition. A Trigger, like sync.Mutex, should never be copied.
 
 */
 type Trigger struct {
-	status uint32
-	ch     chan struct{}
+	done uint32
+	ch   chan struct{}
 }
 
 // New creates a Trigger.
@@ -28,12 +28,12 @@ func Make() Trigger {
 
 // Activated quickly checks to see if this Trigger has been activated.
 func (t *Trigger) Activated() bool {
-	return atomic.LoadUint32(&t.status) != 0
+	return atomic.LoadUint32(&t.done) != 0
 }
 
 // Trigger communicates a state transition. This method is idempotent.
 func (t *Trigger) Trigger() {
-	if atomic.CompareAndSwapUint32(&t.status, 0, 1) {
+	if atomic.CompareAndSwapUint32(&t.done, 0, 1) {
 		close(t.ch)
 	}
 }
@@ -47,7 +47,7 @@ func (t *Trigger) Channel() <-chan struct{} {
 // Wait blocks the current goroutine until this Trigger is activated.
 func (t *Trigger) Wait() {
 	// Check fast path first
-	if atomic.LoadUint32(&t.status) == 0 {
+	if atomic.LoadUint32(&t.done) == 0 {
 		<-t.ch
 	}
 }
