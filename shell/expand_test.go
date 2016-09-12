@@ -1,14 +1,13 @@
 package shell
 
 import (
-	"fmt"
 	"os/exec"
 	"testing"
 )
 
 // WARNING: UNSAFE! word argument is not shell escaped!
 func unsafeShellSprintf(word string) (string, error) {
-	bs, err := exec.Command("sh", "-c", fmt.Sprintf("printf %%s %#v", word)).Output()
+	bs, err := exec.Command("sh", "-c", "printf %s "+word).Output()
 	if err != nil {
 		return "", err
 	}

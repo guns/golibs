@@ -15,23 +15,26 @@ func ExpandUserDir(s string) (string, error) {
 	i := strings.IndexByte(s, '/')
 	var u *user.User
 	var err error
+	var path string
 
 	switch i {
-	case -1: // "~"
-		u, err = user.Current()
-		if err != nil {
-			return "", err
+	case -1: // "~" or "~user"
+		if len(s) == 1 {
+			u, err = user.Current()
+		} else {
+			u, err = user.Lookup(s[1:])
 		}
-		return u.HomeDir, nil
 	case 1: // "~/"
 		u, err = user.Current()
+		path = s[i:]
 	default: // "~user/"
 		u, err = user.Lookup(s[1:i])
+		path = s[i:]
 	}
 
 	if err != nil {
 		return "", err
 	}
 
-	return u.HomeDir + s[i:], nil
+	return u.HomeDir + path, nil
 }
