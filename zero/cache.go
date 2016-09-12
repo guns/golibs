@@ -32,11 +32,11 @@ func NewCache(initFn func() ([]byte, error)) *Cache {
 func (cache *Cache) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
 	if cache.done == 0 {
 		cache.bytes, cache.err = cache.initFn()
 		atomic.StoreUint32(&cache.done, 1)
 	}
-	cache.mutex.Unlock()
 }
 
 // WithByteReader calls f with a *bytes.Reader on the cache byte slice. If the
@@ -65,13 +65,13 @@ func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
 // flag and error message are set to prevent reuse.
 func (cache *Cache) Clear() {
 	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 1)
 	if cache.err == nil {
 		cache.err = errors.New("cannot read cleared zero.Cache")
 	}
 	ClearBytes(cache.bytes)
 	cache.bytes = nil
-	cache.mutex.Unlock()
 }
 
 // Dup returns a new uninitialized cache with the same initFn.
