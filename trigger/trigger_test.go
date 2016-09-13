@@ -24,6 +24,7 @@ func TestTrigger(t *testing.T) {
 	}
 
 	exit.Trigger()
+	exit.Trigger() // assert: should not panic
 
 	if !exit.Activated() {
 		t.Errorf("expected: exit.Activated()")
