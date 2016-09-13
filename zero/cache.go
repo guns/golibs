@@ -33,9 +33,8 @@ func (cache *Cache) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
-	if cache.done == 0 {
+	if atomic.CompareAndSwapUint32(&cache.done, 0, 1) {
 		cache.bytes, cache.err = cache.initFn()
-		atomic.StoreUint32(&cache.done, 1)
 	}
 }
 
