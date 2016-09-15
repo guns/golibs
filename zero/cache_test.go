@@ -12,7 +12,7 @@ import (
 )
 
 var testBytes = []byte("testBytes")
-var testErr = errors.New("testError")
+var errExpected = errors.New("errExpected")
 
 func TestCacheInit(t *testing.T) {
 	inits := int32(0)
@@ -59,7 +59,7 @@ func TestCacheWithByteReaderCallback(t *testing.T) {
 		i := i
 		go func() {
 			errors[i] = cache.WithByteReader(func(r *bytes.Reader) {
-				r.WriteTo(&writers[i])
+				_, _ = r.WriteTo(&writers[i]) // errcheck: the writers are checked later
 				time.Sleep(time.Millisecond)
 			})
 			wg.Done()
@@ -85,15 +85,15 @@ func TestCacheWithByteReaderCallback(t *testing.T) {
 }
 
 func TestCacheWithByteReaderError(t *testing.T) {
-	cache := NewCache(func() ([]byte, error) { return nil, testErr })
+	cache := NewCache(func() ([]byte, error) { return nil, errExpected })
 
 	didread := false
 	err := cache.WithByteReader(func(_ *bytes.Reader) {
 		didread = true
 	})
 
-	if err != testErr {
-		t.Errorf("%v != %v", err, testErr)
+	if err != errExpected {
+		t.Errorf("%v != %v", err, errExpected)
 	}
 	if didread {
 		t.Errorf("expected: !didread")
@@ -117,15 +117,15 @@ func TestCacheClearAndReset(t *testing.T) {
 			append([]byte{}, testBytes...),
 			make([]byte, len(testBytes)),
 			nil,
-			cacheReadAfterClearError,
+			errReadAfterClear,
 		},
 		{
 			cacheClear,
 			1,
 			nil,
 			nil,
-			testErr,
-			testErr,
+			errExpected,
+			errExpected,
 		},
 		{
 			cacheReset,
@@ -140,7 +140,7 @@ func TestCacheClearAndReset(t *testing.T) {
 			2,
 			nil,
 			nil,
-			testErr,
+			errExpected,
 			nil,
 		},
 	}

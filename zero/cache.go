@@ -62,7 +62,7 @@ func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
 	return nil
 }
 
-var cacheReadAfterClearError = errors.New("cannot read cleared zero.Cache")
+var errReadAfterClear = errors.New("cannot read cleared zero.Cache")
 
 // Clear zeroes and truncates the underlying buffer without resetting it.
 // Cleared Caches cannot be read. This method is synchronized.
@@ -73,7 +73,7 @@ func (cache *Cache) Clear() {
 	ClearBytes(cache.bytes)
 	cache.bytes = cache.bytes[:0]
 	if cache.err == nil {
-		cache.err = cacheReadAfterClearError
+		cache.err = errReadAfterClear
 	}
 }
 
