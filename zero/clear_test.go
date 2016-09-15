@@ -28,6 +28,7 @@ func TestClearBuffer(t *testing.T) {
 	}
 
 	ClearBuffer(buf)
+
 	if !reflect.DeepEqual(buf, bytes.NewBuffer([]byte{})) {
 		t.Errorf("%#v != %#v", buf, bytes.NewBuffer([]byte{}))
 	}
@@ -35,14 +36,17 @@ func TestClearBuffer(t *testing.T) {
 
 func TestClearString(t *testing.T) {
 	// Only dynamic strings can be mutated
-	bs := make([]byte, 8)
+	bs := make([]byte, 0x1000)
 	for i := range bs {
 		bs[i] = byte(rand.Uint32() & 0x7f)
 	}
+
 	str := string(bs)
 	copy := str
-	z := "\000\000\000\000\000\000\000\000"
+	z := string(make([]byte, 0x1000))
+
 	ClearString(str)
+
 	if str != z {
 		t.Errorf("%v != %v", str, z)
 	}
