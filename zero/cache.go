@@ -9,13 +9,11 @@ import (
 
 /*
 
-A Cache is a synchronized buffer that is initialized from a constant function
-and can be zeroed.
+A Cache is a synchronized read-only buffer that is initialized from a constant
+function and can be zeroed and reset.
 
 */
 type Cache struct {
-	// done is always written atomically, and is either read atomically or
-	// read while holding a lock on mutex.
 	done   uint32
 	mutex  sync.RWMutex
 	bytes  []byte
@@ -23,12 +21,14 @@ type Cache struct {
 	initFn func() ([]byte, error)
 }
 
-// NewCache creates a Cache that caches bytes from initFn.
+// NewCache returns an object that caches bytes from initFn. If initFn returns
+// an error, Init will record the error and subsequent reads of the underlying
+// buffer will fail.
 func NewCache(initFn func() ([]byte, error)) *Cache {
 	return &Cache{initFn: initFn}
 }
 
-// Init idempotently initializes a Cache.
+// Init initializes a Cache. This method is synchronized and idempotent.
 func (cache *Cache) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
@@ -38,12 +38,14 @@ func (cache *Cache) Init() {
 	}
 }
 
-// WithByteReader calls f with a *bytes.Reader on the cache byte slice. If the
-// cache is uninitialized, it will be atomically populated before f is called.
-// The immutability of the underlying byte slice is only guaranteed during the
-// lifetime of f.
+// WithByteReader calls f with a *bytes.Reader on the data returned from the
+// initialization function. If the cache is uninitialized, Init is called
+// before f is executed. If there was an error during initialization, that
+// error is returned without executing f.
 //
-// If an error is returned, it should be assumed that f() was never called.
+// This method is synchronized with a read-lock and may be called concurrently
+// from multiple goroutines. The immutability of the underlying buffer is only
+// guaranteed during the lifetime of f.
 func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
 	if atomic.LoadUint32(&cache.done) == 0 {
 		cache.Init()
@@ -60,20 +62,29 @@ func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
 	return nil
 }
 
-// Clear locks, zeroes, truncates, and unlocks the cache. The initialization
-// flag and error message are set to prevent reuse.
+var cacheReadAfterClearError = errors.New("cannot read cleared zero.Cache")
+
+// Clear zeroes and truncates the underlying buffer without resetting it.
+// Cleared Caches cannot be read. This method is synchronized.
 func (cache *Cache) Clear() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 1)
-	if cache.err == nil {
-		cache.err = errors.New("cannot read cleared zero.Cache")
-	}
 	ClearBytes(cache.bytes)
-	cache.bytes = nil
+	cache.bytes = cache.bytes[:0]
+	if cache.err == nil {
+		cache.err = cacheReadAfterClearError
+	}
 }
 
-// Dup returns a new uninitialized cache with the same initFn.
-func (cache *Cache) Dup() *Cache {
-	return &Cache{initFn: cache.initFn}
+// Reset clears and truncates the underlying buffer and forgets initialization
+// errors. A Cache that has been Reset can be re-initialized with Init. This
+// method is synchronized
+func (cache *Cache) Reset() {
+	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
+	atomic.StoreUint32(&cache.done, 0)
+	ClearBytes(cache.bytes)
+	cache.bytes = cache.bytes[:0]
+	cache.err = nil
 }
