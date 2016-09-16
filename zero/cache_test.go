@@ -69,8 +69,8 @@ func TestCacheWithByteReaderCallback(t *testing.T) {
 	wg.Wait()
 	elapsed := time.Since(start)
 
-	if !(elapsed < 10*time.Millisecond) {
-		t.Errorf("expected: time.Sub(start) < 10*time.Millisecond, actual: %v", elapsed)
+	if !(elapsed < 100*time.Millisecond) {
+		t.Errorf("expected: time.Sub(start) < 100*time.Millisecond, actual: %v", elapsed)
 	}
 	for i := range writers {
 		if !reflect.DeepEqual(writers[i].Bytes(), testBytes) {
