@@ -5,9 +5,9 @@ import (
 	"io"
 )
 
-// ReadAllInto reads data from r until EOF and appends it to buf, growing the
+// ReadAll reads data from r until EOF and appends it to buf, growing the
 // buffer and zeroing old buffers as needed.
-func ReadAllInto(buf []byte, r io.Reader) ([]byte, error) {
+func ReadAll(buf []byte, r io.Reader) ([]byte, error) {
 	for {
 		i := len(buf)
 

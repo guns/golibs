@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestReadAllInto(t *testing.T) {
+func TestReadAll(t *testing.T) {
 	data := []struct {
 		initlen, initcap int
 		init             string
@@ -40,7 +40,7 @@ func TestReadAllInto(t *testing.T) {
 			copy(initExpected, row.init)
 		}
 
-		new, err := ReadAllInto(init, strings.NewReader(row.readersrc))
+		new, err := ReadAll(init, strings.NewReader(row.readersrc))
 		if err != row.err {
 			t.Errorf("%v != %v", err, row.err)
 		}
