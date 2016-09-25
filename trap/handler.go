@@ -26,7 +26,7 @@ const (
 // respected as an "abort ASAP" message.
 type Handler struct {
 	Action Action
-	Fn     func(sig os.Signal, exit *trigger.Trigger)
+	Fn     func(sig os.Signal, exit *trigger.T)
 }
 
 // HandlerMap associates Handler objects to specific signals
@@ -43,10 +43,10 @@ const sigChanLen = 8
 //	Exit    terminate f; call handler
 //
 // The handler function is ignored if nil, and f must exit ASAP once its
-// Trigger is activated.
+// trigger is activated.
 //
 // The return value of f is returned
-func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.Trigger, f func(*trigger.Trigger) error) (err error) {
+func ExecuteWithHandlers(hmap HandlerMap, exit *trigger.T, f func(*trigger.T) error) (err error) {
 	if exit == nil {
 		exit = trigger.New()
 	}

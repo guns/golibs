@@ -30,8 +30,8 @@ func TestTrigger(t *testing.T) {
 
 func TestMake(t *testing.T) {
 	trg := struct {
-		t Trigger
-		u Trigger
+		t T
+		u T
 	}{Make(), Make()}
 
 	trg.u.Trigger()

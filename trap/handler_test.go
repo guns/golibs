@@ -14,14 +14,14 @@ import (
 var errExpected = errors.New("FEXIT")
 
 func TestHandlerReturnsFunctionError(t *testing.T) {
-	err := ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.Trigger) error {
+	err := ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.T) error {
 		return errExpected
 	})
 	if err != errExpected {
 		t.Errorf("%v != %v", err, errExpected)
 	}
 
-	err = ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.Trigger) error {
+	err = ExecuteWithHandlers(HandlerMap{}, nil, func(_ *trigger.T) error {
 		return nil
 	})
 	if err != nil {
@@ -36,19 +36,19 @@ func TestHandlerActions(t *testing.T) {
 		err      error
 		expected int32
 	}{
-		{HandlerMap{syscall.SIGUSR1: {None, func(_ os.Signal, _ *trigger.Trigger) {
+		{HandlerMap{syscall.SIGUSR1: {None, func(_ os.Signal, _ *trigger.T) {
 			atomic.AddInt32(&n, 10)
 		}}}, errExpected, sigChanLen*10 + 1},
-		{HandlerMap{syscall.SIGUSR1: {Restart, func(_ os.Signal, _ *trigger.Trigger) {
+		{HandlerMap{syscall.SIGUSR1: {Restart, func(_ os.Signal, _ *trigger.T) {
 			atomic.AddInt32(&n, 10)
 		}}}, nil, sigChanLen*10 + sigChanLen + 1},
-		{HandlerMap{syscall.SIGUSR1: {Restart, func(_ os.Signal, _ *trigger.Trigger) {
+		{HandlerMap{syscall.SIGUSR1: {Restart, func(_ os.Signal, _ *trigger.T) {
 			atomic.AddInt32(&n, 10)
 		}}}, errExpected, 11},
-		{HandlerMap{syscall.SIGUSR1: {Exit, func(_ os.Signal, _ *trigger.Trigger) {
+		{HandlerMap{syscall.SIGUSR1: {Exit, func(_ os.Signal, _ *trigger.T) {
 			atomic.AddInt32(&n, 10)
 		}}}, nil, 11},
-		{HandlerMap{syscall.SIGUSR1: {Exit, func(_ os.Signal, _ *trigger.Trigger) {
+		{HandlerMap{syscall.SIGUSR1: {Exit, func(_ os.Signal, _ *trigger.T) {
 			atomic.AddInt32(&n, 10)
 		}}}, errExpected, 11},
 	}
@@ -61,7 +61,7 @@ func TestHandlerActions(t *testing.T) {
 		var err error
 
 		go func() {
-			err = ExecuteWithHandlers(row.hmap, exit, func(fexit *trigger.Trigger) error {
+			err = ExecuteWithHandlers(row.hmap, exit, func(fexit *trigger.T) error {
 				atomic.AddInt32(&n, 1)
 				start.Trigger()
 				fexit.Wait()
@@ -97,7 +97,7 @@ func TestHandlerExitsIfPassedActivatedTrigger(t *testing.T) {
 	exit := trigger.New()
 	n := int32(0)
 	exit.Trigger()
-	err := ExecuteWithHandlers(nil, exit, func(fexit *trigger.Trigger) error {
+	err := ExecuteWithHandlers(nil, exit, func(fexit *trigger.T) error {
 		atomic.AddInt32(&n, 1)
 		return errExpected
 	})

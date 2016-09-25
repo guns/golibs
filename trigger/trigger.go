@@ -6,33 +6,33 @@ import "sync/atomic"
 
 /*
 
-A Trigger is a flexible, synchronized way to communicate a single state
-transition. A Trigger, like sync.Mutex, should never be copied.
+A trigger is a flexible, synchronized way to communicate a single state
+transition. Like sync.Mutex, triggers should never be copied.
 
 */
-type Trigger struct {
+type T struct {
 	done uint32
 	ch   chan struct{}
 }
 
-// New creates a Trigger.
-func New() *Trigger {
-	return &Trigger{ch: make(chan struct{})}
+// New creates a trigger.
+func New() *T {
+	return &T{ch: make(chan struct{})}
 }
 
-// Make returns a Trigger value. This is only useful when embedding a Trigger
+// Make returns a trigger value. This is only useful when embedding a trigger
 // in a struct.
-func Make() Trigger {
-	return Trigger{ch: make(chan struct{})}
+func Make() T {
+	return T{ch: make(chan struct{})}
 }
 
-// Activated quickly checks to see if this Trigger has been activated.
-func (t *Trigger) Activated() bool {
+// Activated quickly checks to see if this trigger has been activated.
+func (t *T) Activated() bool {
 	return atomic.LoadUint32(&t.done) != 0
 }
 
-// Trigger communicates a state transition. This method is idempotent.
-func (t *Trigger) Trigger() {
+// trigger communicates a state transition. This method is idempotent.
+func (t *T) Trigger() {
 	if atomic.CompareAndSwapUint32(&t.done, 0, 1) {
 		close(t.ch)
 	}
@@ -40,12 +40,12 @@ func (t *Trigger) Trigger() {
 
 // Channel returns a read channel that can be used to receive a transition
 // notification in a select operation.
-func (t *Trigger) Channel() <-chan struct{} {
+func (t *T) Channel() <-chan struct{} {
 	return t.ch
 }
 
-// Wait blocks the current goroutine until this Trigger is activated.
-func (t *Trigger) Wait() {
+// Wait blocks the current goroutine until this trigger is activated.
+func (t *T) Wait() {
 	// Check fast path first
 	if atomic.LoadUint32(&t.done) == 0 {
 		<-t.ch
