@@ -34,7 +34,7 @@ func TestErrorMap(t *testing.T) {
 }
 
 func TestThat(t *testing.T) {
-	IsPositive := func(n int, key string) Checker {
+	IsPositive := func(n int, key string) Fn {
 		return func() (bool, string, string) {
 			return n > 0, key, key + " must be positive"
 		}
