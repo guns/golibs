@@ -42,8 +42,17 @@ func TestThat(t *testing.T) {
 	}
 
 	m := That(IsPositive(0, "x"), IsPositive(1, "y"), IsPositive(-1, "z"))
+	if m == nil {
+		t.Errorf("expected: !(m == nil)")
+	}
+
 	emap := ErrorMap{"x": "must be positive", "z": "must be positive"}
 	if !reflect.DeepEqual(m, emap) {
 		t.Errorf("%#v != %#v", m, emap)
+	}
+
+	m = That(IsPositive(1, "x"))
+	if m != nil {
+		t.Errorf("unexpected error: %#v", m)
 	}
 }
