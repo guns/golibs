@@ -12,17 +12,18 @@ func TestErrorMap(t *testing.T) {
 		t.Errorf("%#v != %#v", m.Error(), "validation passed")
 	}
 
-	m["username"] = "username should not be blank"
+	m["username"] = "must not be blank"
 
-	if m.Error() != "validation failed: username should not be blank" {
-		t.Errorf("%#v != %#v", m.Error(), "validation failed: username should not be blank")
+	s := "validation failed: username must not be blank"
+	if m.Error() != s {
+		t.Errorf("%#v != %#v", m.Error(), s)
 	}
 
-	m["password"] = "password must be longer than 12 characters"
+	m["password"] = "must be longer than 12 characters"
 
-	n := len("validation failed: username should not be blank, password must be longer than 12 characters")
-	if len(m.Error()) != n {
-		t.Errorf("%#v != %#v", len(m.Error()), n)
+	s = "validation failed: username must not be blank, password must be longer than 12 characters"
+	if m.Error() != s {
+		t.Errorf("%#v != %#v", m.Error(), s)
 	}
 
 	e := func() error { return m }()
@@ -36,12 +37,12 @@ func TestErrorMap(t *testing.T) {
 func TestThat(t *testing.T) {
 	IsPositive := func(n int, key string) Fn {
 		return func() (bool, string, string) {
-			return n > 0, key, key + " must be positive"
+			return n > 0, key, "must be positive"
 		}
 	}
 
 	m := That(IsPositive(0, "x"), IsPositive(1, "y"), IsPositive(-1, "z"))
-	emap := ErrorMap{"x": "x must be positive", "z": "z must be positive"}
+	emap := ErrorMap{"x": "must be positive", "z": "must be positive"}
 	if !reflect.DeepEqual(m, emap) {
 		t.Errorf("%#v != %#v", m, emap)
 	}

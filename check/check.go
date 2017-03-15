@@ -13,7 +13,7 @@ For example:
 	func stringIsNotEmpty(s, key string) check.Fn {
 		return func() (pass bool, key, msg string) {
 			pass = len(s) > 0
-			msg = key + " must not be blank"
+			msg = "must not be blank"
 			return
 		}
 	}
@@ -21,7 +21,7 @@ For example:
 	func portNumberIsValid(port int, key string) check.Fn {
 		return func() (pass bool, key, msg string) {
 			pass = port > 0 && port < 0x10000
-			msg = key + " must be an integer between 0 and 65536"
+			msg = "must be an integer between 0 and 65536"
 			return
 		}
 	}
@@ -50,8 +50,8 @@ For example:
 An API request failing validation would get the following JSON response:
 
 	{
-		"host": "host must not be blank",
-		"port": "port must be an integer between 0 and 65536"
+		"host": "must not be blank",
+		"port": "must be an integer between 0 and 65536"
 	}
 
 */
@@ -83,8 +83,8 @@ func (m ErrorMap) Error() string {
 
 	errors := make([]string, len(m))
 	i := 0
-	for _, v := range m {
-		errors[i] = v
+	for k, v := range m {
+		errors[i] = k + " " + v
 		i++
 	}
 	return "validation failed: " + strings.Join(errors, ", ")
