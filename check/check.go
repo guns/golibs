@@ -96,7 +96,7 @@ func That(checkers ...Fn) ErrorMap {
 	for _, checker := range checkers {
 		if pass, key, msg := checker(); !pass {
 			if len(m) == 0 {
-				m = make(ErrorMap, len(checkers))
+				m = make(ErrorMap)
 			}
 			m[key] = msg
 		}
