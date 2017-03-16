@@ -90,8 +90,10 @@ func (m ErrorMap) Error() string {
 	return "validation failed: " + strings.Join(errors, ", ")
 }
 
-// That runs given Checkers and returns an ErrorMap.
-func That(checkers ...Fn) ErrorMap {
+// That runs Checkers and returns a nil error interface value if all checkers
+// passed, and returns a non-nil error interface value with concrete type
+// ErrorMap if any failed.
+func That(checkers ...Fn) error {
 	var m ErrorMap
 	for _, checker := range checkers {
 		if pass, key, msg := checker(); !pass {
@@ -100,6 +102,9 @@ func That(checkers ...Fn) ErrorMap {
 			}
 			m[key] = msg
 		}
+	}
+	if len(m) == 0 {
+		return nil
 	}
 	return m
 }

@@ -22,7 +22,7 @@ func TestErrorMap(t *testing.T) {
 	m["password"] = "must be longer than 12 characters"
 
 	s = "validation failed: username must not be blank, password must be longer than 12 characters"
-	if m.Error() != s {
+	if len(m.Error()) != len(s) {
 		t.Errorf("%#v != %#v", m.Error(), s)
 	}
 
