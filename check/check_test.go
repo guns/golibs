@@ -5,32 +5,21 @@ import (
 	"testing"
 )
 
-func TestErrorMap(t *testing.T) {
-	m := ErrorMap{}
-
-	if m.Error() != "validation passed" {
-		t.Errorf("%#v != %#v", m.Error(), "validation passed")
+func TestErrorMapError(t *testing.T) {
+	data := []struct {
+		in  error
+		out string
+	}{
+		{ErrorMap(nil), "validation passed"},
+		{ErrorMap{}, "validation passed"},
+		{ErrorMap{"alice": "must be alert"}, "validation failed: alice must be alert"},
+		{ErrorMap{"alice": "must be alert", "bob": "must be bored"}, "validation failed: alice must be alert, bob must be bored"},
 	}
 
-	m["username"] = "must not be blank"
-
-	s := "validation failed: username must not be blank"
-	if m.Error() != s {
-		t.Errorf("%#v != %#v", m.Error(), s)
-	}
-
-	m["password"] = "must be longer than 12 characters"
-
-	s = "validation failed: username must not be blank, password must be longer than 12 characters"
-	if len(m.Error()) != len(s) {
-		t.Errorf("%#v != %#v", m.Error(), s)
-	}
-
-	e := func() error { return m }()
-	switch e.(type) {
-	case ErrorMap:
-	default:
-		t.Errorf("%v != %v", reflect.TypeOf(e), reflect.TypeOf(m))
+	for _, row := range data {
+		if len(row.in.Error()) != len(row.out) {
+			t.Errorf("%#v != %#v", row.in.Error(), row.out)
+		}
 	}
 }
 
@@ -41,18 +30,24 @@ func TestThat(t *testing.T) {
 		}
 	}
 
-	m := That(IsPositive(0, "x"), IsPositive(1, "y"), IsPositive(-1, "z"))
-	if m == nil {
-		t.Errorf("expected: !(m == nil)")
+	data := []struct {
+		in  error
+		out error
+	}{
+		{That(IsPositive(1, "x")), nil},
+		{That(IsPositive(1, "x"), IsPositive(0, "y")), ErrorMap{"y": "must be positive"}},
+		{That(IsPositive(1, "x"), IsPositive(0, "y"), IsPositive(-1, "z")), ErrorMap{"y": "must be positive", "z": "must be positive"}},
 	}
 
-	emap := ErrorMap{"x": "must be positive", "z": "must be positive"}
-	if !reflect.DeepEqual(m, emap) {
-		t.Errorf("%#v != %#v", m, emap)
-	}
-
-	m = That(IsPositive(1, "x"))
-	if m != nil {
-		t.Errorf("unexpected error: %#v", m)
+	for _, row := range data {
+		if row.out == nil {
+			if row.in != nil {
+				t.Errorf("unexpected non-nil value: %#v", row.in)
+			}
+		} else {
+			if !reflect.DeepEqual(row.in, row.out) {
+				t.Errorf("%#v != %#v", row.in, row.out)
+			}
+		}
 	}
 }
