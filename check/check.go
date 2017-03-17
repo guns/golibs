@@ -39,7 +39,8 @@ For example:
 		if err := validate(f); err != nil {
 			if m, ok := err.(check.ErrorMap); ok {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(m)
+				w.WriteHeader(http.StatusBadRequest)
+				_ = json.NewEncoder(w).Encode(m)
 				return
 			}
 			// …
