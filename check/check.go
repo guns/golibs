@@ -10,19 +10,17 @@ For example:
 		port int
 	}
 
-	func stringIsNotEmpty(s, key string) check.Fn {
-		return func() (pass bool, key, msg string) {
-			pass = len(s) > 0
-			msg = "must not be blank"
-			return
-		}
-	}
-
 	func portNumberIsValid(port int, key string) check.Fn {
 		return func() (pass bool, key, msg string) {
 			pass = port > 0 && port < 0x10000
 			msg = "must be an integer between 0 and 65536"
 			return
+		}
+	}
+
+	func stringIsNotEmpty(s, key string) check.Fn {
+		return func() (bool, string, string) {
+			return len(s) > 0, key, "must not be blank"
 		}
 	}
 
