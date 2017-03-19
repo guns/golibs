@@ -3,6 +3,7 @@ package zero
 import (
 	"bytes"
 	"reflect"
+	"runtime"
 	"unicode/utf8"
 	"unsafe"
 )
@@ -14,8 +15,7 @@ func ClearBytes(bs []byte) {
 	}
 }
 
-// Copy of bytes.Buffer
-type go1Buffer struct {
+type go10BytesBuffer struct {
 	buf       []byte            // contents are the bytes buf[off : len(buf)]
 	off       int               // read at &buf[off], write at &buf[len(buf)]
 	runeBytes [utf8.UTFMax]byte // avoid allocation of slice on each WriteByte or Rune
@@ -23,19 +23,38 @@ type go1Buffer struct {
 	lastRead  int               // last read operation, so that Unread* can work correctly.
 }
 
+type go18BytesBuffer struct {
+	buf       []byte   // contents are the bytes buf[off : len(buf)]
+	off       int      // read at &buf[off], write at &buf[len(buf)]
+	bootstrap [64]byte // memory to hold first slice; helps small buffers (Printf) avoid allocation.
+	lastRead  int      // last read operation, so that Unread* can work correctly.
+}
+
 // ClearBuffer zeroes ALL data in a bytes.Buffer
 func ClearBuffer(bbuf *bytes.Buffer) {
-	b := (*go1Buffer)(unsafe.Pointer(bbuf))
-	ClearBytes(b.buf)
-	b.buf = b.buf[:0]
-	b.off = 0
-	for i := range b.runeBytes {
-		b.runeBytes[i] = 0
+	switch runtime.Version() {
+	case "go1.8":
+		b := (*go18BytesBuffer)(unsafe.Pointer(bbuf))
+		ClearBytes(b.buf)
+		b.buf = b.buf[:0]
+		b.off = 0
+		for i := range b.bootstrap {
+			b.bootstrap[i] = 0
+		}
+		b.lastRead = 0
+	default:
+		b := (*go10BytesBuffer)(unsafe.Pointer(bbuf))
+		ClearBytes(b.buf)
+		b.buf = b.buf[:0]
+		b.off = 0
+		for i := range b.runeBytes {
+			b.runeBytes[i] = 0
+		}
+		for i := range b.bootstrap {
+			b.bootstrap[i] = 0
+		}
+		b.lastRead = 0
 	}
-	for i := range b.bootstrap {
-		b.bootstrap[i] = 0
-	}
-	b.lastRead = 0
 }
 
 // ClearString zeroes a string's backing array. This is truly s̶t̶u̶p̶i̶d̶ dangerous.
