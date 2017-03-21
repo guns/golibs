@@ -1,6 +1,8 @@
 // Package process provides tools for working with OS processes.
 package process
 
+// +build !windows
+
 import (
 	"os"
 	"syscall"
