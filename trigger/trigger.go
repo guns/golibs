@@ -31,7 +31,7 @@ func (t *T) Activated() bool {
 	return atomic.LoadUint32(&t.done) != 0
 }
 
-// trigger communicates a state transition. This method is idempotent.
+// Trigger communicates a state transition. This method is idempotent.
 func (t *T) Trigger() {
 	if atomic.CompareAndSwapUint32(&t.done, 0, 1) {
 		close(t.ch)
