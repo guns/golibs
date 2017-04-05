@@ -23,13 +23,13 @@ func TestErrorMapError(t *testing.T) {
 	}
 }
 
-func isPositive(n int, key string) Fn {
+func isPositive(key string, n int) Fn {
 	return func() (bool, string, string) {
 		return n > 0, key, "must be positive"
 	}
 }
 
-func isEven(n int, key string) Fn {
+func isEven(key string, n int) Fn {
 	return func() (bool, string, string) {
 		return (n&1 == 0), key, "must be even"
 	}
@@ -39,9 +39,9 @@ func TestThat(t *testing.T) {
 	data := []struct {
 		in, out error
 	}{
-		{That(isPositive(1, "x")), nil},
-		{That(isPositive(1, "x"), isPositive(0, "y")), ErrorMap{"y": "must be positive"}},
-		{That(isPositive(1, "x"), isPositive(0, "y"), isPositive(-1, "z")), ErrorMap{"y": "must be positive", "z": "must be positive"}},
+		{That(isPositive("x", 1)), nil},
+		{That(isPositive("x", 1), isPositive("y", 0)), ErrorMap{"y": "must be positive"}},
+		{That(isPositive("x", 1), isPositive("y", 0), isPositive("z", -1)), ErrorMap{"y": "must be positive", "z": "must be positive"}},
 	}
 
 	for _, row := range data {
@@ -55,10 +55,10 @@ func TestPipe(t *testing.T) {
 	data := []struct {
 		in, out error
 	}{
-		{That(Pipe(isPositive(2, "x"), isEven(2, "x"))), nil},
-		{That(Pipe(isPositive(-2, "x"), isEven(-2, "x"))), ErrorMap{"x": "must be positive"}},
-		{That(Pipe(isPositive(1, "x"), isEven(1, "x"))), ErrorMap{"x": "must be even"}},
-		{That(Pipe(isPositive(-1, "x"), isEven(-1, "x"))), ErrorMap{"x": "must be positive"}},
+		{That(Pipe(isPositive("x", 2), isEven("x", 2))), nil},
+		{That(Pipe(isPositive("x", -2), isEven("x", -2))), ErrorMap{"x": "must be positive"}},
+		{That(Pipe(isPositive("x", 1), isEven("x", 1))), ErrorMap{"x": "must be even"}},
+		{That(Pipe(isPositive("x", -1), isEven("x", -1))), ErrorMap{"x": "must be positive"}},
 	}
 
 	for _, row := range data {

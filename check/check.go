@@ -10,7 +10,7 @@ For example:
 		port int
 	}
 
-	func portNumberIsValid(port int, key string) check.Fn {
+	func portNumberIsValid(key string, port int) check.Fn {
 		return func() (pass bool, key, msg string) {
 			pass = port > 0 && port < 0x10000
 			msg = "must be an integer between 0 and 65536"
@@ -18,7 +18,7 @@ For example:
 		}
 	}
 
-	func stringIsNotEmpty(s, key string) check.Fn {
+	func stringIsNotEmpty(key, s string) check.Fn {
 		return func() (bool, string, string) {
 			return len(s) > 0, key, "must not be blank"
 		}
@@ -26,8 +26,8 @@ For example:
 
 	func validate(f form) error {
 		return check.That(
-			stringIsNotEmpty(f.host, "host"),
-			portNumberIsValid(f.port, "port"),
+			stringIsNotEmpty("host", f.host),
+			portNumberIsValid("port", f.port),
 		)
 	}
 
@@ -114,8 +114,8 @@ func That(fs ...Fn) error {
 // e.g.
 //	check.That(
 //		check.Pipe(
-//			lenWithinBounds(username, 4, 60, "username"),
-//			isUnique(db, username, "username"),
+//			lenWithinBounds("username", username, 4, 60),
+//			isUnique("username", db, username),
 //		),
 //	)
 //
