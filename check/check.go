@@ -69,7 +69,7 @@ type ErrorMap map[string]string
 //	errorMsg: an error message
 //
 // errorKey and errorMsg should always be returned so that composable check
-// functions like Not() can be written.
+// functions like Or() can be written.
 type Fn func() (pass bool, errorKey, errorMsg string)
 
 // Error returns a summary of the error message map. It also implements the
@@ -107,26 +107,60 @@ func That(fs ...Fn) error {
 	return m
 }
 
-// Pipe creates a pipeline of Fns such that each Fn must pass before the
-// next Fn is called. This pipeline Fn will return the values from the first
-// failure, if any.
+// And creates a short-circuiting chain of validation Fns that passes if all
+// Fns pass and fails if a single Fn fails. This chained Fn will return the
+// values from the first failure, if any.
 //
 // e.g.
 //	check.That(
-//		check.Pipe(
+//		check.And(
 //			lenWithinBounds("username", username, 4, 60),
 //			isUnique("username", db, username),
 //		),
 //	)
 //
-func Pipe(fs ...Fn) Fn {
+func And(fs ...Fn) Fn {
 	return func() (pass bool, key, msg string) {
+		if len(fs) == 0 {
+			return true, key, msg
+		}
+
 		for _, f := range fs {
 			pass, key, msg = f()
 			if !pass {
 				return pass, key, msg
 			}
 		}
+
+		return pass, key, msg
+	}
+}
+
+// Or creates a short-circuiting chain of validation Fns that passes if a
+// single Fn passes and fails if all Fns fail. This chained Fn will return the
+// values from the last failure, if any.
+//
+// e.g.
+//	check.That(
+//		check.Or(
+//			isBlank("email", email),
+//			isValidEmail("email", email),
+//		),
+//	)
+//
+func Or(fs ...Fn) Fn {
+	return func() (pass bool, key, msg string) {
+		if len(fs) == 0 {
+			return true, key, msg
+		}
+
+		for _, f := range fs {
+			pass, key, msg = f()
+			if pass {
+				return pass, key, msg
+			}
+		}
+
 		return pass, key, msg
 	}
 }

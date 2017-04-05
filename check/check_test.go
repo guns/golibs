@@ -51,19 +51,44 @@ func TestThat(t *testing.T) {
 	}
 }
 
-func TestPipe(t *testing.T) {
+func TestAnd(t *testing.T) {
 	data := []struct {
-		in, out error
+		in  Fn
+		out error
 	}{
-		{That(Pipe(isPositive("x", 2), isEven("x", 2))), nil},
-		{That(Pipe(isPositive("x", -2), isEven("x", -2))), ErrorMap{"x": "must be positive"}},
-		{That(Pipe(isPositive("x", 1), isEven("x", 1))), ErrorMap{"x": "must be even"}},
-		{That(Pipe(isPositive("x", -1), isEven("x", -1))), ErrorMap{"x": "must be positive"}},
+		{And(), nil},
+		{And(isPositive("x", 1)), nil},
+		{And(isPositive("x", -1)), ErrorMap{"x": "must be positive"}},
+		{And(isPositive("x", 2), isEven("x", 2)), nil},
+		{And(isPositive("x", -2), isEven("x", -2)), ErrorMap{"x": "must be positive"}},
+		{And(isPositive("x", 1), isEven("x", 1)), ErrorMap{"x": "must be even"}},
+		{And(isPositive("x", -1), isEven("x", -1)), ErrorMap{"x": "must be positive"}},
 	}
 
 	for _, row := range data {
-		if !reflect.DeepEqual(row.in, row.out) {
-			t.Errorf("%#v != %#v", row.in, row.out)
+		if !reflect.DeepEqual(That(row.in), row.out) {
+			t.Errorf("%#v != %#v", That(row.in), row.out)
+		}
+	}
+}
+
+func TestOr(t *testing.T) {
+	data := []struct {
+		in  Fn
+		out error
+	}{
+		{Or(), nil},
+		{Or(isPositive("x", 1)), nil},
+		{Or(isPositive("x", -1)), ErrorMap{"x": "must be positive"}},
+		{Or(isPositive("x", 2), isEven("x", 2)), nil},
+		{Or(isPositive("x", -2), isEven("x", -2)), nil},
+		{Or(isPositive("x", 1), isEven("x", 1)), nil},
+		{Or(isPositive("x", -1), isEven("x", -1)), ErrorMap{"x": "must be even"}},
+	}
+
+	for _, row := range data {
+		if !reflect.DeepEqual(That(row.in), row.out) {
+			t.Errorf("%#v != %#v", That(row.in), row.out)
 		}
 	}
 }
