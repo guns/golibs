@@ -89,12 +89,11 @@ func (m ErrorMap) Error() string {
 	return "validation failed: " + strings.Join(errors, ", ")
 }
 
-// That runs Checkers and returns a nil error interface value if all checkers
-// passed, and returns a non-nil error interface value with concrete type
-// ErrorMap if any failed.
-func That(checkers ...Fn) error {
+// That runs Fns and returns nil if all Fns passed, and returns a non-nil
+// error interface value with concrete type ErrorMap if any failed.
+func That(fs ...Fn) error {
 	var m ErrorMap
-	for _, checker := range checkers {
+	for _, checker := range fs {
 		if pass, key, msg := checker(); !pass {
 			if len(m) == 0 {
 				m = make(ErrorMap)
@@ -106,4 +105,28 @@ func That(checkers ...Fn) error {
 		return nil
 	}
 	return m
+}
+
+// Pipe creates a pipeline of Fns such that each Fn must pass before the
+// next Fn is called. This pipeline Fn will return the values from the first
+// failure, if any.
+//
+// e.g.
+//	check.That(
+//		check.Pipe(
+//			lenWithinBounds(username, 4, 60, "username"),
+//			isUnique(db, username, "username"),
+//		),
+//	)
+//
+func Pipe(fs ...Fn) Fn {
+	return func() (pass bool, key, msg string) {
+		for _, f := range fs {
+			pass, key, msg = f()
+			if !pass {
+				return pass, key, msg
+			}
+		}
+		return pass, key, msg
+	}
 }
