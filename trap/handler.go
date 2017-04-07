@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2017 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 // Package trap handles POSIX signals.
 package trap
 

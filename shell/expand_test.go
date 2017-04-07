@@ -1,3 +1,7 @@
+// Copyright (c) 2015-2017 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 package shell
 
 import (
