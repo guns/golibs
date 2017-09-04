@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// Join joins errors with a given separator. Nil arguments are filtered, and
-// if all arguments are nil, Join returns nil.
+// Join joins error messages with a given separator. Nil arguments are
+// ignored, and if all arguments are nil, Join returns nil.
 func Join(sep string, errs ...error) error {
 	var errorStrings []string
 
