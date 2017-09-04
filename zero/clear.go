@@ -34,9 +34,25 @@ type go18BytesBuffer struct {
 	lastRead  int      // last read operation, so that Unread* can work correctly.
 }
 
+type go19BytesBuffer struct {
+	buf       []byte   // contents are the bytes buf[off : len(buf)]
+	off       int      // read at &buf[off], write at &buf[len(buf)]
+	lastRead  int      // last read operation, so that Unread* can work correctly.
+	bootstrap [64]byte // memory to hold first slice; helps small buffers avoid allocation.
+}
+
 // ClearBuffer zeroes ALL data in a bytes.Buffer
 func ClearBuffer(bbuf *bytes.Buffer) {
 	switch runtime.Version() {
+	case "go1.9":
+		b := (*go19BytesBuffer)(unsafe.Pointer(bbuf))
+		ClearBytes(b.buf)
+		b.buf = b.buf[:0]
+		b.off = 0
+		for i := range b.bootstrap {
+			b.bootstrap[i] = 0
+		}
+		b.lastRead = 0
 	case "go1.8":
 		b := (*go18BytesBuffer)(unsafe.Pointer(bbuf))
 		ClearBytes(b.buf)
