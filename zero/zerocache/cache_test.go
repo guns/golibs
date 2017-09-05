@@ -2,7 +2,7 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-package zero
+package zerocache
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ var errExpected = errors.New("errExpected")
 
 func TestCacheInit(t *testing.T) {
 	inits := int32(0)
-	cache := NewCache(func() ([]byte, error) {
+	cache := New(func() ([]byte, error) {
 		atomic.AddInt32(&inits, 1)
 		time.Sleep(time.Duration(rand.Uint32()&0xff) * time.Nanosecond)
 		return append([]byte{}, testBytes...), nil
@@ -50,7 +50,7 @@ func TestCacheInit(t *testing.T) {
 }
 
 func TestCacheWithByteReaderCallback(t *testing.T) {
-	cache := NewCache(func() ([]byte, error) { return append([]byte{}, testBytes...), nil })
+	cache := New(func() ([]byte, error) { return append([]byte{}, testBytes...), nil })
 	errors := [1000]error{}
 	writers := [1000]bytes.Buffer{}
 
@@ -89,7 +89,7 @@ func TestCacheWithByteReaderCallback(t *testing.T) {
 }
 
 func TestCacheWithByteReaderError(t *testing.T) {
-	cache := NewCache(func() ([]byte, error) { return nil, errExpected })
+	cache := New(func() ([]byte, error) { return nil, errExpected })
 
 	didread := false
 	err := cache.WithByteReader(func(_ *bytes.Reader) {
@@ -121,7 +121,7 @@ func TestCacheClearAndReset(t *testing.T) {
 			append([]byte{}, testBytes...),
 			make([]byte, len(testBytes)),
 			nil,
-			errReadAfterClear,
+			ErrReadAfterClear,
 		},
 		{
 			cacheClear,
@@ -151,7 +151,7 @@ func TestCacheClearAndReset(t *testing.T) {
 
 	for _, row := range data {
 		inits := 0
-		cache := NewCache(func() ([]byte, error) {
+		cache := New(func() ([]byte, error) {
 			inits++
 			return row.data, row.err
 		})

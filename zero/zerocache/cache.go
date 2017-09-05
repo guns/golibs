@@ -2,22 +2,20 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-package zero
+// Package zerocache provides a synchronized read-only buffer that is
+// initialized from a constant function and can be zeroed and reset.
+package zerocache
 
 import (
 	"bytes"
 	"errors"
 	"sync"
 	"sync/atomic"
+
+	"github.com/guns/golibs/zero"
 )
 
-/*
-
-A Cache is a synchronized read-only buffer that is initialized from a constant
-function and can be zeroed and reset.
-
-*/
-type Cache struct {
+type T struct {
 	done   uint32
 	mutex  sync.RWMutex
 	bytes  []byte
@@ -25,15 +23,15 @@ type Cache struct {
 	initFn func() ([]byte, error)
 }
 
-// NewCache returns an object that caches bytes from initFn. If initFn returns
-// an error, Init will record the error and subsequent reads of the underlying
+// New returns an object that caches bytes from initFn. If initFn returns an
+// error, Init will record the error and subsequent reads of the underlying
 // buffer will fail.
-func NewCache(initFn func() ([]byte, error)) *Cache {
-	return &Cache{initFn: initFn}
+func New(initFn func() ([]byte, error)) *T {
+	return &T{initFn: initFn}
 }
 
-// Init initializes a Cache. This method is synchronized and idempotent.
-func (cache *Cache) Init() {
+// Init initializes a zcache. This method is synchronized and idempotent.
+func (cache *T) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
@@ -50,7 +48,7 @@ func (cache *Cache) Init() {
 // This method is synchronized with a read-lock and may be called concurrently
 // from multiple goroutines. The immutability of the underlying buffer is only
 // guaranteed during the lifetime of f.
-func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
+func (cache *T) WithByteReader(f func(*bytes.Reader)) error {
 	if atomic.LoadUint32(&cache.done) == 0 {
 		cache.Init()
 	}
@@ -66,29 +64,30 @@ func (cache *Cache) WithByteReader(f func(*bytes.Reader)) error {
 	return nil
 }
 
-var errReadAfterClear = errors.New("cannot read cleared zero.Cache")
+// ErrReadAfterClear is returned when trying to read from a cleared zcache.
+var ErrReadAfterClear = errors.New("cannot read cleared zcache.T")
 
 // Clear zeroes and truncates the underlying buffer without resetting it.
 // Cleared Caches cannot be read. This method is synchronized.
-func (cache *Cache) Clear() {
+func (cache *T) Clear() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 1)
-	ClearBytes(cache.bytes)
+	zero.ClearBytes(cache.bytes)
 	cache.bytes = cache.bytes[:0]
 	if cache.err == nil {
-		cache.err = errReadAfterClear
+		cache.err = ErrReadAfterClear
 	}
 }
 
 // Reset clears and truncates the underlying buffer and forgets initialization
-// errors. A Cache that has been Reset can be re-initialized with Init. This
+// errors. A zcache that has been Reset can be re-initialized with Init. This
 // method is synchronized
-func (cache *Cache) Reset() {
+func (cache *T) Reset() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 0)
-	ClearBytes(cache.bytes)
+	zero.ClearBytes(cache.bytes)
 	cache.bytes = cache.bytes[:0]
 	cache.err = nil
 }
