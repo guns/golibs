@@ -17,32 +17,47 @@ func GetTTYState(fd uintptr, termios *syscall.Termios) error {
 	return err
 }
 
-// SetTTYState sets at least one of the changes requested in termios were
-// carried out. It may therefore be necessary to call SetTTYState multiple
-// times to make multiple changes to the TTY indicated by fd. See tcsetattr(3)
-// for more details.
+// SetTTYState alters the TTY state of fd to termios.
 func SetTTYState(fd uintptr, termios *syscall.Termios) error {
-	_, _, err := Ioctl(fd, syscall.TCSETS, uintptr(unsafe.Pointer(termios)))
-	return err
+	// tcsetattr(3):
+	// Note that tcsetattr() returns success if any of the requested changes
+	// could be successfully carried out. Therefore, when making multiple changes
+	// it may be necessary to follow this call with a further call to tcgetattr()
+	// to check that all changes have been performed successfully.
+	state := syscall.Termios{}
+	for {
+		_, _, err := Ioctl(fd, syscall.TCSETS, uintptr(unsafe.Pointer(termios)))
+		if err != nil {
+			return err
+		}
+
+		if err := GetTTYState(fd, &state); err != nil {
+			return err
+		}
+
+		if state == *termios {
+			return nil
+		}
+	}
 }
 
-// DisableTTYCanonicalMode disables the ICANON flag in the TTY indicated by fd
-// and returns a function that will return the TTY to its original state. If
-// fd is not a TTY or the change was not successful, an error is returned and
-// a nil restoreTTY function is returned.
-func DisableTTYCanonicalMode(fd uintptr) (restoreTTY func() error, err error) {
+// AlterTTY changes the TTY indicated by fd to the termios struct returned by
+// f, which receives the current TTY state. A function is returned that will
+// return the TTY to its original state if it was altered. If the TTY was not
+// altered, restoreTTY will be nil.
+func AlterTTY(fd uintptr, f func(syscall.Termios) syscall.Termios) (restoreTTY func() error, err error) {
 	oldstate := syscall.Termios{}
 
 	if err := GetTTYState(fd, &oldstate); err != nil {
 		return nil, err
 	}
 
-	newstate := oldstate
-	newstate.Lflag &^= syscall.ICANON
+	restoreTTY = func() error { return SetTTYState(fd, &oldstate) }
+	newstate := f(oldstate)
 
 	if err := SetTTYState(fd, &newstate); err != nil {
-		return nil, err
+		return restoreTTY, err
 	}
 
-	return func() error { return SetTTYState(fd, &oldstate) }, nil
+	return restoreTTY, nil
 }
