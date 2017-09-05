@@ -91,7 +91,7 @@ func TestEditPipe(t *testing.T) {
 
 		for i := range p.wbuf {
 			if p.wbuf[i] != 0 {
-				t.Error("should be clear: %#v", p.wbuf)
+				t.Errorf("should be clear: %#v", p.wbuf)
 				break
 			}
 		}

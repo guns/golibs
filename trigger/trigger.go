@@ -2,8 +2,8 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// Package trigger provides a simple, but flexible way to communicate state
-// transitions.
+// Package trigger provides a simple, but flexible way to communicate a single
+// state transition.
 package trigger
 
 import "sync/atomic"

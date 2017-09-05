@@ -21,7 +21,7 @@ const (
 	go1_9
 )
 
-var goBufferVersion int = goVersionUnknown
+var goBufferVersion = goVersionUnknown
 
 func init() {
 	v := runtime.Version()
