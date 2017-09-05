@@ -36,6 +36,7 @@ func TestEditPipe(t *testing.T) {
 		{input: "123456789", buflen: 8, expect: "12345678"},
 		{input: "1234567890\x15\n", buflen: 8, expect: "12345678\n"},
 		{input: "1\n23\n456\n7890\n", buflen: 8, expect: "1\n23\n456\n7890\n"},
+		{input: "123\n", buflen: 1, expect: "123\n"},
 		{
 			input: "foo bar baz\n",
 			editFn: func(i int, b byte) Op {
