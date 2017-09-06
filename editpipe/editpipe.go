@@ -75,9 +75,7 @@ func New(r io.Reader, w io.WriteCloser, secure bool, buflen int, f EditFn) *T {
 		w:      w,
 		rbuf:   make([]byte, 1),
 		wbuf:   make([]byte, buflen),
-		i:      0,
 		secure: secure,
-		done:   false,
 	}
 }
 
