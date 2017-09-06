@@ -9,6 +9,18 @@ package sys
 import (
 	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
+)
+
+// SetTTYIoctl identifies the three tcsetattr ioctls described in ioctl_tty(2)
+type SetTTYIoctl uintptr
+
+// These are typed for compile time safety.
+const (
+	TCSETS  SetTTYIoctl = unix.TCSETS
+	TCSETSW             = unix.TCSETSW
+	TCSETSF             = unix.TCSETSF
 )
 
 // GetTTYState writes the TTY state of fd to termios.
@@ -17,8 +29,8 @@ func GetTTYState(fd uintptr, termios *syscall.Termios) error {
 	return err
 }
 
-// SetTTYState alters the TTY state of fd to termios.
-func SetTTYState(fd uintptr, termios *syscall.Termios) error {
+// SetTTYState alters the TTY state of fd to match termios.
+func SetTTYState(fd uintptr, action SetTTYIoctl, termios *syscall.Termios) error {
 	// tcsetattr(3):
 	// Note that tcsetattr() returns success if any of the requested changes
 	// could be successfully carried out. Therefore, when making multiple changes
@@ -26,7 +38,7 @@ func SetTTYState(fd uintptr, termios *syscall.Termios) error {
 	// to check that all changes have been performed successfully.
 	state := syscall.Termios{}
 	for {
-		_, _, err := Ioctl(fd, syscall.TCSETS, uintptr(unsafe.Pointer(termios)))
+		_, _, err := Ioctl(fd, uintptr(action), uintptr(unsafe.Pointer(termios)))
 		if err != nil {
 			return err
 		}
@@ -45,17 +57,17 @@ func SetTTYState(fd uintptr, termios *syscall.Termios) error {
 // f, which receives the current TTY state. A function is returned that will
 // return the TTY to its original state if it was altered. If the TTY was not
 // altered, restoreTTY will be nil.
-func AlterTTY(fd uintptr, f func(syscall.Termios) syscall.Termios) (restoreTTY func() error, err error) {
+func AlterTTY(fd uintptr, action SetTTYIoctl, f func(syscall.Termios) syscall.Termios) (restoreTTY func() error, err error) {
 	oldstate := syscall.Termios{}
 
 	if err := GetTTYState(fd, &oldstate); err != nil {
 		return nil, err
 	}
 
-	restoreTTY = func() error { return SetTTYState(fd, &oldstate) }
+	restoreTTY = func() error { return SetTTYState(fd, action, &oldstate) }
 	newstate := f(oldstate)
 
-	if err := SetTTYState(fd, &newstate); err != nil {
+	if err := SetTTYState(fd, action, &newstate); err != nil {
 		return restoreTTY, err
 	}
 
