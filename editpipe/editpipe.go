@@ -62,7 +62,7 @@ type T struct {
 // or when w is closed.
 //
 // w is closed when a read from r returns an error or EOF.
-func New(r io.Reader, w io.WriteCloser, secure bool, buflen int, f EditFn) *T {
+func New(r io.Reader, w io.WriteCloser, buflen int, secure bool, f EditFn) *T {
 	if buflen < 1 {
 		buflen = 4096
 	}

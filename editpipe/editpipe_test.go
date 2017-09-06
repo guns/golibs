@@ -61,7 +61,7 @@ func TestEditPipe(t *testing.T) {
 
 	for _, row := range data {
 		r, w := io.Pipe()
-		p := New(strings.NewReader(row.input), w, true, row.buflen, row.editFn)
+		p := New(strings.NewReader(row.input), w, row.buflen, true, row.editFn)
 		wg := sync.WaitGroup{}
 		var perr error
 
