@@ -7,10 +7,7 @@
 // Package sys provides convenience functions around syscalls.
 package sys
 
-import (
-	"os"
-	"syscall"
-)
+import "syscall"
 
 // Ioctl is a simple wrapper around syscall.Syscall(syscall.SYS_IOCTL, …).
 // Returns nil if the syscall.Errno equals 0.
@@ -20,14 +17,4 @@ func Ioctl(a1, a2, a3 uintptr) (r1, r2 uintptr, err error) {
 		err = errno
 	}
 	return
-}
-
-// Pipe is a wrapper around pipe(2). Returns nil *os.File objects on error.
-func Pipe() (r, w *os.File, err error) {
-	fildes := make([]int, 2)
-	if err := syscall.Pipe(fildes); err != nil {
-		return nil, nil, err
-	}
-
-	return os.NewFile(uintptr(fildes[0]), "r"), os.NewFile(uintptr(fildes[1]), "w"), nil
 }
