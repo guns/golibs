@@ -74,7 +74,7 @@ func TestEditReader(t *testing.T) {
 			expect: "one  three  five\n",
 		},
 		{
-			// This case tests handlind of unread data after close
+			// This case tests handling of unread data after close
 			input: "foo\b\x7f\x17\x15\x04bar\n\x07baz\n\x07",
 			editFn: func(i int, b byte) Op {
 				if b == 0x07 {
