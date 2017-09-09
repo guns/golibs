@@ -32,7 +32,7 @@ func New(initFn func() ([]byte, error)) *T {
 	return &T{initFn: initFn}
 }
 
-// Init initializes a zcache. This method is synchronized and idempotent.
+// Init initializes a zerocache. This method is synchronized and idempotent.
 func (cache *T) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
@@ -66,8 +66,8 @@ func (cache *T) WithByteReader(f func(*bytes.Reader)) error {
 	return nil
 }
 
-// ErrReadAfterClear is returned when trying to read from a cleared zcache.
-var ErrReadAfterClear = errors.New("cannot read cleared zcache.T")
+// ErrReadAfterClear is returned when trying to read from a cleared zerocache.
+var ErrReadAfterClear = errors.New("cannot read cleared zerocache.T")
 
 // Clear zeroes and truncates the underlying buffer without resetting it.
 // Cleared Caches cannot be read. This method is synchronized.
@@ -83,8 +83,8 @@ func (cache *T) Clear() {
 }
 
 // Reset clears and truncates the underlying buffer and forgets initialization
-// errors. A zcache that has been Reset can be re-initialized with Init. This
-// method is synchronized
+// errors. A zerocache that has been Reset can be re-initialized with Init.
+// This method is synchronized.
 func (cache *T) Reset() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()

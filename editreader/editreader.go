@@ -100,17 +100,15 @@ func (e *T) Read(dst []byte) (n int, err error) {
 	return e.readAvailable(dst)
 }
 
-// WriteTo implements WriterTo. This is explicitly to avoid use of a transfer
-// buffer in io.Copy, which is called by exec.Cmd to pipe data from a non-file
-// stdin.
+// WriteTo implements WriterTo, and has been explicitly provided to avoid use
+// of a transfer buffer in io.Copy, which is called by exec.Cmd to pipe data
+// from a non-file stdin.
 func (e *T) WriteTo(w io.Writer) (n int64, err error) {
-	var i, j int
-	var rerr, werr error
 	buf := make([]byte, 4096)
 	for {
-		i, rerr = e.Read(buf)
+		i, rerr := e.Read(buf)
 		if i > 0 {
-			j, werr = w.Write(buf[:i])
+			j, werr := w.Write(buf[:i])
 			n += int64(j)
 			if werr != nil {
 				err = werr
@@ -127,8 +125,8 @@ func (e *T) WriteTo(w io.Writer) (n int64, err error) {
 	return n, err
 }
 
-// readAvailable copies unread data into dst. The available flag is cleared
-// if no unread data remains.
+// readAvailable copies unread data into dst. The available flag is cleared if
+// no unread data remains.
 // WARNING: This method assumes the buffer is available for read!
 func (e *T) readAvailable(dst []byte) (n int, err error) {
 	n = copy(dst, e.buf[e.r:e.w])
