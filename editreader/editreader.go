@@ -80,24 +80,14 @@ func New(r io.Reader, buflen int, secure bool, f EditFn) *T {
 // data available, data is read and processed from the source reader until it
 // is flushed and available for read.
 func (e *T) Read(dst []byte) (n int, err error) {
-	if e.available {
-		return e.readAvailable(dst)
-	}
-
-	if e.done {
-		return 0, e.rerr
-	}
-
 	for {
-		e.scan()
 		if e.available {
-			break
+			return e.readAvailable(dst)
 		} else if e.done {
 			return 0, e.rerr
 		}
+		e.scan()
 	}
-
-	return e.readAvailable(dst)
 }
 
 // WriteTo implements WriterTo, and has been explicitly provided to avoid use
