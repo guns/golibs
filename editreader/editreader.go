@@ -122,6 +122,9 @@ func (e *T) WriteTo(w io.Writer) (n int64, err error) {
 			break
 		}
 	}
+	if e.secure {
+		clearbytes(buf)
+	}
 	return n, err
 }
 
