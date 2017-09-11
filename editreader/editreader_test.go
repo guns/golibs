@@ -136,13 +136,11 @@ func TestEditReader(t *testing.T) {
 
 func readall(r *T, out, buf []byte, writeTo bool) ([]byte, []byte, error) {
 	var n int
-	var n64 int64
 	var err error
 
 	if writeTo {
 		bbuf := bytes.Buffer{}
-		n64, err = r.WriteTo(&bbuf)
-		n = int(n64)
+		_, err = r.WriteTo(&bbuf)
 		out = append(out, bbuf.Bytes()...)
 		if err == nil {
 			err = io.EOF

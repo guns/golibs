@@ -67,9 +67,5 @@ func AlterTTY(fd uintptr, action SetTTYIoctl, f func(syscall.Termios) syscall.Te
 	restoreTTY = func() error { return SetTTYState(fd, action, &oldstate) }
 	newstate := f(oldstate)
 
-	if err := SetTTYState(fd, action, &newstate); err != nil {
-		return restoreTTY, err
-	}
-
-	return restoreTTY, nil
+	return restoreTTY, SetTTYState(fd, action, &newstate)
 }

@@ -42,7 +42,7 @@ type T struct {
 	buf       []byte    // Edit buffer
 	r         int       // Next edit buffer read index
 	w         int       // Next edit buffer write index
-	rerr      error     // Error to return readers after close
+	err       error     // Error to return readers after close
 	available bool      // Set on Flush, cleared after full read
 	overflow  bool      // Set when an Append would overflow the edit buffer
 	done      bool      // Set on read error/EOF or Close Op
@@ -84,7 +84,7 @@ func (e *T) Read(dst []byte) (n int, err error) {
 		if e.available {
 			return e.readAvailable(dst)
 		} else if e.done {
-			return 0, e.rerr
+			return 0, e.err
 		}
 		e.scan()
 	}
@@ -244,9 +244,9 @@ func (e *T) closeWithError(err error) {
 		return
 	}
 	e.done = true
-	e.rerr = err
+	e.err = err
 	if err == nil {
-		e.rerr = io.EOF
+		e.err = io.EOF
 	}
 	if e.secure {
 		e.rbuf[0] = 0
