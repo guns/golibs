@@ -2,8 +2,8 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// Package errjoin provides a simple function that combines multiple errors.
-package errjoin
+// Package errutil provides a simple functions for working with errors.
+package errutil
 
 import (
 	"errors"
@@ -26,4 +26,14 @@ func Join(sep string, errs ...error) error {
 	}
 
 	return errors.New(strings.Join(errorStrings, sep))
+}
+
+// First returns the first non-nil error in errs.
+func First(errs ...error) error {
+	for i := range errs {
+		if errs[i] != nil {
+			return errs[i]
+		}
+	}
+	return nil
 }
