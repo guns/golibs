@@ -53,11 +53,14 @@ func SetTTYState(fd uintptr, action SetTTYIoctl, termios *syscall.Termios) error
 	}
 }
 
-// AlterTTY changes the TTY indicated by fd to the termios struct returned by
-// f, which receives the current TTY state. A function is returned that will
-// return the TTY to its original state if it was altered. If the TTY was not
-// altered, restoreTTY will be nil.
-func AlterTTY(fd uintptr, action SetTTYIoctl, f func(syscall.Termios) syscall.Termios) (restoreTTY func() error, err error) {
+// AlterTTY provides a simple way to change a TTY and restore it later.
+//
+// Function f receives a copy of the current TTY state of fd and modifies it.
+// The TTY indicated by fd is then changed to match this modified state.
+//
+// A function is returned that will return the TTY to its original state if it
+// was altered. If the TTY was not altered, restoreTTY will be nil.
+func AlterTTY(fd uintptr, action SetTTYIoctl, f func(*syscall.Termios)) (restoreTTY func() error, err error) {
 	oldstate := syscall.Termios{}
 
 	if err := GetTTYState(fd, &oldstate); err != nil {
@@ -65,7 +68,9 @@ func AlterTTY(fd uintptr, action SetTTYIoctl, f func(syscall.Termios) syscall.Te
 	}
 
 	restoreTTY = func() error { return SetTTYState(fd, action, &oldstate) }
-	newstate := f(oldstate)
+
+	newstate := oldstate
+	f(&newstate)
 
 	return restoreTTY, SetTTYState(fd, action, &newstate)
 }
