@@ -16,5 +16,5 @@ func Ioctl(a1, a2, a3 uintptr) (r1, r2 uintptr, err error) {
 	if errno != 0 {
 		err = errno
 	}
-	return
+	return r1, r2, err
 }
