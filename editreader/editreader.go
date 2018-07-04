@@ -36,12 +36,12 @@ type EditFn func(i int, b byte) Op
 // T wraps a Reader and implements an editable buffer by reading one byte at a
 // time from the wrapped Reader and executing the Ops returned by an EditFn.
 type T struct {
-	f         EditFn
+	editFn    EditFn
 	src       io.Reader // Source
 	rbuf      []byte    // 1-byte buffer for reading from r
 	buf       []byte    // Edit buffer
-	r         int       // Next edit buffer read index
-	w         int       // Next edit buffer write index
+	ridx      int       // Next edit buffer read index
+	widx      int       // Next edit buffer write index
 	err       error     // Error to return readers after close
 	available bool      // Set on Flush, cleared after full read
 	overflow  bool      // Set when an Append would overflow the edit buffer
@@ -68,7 +68,7 @@ func New(r io.Reader, buflen int, secure bool, f EditFn) *T {
 		f = BasicLineEdit
 	}
 	return &T{
-		f:      f,
+		editFn: f,
 		src:    r,
 		rbuf:   make([]byte, 1),
 		buf:    make([]byte, buflen),
@@ -122,15 +122,15 @@ func (e *T) WriteTo(w io.Writer) (n int64, err error) {
 // no unread data remains.
 // WARNING: This method assumes the buffer is available for read!
 func (e *T) readAvailable(dst []byte) (n int, err error) {
-	n = copy(dst, e.buf[e.r:e.w])
-	i := e.r + n
+	n = copy(dst, e.buf[e.ridx:e.widx])
+	i := e.ridx + n
 	if e.secure {
-		clearbytes(e.buf[e.r:i])
+		clearbytes(e.buf[e.ridx:i])
 	}
-	e.r = i
-	if e.r >= e.w {
-		e.r = 0
-		e.w = 0
+	e.ridx = i
+	if e.ridx >= e.widx {
+		e.ridx = 0
+		e.widx = 0
 		e.available = false
 	}
 	return n, nil
@@ -157,7 +157,7 @@ func (e *T) scan() {
 
 // process executes the Ops specified by the EditFn for byte b.
 func (e *T) process(b byte) {
-	ops := e.f(e.w, b)
+	ops := e.editFn(e.widx, b)
 
 	if ops&Erase > 0 {
 		e.erase()
@@ -181,60 +181,60 @@ func (e *T) process(b byte) {
 
 // erase prunes and zeroes the last byte in the edit buffer.
 func (e *T) erase() {
-	if e.w <= 0 {
+	if e.widx <= 0 {
 		return
 	}
-	e.w--
-	e.buf[e.w] = 0
+	e.widx--
+	e.buf[e.widx] = 0
 }
 
 // eraseWord prunes the last sequence of non-whitespace bytes in the write
 // buffer. Multibyte character sequences are unsupported.
 func (e *T) eraseWord() {
-	if e.w <= 0 {
+	if e.widx <= 0 {
 		return
 	}
 
 	// number of boundary transitions
 	n := 2
 
-	e.w--
-	if isWordRune(rune(e.buf[e.w])) {
+	e.widx--
+	if isWordRune(rune(e.buf[e.widx])) {
 		n--
 	}
-	e.buf[e.w] = 0
+	e.buf[e.widx] = 0
 
-	for e.w > 0 {
-		e.w--
-		isword := isWordRune(rune(e.buf[e.w]))
+	for e.widx > 0 {
+		e.widx--
+		isword := isWordRune(rune(e.buf[e.widx]))
 		if n == 2 && isword {
 			n--
 		} else if n == 1 && !isword {
-			e.w++
+			e.widx++
 			break
 		}
-		e.buf[e.w] = 0
+		e.buf[e.widx] = 0
 	}
 }
 
 // kill truncates the edit buffer
 func (e *T) kill() {
 	if e.secure {
-		clearbytes(e.buf[:e.w])
+		clearbytes(e.buf[:e.widx])
 	}
-	e.w = 0
+	e.widx = 0
 }
 
 // append appends a byte to the edit buffer. If this would overflow the
 // buffer, the overflow flag is set and the buffer is marked as available.
 func (e *T) append(b byte) {
-	if e.w >= len(e.buf) {
+	if e.widx >= len(e.buf) {
 		e.overflow = true
 		e.available = true
 		return
 	}
-	e.buf[e.w] = b
-	e.w++
+	e.buf[e.widx] = b
+	e.widx++
 }
 
 // closeWithError marks e as done, and sets err as the error to send to readers. If err
@@ -250,9 +250,9 @@ func (e *T) closeWithError(err error) {
 	}
 	if e.secure {
 		e.rbuf[0] = 0
-		n := e.w
+		n := e.widx
 		if e.available {
-			n = e.r
+			n = e.ridx
 		}
 		clearbytes(e.buf[:n])
 	}
