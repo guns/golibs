@@ -2,7 +2,7 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-package gen
+package generic
 
 import "math/bits"
 

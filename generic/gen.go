@@ -2,9 +2,9 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// Package gen provides generic templates for common data structures and
+// Package generic provides generic templates for common data structures and
 // functions via https://github.com/cheekybits/genny/generic
-package gen
+package generic
 
 import "github.com/cheekybits/genny/generic"
 
