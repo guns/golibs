@@ -42,6 +42,12 @@ func TestTypeQueue(t *testing.T) {
 			out:   []Type{1, 2, 3, 4},
 			state: TypeQueue{a: []Type{1, 2, 3, 4, Type(nil), Type(nil), Type(nil), Type(nil)}, head: -1, tail: -1},
 		},
+		{
+			size:  4,
+			cmds:  []Type{1, 2, -1, -1, 3, 4, 0, 0},
+			out:   []Type{1, 1, 1, 2},
+			state: TypeQueue{a: []Type{1, 2, 3, 4}, head: 2, tail: 0},
+		},
 	}
 
 	for i, row := range data {
@@ -49,9 +55,12 @@ func TestTypeQueue(t *testing.T) {
 		out := make([]Type, 0, len(row.out))
 
 		for _, n := range row.cmds {
-			if n == 0 {
+			switch n {
+			case -1:
+				out = append(out, q.Peek())
+			case 0:
 				out = append(out, q.Dequeue())
-			} else {
+			default:
 				q.Enqueue(n)
 			}
 		}

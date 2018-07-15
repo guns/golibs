@@ -87,6 +87,16 @@ func (q *TypeQueue) Dequeue() Type {
 	return x
 }
 
+// Peek returns the next element from the queue without removing it. Peeking
+// an empty queue results in a panic.
+func (q *TypeQueue) Peek() Type {
+	if q.head == -1 {
+		panic("cannot peek empty TypeQueue")
+	}
+
+	return q.a[q.head]
+}
+
 // Reset the queue so that its length is zero. Note that the internal slice is
 // NOT cleared.
 func (q *TypeQueue) Reset() {
@@ -94,7 +104,7 @@ func (q *TypeQueue) Reset() {
 	q.tail = -1
 }
 
-// Grow internal slice to accomodate at least n more items.
+// Grow internal slice to accommodate at least n more items.
 func (q *TypeQueue) Grow(n int) {
 	n -= cap(q.a) - len(q.a)
 	if n <= 0 {
