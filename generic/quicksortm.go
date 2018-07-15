@@ -4,39 +4,39 @@
 
 package generic
 
-func QuicksortTypeSlice(v []Type, less func(a, b *Type) bool) {
+func QuicksortComparableTypeSlice(v []ComparableType) {
 	switch len(v) {
 	case 0, 1:
 		return
 	case 2:
-		if less(&v[1], &v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	case 3:
-		if less(&v[1], &v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
-		if less(&v[2], &v[1]) {
+		if v[2].Less(&v[1]) {
 			v[1], v[2] = v[2], v[1]
 		}
-		if less(&v[1], &v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	}
 
-	i := PartitionTypeSlice(v, less)
-	QuicksortTypeSlice(v[:i+1], less)
-	QuicksortTypeSlice(v[i+1:], less)
+	i := PartitionComparableTypeSlice(v)
+	QuicksortComparableTypeSlice(v[:i+1])
+	QuicksortComparableTypeSlice(v[i+1:])
 }
 
 // Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionTypeSlice(v []Type, less func(a, b *Type) bool) int {
-	var pivot Type
+func PartitionComparableTypeSlice(v []ComparableType) int {
+	var pivot ComparableType
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeType(v, less)
+		pivot = MedianOfThreeComparableTypeM(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -46,14 +46,14 @@ func PartitionTypeSlice(v []Type, less func(a, b *Type) bool) int {
 	for {
 		for {
 			i++
-			if !less(&v[i], &pivot) {
+			if !v[i].Less(&pivot) {
 				break
 			}
 		}
 
 		for {
 			j--
-			if !less(&pivot, &v[j]) {
+			if !pivot.Less(&v[j]) {
 				break
 			}
 		}
@@ -66,18 +66,18 @@ func PartitionTypeSlice(v []Type, less func(a, b *Type) bool) int {
 	}
 }
 
-func MedianOfThreeType(v []Type, less func(a, b *Type) bool) Type {
+func MedianOfThreeComparableTypeM(v []ComparableType) ComparableType {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]
 
-	if less(&b, &a) {
+	if b.Less(&a) {
 		a, b = b, a
 	}
-	if less(&c, &b) {
+	if c.Less(&b) {
 		b, c = c, b
 	}
-	if less(&b, &a) {
+	if b.Less(&a) {
 		a, b = b, a
 	}
 

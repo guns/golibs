@@ -10,3 +10,4 @@ import "github.com/cheekybits/genny/generic"
 
 type Type generic.Type
 type Number generic.Number
+type ComparableType interface{ Less(x *ComparableType) bool } // generic.Type

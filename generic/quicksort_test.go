@@ -11,15 +11,15 @@ import (
 	"testing"
 )
 
-func randslice(n, max int) []int {
-	v := make([]int, n)
+func randNumberSlice(n, max int) []Number {
+	v := make([]Number, n)
 	if max > 0 {
 		for i := range v {
-			v[i] = rand.Intn(max)
+			v[i] = Number(rand.Intn(max))
 		}
 	} else {
 		for i := range v {
-			v[i] = i
+			v[i] = Number(i)
 		}
 		// Fisher-Yates shuffle
 		for i := len(v) - 1; i >= 0; i-- {
@@ -30,49 +30,34 @@ func randslice(n, max int) []int {
 	return v
 }
 
-func TestQuickSort(t *testing.T) {
-	var r []int
-
+func TestQuicksortNumberSlice(t *testing.T) {
 	for i := 0; i < 100; i++ {
+		var r []Number
+
 		if rand.Intn(2) == 0 {
-			r = randslice(10*i, 0)
+			r = randNumberSlice(10*i, 0)
 		} else {
-			r = randslice(10*i, 5*i)
+			r = randNumberSlice(10*i, 5*i)
 		}
 
-		r1 := make([]Number, len(r))
-		r2 := make([]Type, len(r))
-		s := make([]int, len(r))
 		s1 := make([]int, len(r))
 		s2 := make([]int, len(r))
 
-		copy(s, r)
-
-		for i, n := range r {
-			r1[i] = Number(n)
-			r2[i] = Type(n)
+		for i := range r {
+			s1[i] = int(r[i])
 		}
 
-		sort.Ints(s)
-		QuicksortNumberSlice(r1)
-		QuicksortTypeSliceF(r2, func(a, b Type) bool { return a.(int) < b.(int) })
+		sort.Ints(s1)
+		QuicksortNumberSlice(r)
 
-		for i := 0; i < len(s); i++ {
-			s1[i] = int(r1[i])
-			s2[i] = r2[i].(int)
+		for i := range r {
+			s2[i] = int(r[i])
 		}
 
-		if !reflect.DeepEqual(s1, s) {
+		if !reflect.DeepEqual(s2, s1) {
 			t.Logf("QuicksortNumberSlice:")
-			t.Logf("%v !=", s1)
-			t.Logf("%v", s)
-			t.Fail()
-		}
-
-		if !reflect.DeepEqual(s2, s) {
-			t.Logf("QuicksortTypeSliceF:")
 			t.Logf("%v !=", s2)
-			t.Logf("%v", s)
+			t.Logf("%v", s1)
 			t.Fail()
 		}
 	}
