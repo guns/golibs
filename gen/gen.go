@@ -5,3 +5,7 @@
 // Package gen provides generic templates for common data structures and
 // functions via https://github.com/cheekybits/genny/generic
 package gen
+
+import "github.com/cheekybits/genny/generic"
+
+type Type generic.Type

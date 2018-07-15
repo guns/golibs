@@ -4,13 +4,7 @@
 
 package gen
 
-import (
-	"math/bits"
-
-	"github.com/cheekybits/genny/generic"
-)
-
-type Type generic.Type
+import "math/bits"
 
 // A TypeQueue is an auto-growing queue backed by a ring buffer.
 type TypeQueue struct {
@@ -22,8 +16,8 @@ type TypeQueue struct {
 // non-positive size.
 const DefaultQueueLen = 8
 
-// NewTypeQueue returns a new queue with the given size rounded to the next
-// power of two, or DefaultQueueLen if size <= 0.
+// NewTypeQueue returns a new queue that can accommodate at least size items,
+// or DefaultQueueLen if size <= 0.
 func NewTypeQueue(size int) *TypeQueue {
 	if size <= 0 {
 		size = DefaultQueueLen
@@ -47,9 +41,9 @@ func (q *TypeQueue) Len() int {
 	}
 }
 
-// Enqueue adds a new element into the queue. If adding this element would
-// overflow the queue, the current queue is moved to a new TypeQueue twice the
-// size of the original before adding the element.
+// Enqueue a new element into the queue. If adding this element would overflow
+// the queue, the current queue is moved to a new TypeQueue twice the size of
+// the original before adding the element.
 func (q *TypeQueue) Enqueue(x Type) {
 	if q.tail == -1 {
 		q.head = 0
