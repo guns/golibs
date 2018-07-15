@@ -17,6 +17,7 @@ func (p *Person) Less(x *Person) bool {
 	return p.age < x.age
 }
 
+// PersonSlice is a type that implements sort.Interface
 type PersonSlice []Person
 
 func (p PersonSlice) Len() int      { return len(p) }

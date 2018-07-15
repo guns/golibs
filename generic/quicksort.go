@@ -4,10 +4,13 @@
 
 package generic
 
+// QuicksortNumberSlice sorts a slice of Number in place. Elements of type
+// Number must be comparable by value.
 func QuicksortNumberSlice(v []Number) {
 	switch len(v) {
 	case 0, 1:
 		return
+	// Manually sort small slices
 	case 2:
 		if v[1] < v[0] {
 			v[0], v[1] = v[1], v[0]
@@ -31,12 +34,15 @@ func QuicksortNumberSlice(v []Number) {
 	QuicksortNumberSlice(v[i+1:])
 }
 
-// Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionNumberSlice(v []Number) int {
+// PartitionNumberSlice partitions a slice of Number in place such that every
+// element 0..index is less than or equal to every element index+1..len(v-1).
+// Elements of type Number must be comparable by value.
+func PartitionNumberSlice(v []Number) (index int) {
+	// Hoare's partitioning with median of first, middle, and last as pivot
 	var pivot Number
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeNumber(v)
+		pivot = MedianOfThreeNumberSamples(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -66,7 +72,9 @@ func PartitionNumberSlice(v []Number) int {
 	}
 }
 
-func MedianOfThreeNumber(v []Number) Number {
+// MedianOfThreeNumberSamples returns the median of the first, middle, and
+// last element. Elements of type Number must be comparable by value.
+func MedianOfThreeNumberSamples(v []Number) Number {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]

@@ -4,10 +4,16 @@
 
 package generic
 
+// QuicksortComparableTypeSlice sorts a slice of ComparableType in place.
+// ComparableType must define the following method:
+//
+//	Less(*ComparableType) bool
+//
 func QuicksortComparableTypeSlice(v []ComparableType) {
 	switch len(v) {
 	case 0, 1:
 		return
+	// Manually sort small slices
 	case 2:
 		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
@@ -31,12 +37,18 @@ func QuicksortComparableTypeSlice(v []ComparableType) {
 	QuicksortComparableTypeSlice(v[i+1:])
 }
 
-// Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionComparableTypeSlice(v []ComparableType) int {
+// PartitionComparableTypeSlice partitions a slice of ComparableType in place
+// such that every element 0..index is less than or equal to every element
+// index+1..len(v-1). ComparableType must define the following method:
+//
+//	Less(*ComparableType) bool
+//
+func PartitionComparableTypeSlice(v []ComparableType) (index int) {
+	// Hoare's partitioning with median of first, middle, and last as pivot
 	var pivot ComparableType
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeComparableTypeM(v)
+		pivot = MedianOfThreeComparableTypeSamples(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -66,7 +78,12 @@ func PartitionComparableTypeSlice(v []ComparableType) int {
 	}
 }
 
-func MedianOfThreeComparableTypeM(v []ComparableType) ComparableType {
+// MedianOfThreeComparableTypeSamples returns the median of the first, middle,
+// and last element. ComparableType must define the following method:
+//
+//	Less(*ComparableType) bool
+//
+func MedianOfThreeComparableTypeSamples(v []ComparableType) ComparableType {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]
