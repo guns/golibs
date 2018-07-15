@@ -1,38 +1,38 @@
 package gen
 
-func QuicksortTypeSliceF(v []Type, less func(a, b Type) bool) {
+func QuicksortNumberSlice(v []Number) {
 	switch len(v) {
 	case 0, 1:
 		return
 	case 2:
-		if less(v[1], v[0]) {
+		if v[1] < v[0] {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	case 3:
-		if less(v[1], v[0]) {
+		if v[1] < v[0] {
 			v[0], v[1] = v[1], v[0]
 		}
-		if less(v[2], v[1]) {
+		if v[2] < v[1] {
 			v[1], v[2] = v[2], v[1]
 		}
-		if less(v[1], v[0]) {
+		if v[1] < v[0] {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	}
 
-	i := PartitionTypeSliceF(v, less)
-	QuicksortTypeSliceF(v[:i+1], less)
-	QuicksortTypeSliceF(v[i+1:], less)
+	i := PartitionNumberSlice(v)
+	QuicksortNumberSlice(v[:i+1])
+	QuicksortNumberSlice(v[i+1:])
 }
 
 // Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionTypeSliceF(v []Type, less func(a, b Type) bool) int {
-	var pivot Type
+func PartitionNumberSlice(v []Number) int {
+	var pivot Number
 
 	if len(v) > 16 {
-		pivot = medianOfThreeTypeF(v, less)
+		pivot = MedianOfThreeNumber(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -42,14 +42,14 @@ func PartitionTypeSliceF(v []Type, less func(a, b Type) bool) int {
 	for {
 		for {
 			i++
-			if !less(v[i], pivot) {
+			if v[i] >= pivot {
 				break
 			}
 		}
 
 		for {
 			j--
-			if !less(pivot, v[j]) {
+			if v[j] <= pivot {
 				break
 			}
 		}
@@ -62,18 +62,18 @@ func PartitionTypeSliceF(v []Type, less func(a, b Type) bool) int {
 	}
 }
 
-func medianOfThreeTypeF(v []Type, less func(a, b Type) bool) Type {
+func MedianOfThreeNumber(v []Number) Number {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]
 
-	if less(b, a) {
+	if b < a {
 		a, b = b, a
 	}
-	if less(c, b) {
+	if c < b {
 		b, c = c, b
 	}
-	if less(b, a) {
+	if b < a {
 		a, b = b, a
 	}
 
