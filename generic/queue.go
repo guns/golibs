@@ -12,15 +12,15 @@ type GenericTypeQueue struct {
 	head, tail int
 }
 
-// DefaultQueueLen is the default size of a GenericTypeQueue that is created
-// with a non-positive size.
-const DefaultQueueLen = 8
+// DefaultGenericTypeQueueLen is the default size of a GenericTypeQueue that
+// is created with a non-positive size.
+const DefaultGenericTypeQueueLen = 8
 
 // NewGenericTypeQueue returns a new queue that can accommodate at least size
 // items, or DefaultQueueLen if size <= 0.
 func NewGenericTypeQueue(size int) *GenericTypeQueue {
 	if size <= 0 {
-		size = DefaultQueueLen
+		size = DefaultGenericTypeQueueLen
 	}
 	return &GenericTypeQueue{
 		a:    make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),

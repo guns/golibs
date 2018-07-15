@@ -12,15 +12,15 @@ type GenericTypeStack struct {
 	i int
 }
 
-// DefaultStackLen is the default size of a GenericTypeStack that is created
-// with a non-positive size.
-const DefaultStackLen = 8
+// DefaultGenericTypeStackLen is the default size of a GenericTypeStack that
+// is created with a non-positive size.
+const DefaultGenericTypeStackLen = 8
 
 // NewGenericTypeStack returns a new stack that can accommodate at least size items,
 // or DefaultStackLen if size <= 0.
 func NewGenericTypeStack(size int) *GenericTypeStack {
 	if size <= 0 {
-		size = DefaultStackLen
+		size = DefaultGenericTypeStackLen
 	}
 	return &GenericTypeStack{
 		a: make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
