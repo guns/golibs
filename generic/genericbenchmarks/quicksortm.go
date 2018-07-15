@@ -8,10 +8,16 @@
 
 package genericbenchmarks
 
+// QuicksortPersonSlice sorts a slice of Person in place.
+// Person must define the following method:
+//
+// Less(*Person) bool
+//
 func QuicksortPersonSlice(v []Person) {
 	switch len(v) {
 	case 0, 1:
 		return
+	// Manually sort small slices
 	case 2:
 		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
@@ -35,12 +41,18 @@ func QuicksortPersonSlice(v []Person) {
 	QuicksortPersonSlice(v[i+1:])
 }
 
-// Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionPersonSlice(v []Person) int {
+// PartitionPersonSlice partitions a slice of Person in place
+// such that every element 0..index is less than or equal to every element
+// index+1..len(v-1). Person must define the following method:
+//
+// Less(*Person) bool
+//
+func PartitionPersonSlice(v []Person) (index int) {
+	// Hoare's partitioning with median of first, middle, and last as pivot
 	var pivot Person
 
 	if len(v) > 16 {
-		pivot = MedianOfThreePersonM(v)
+		pivot = MedianOfThreePersonSamples(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -70,7 +82,12 @@ func PartitionPersonSlice(v []Person) int {
 	}
 }
 
-func MedianOfThreePersonM(v []Person) Person {
+// MedianOfThreePersonSamples returns the median of the first, middle,
+// and last element. Person must define the following method:
+//
+// Less(*Person) bool
+//
+func MedianOfThreePersonSamples(v []Person) Person {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]

@@ -13,50 +13,50 @@ func TestQueue(t *testing.T) {
 	data := []struct {
 		size  int
 		cmds  []int
-		out   []Type
-		state TypeQueue
+		out   []GenericType
+		state GenericTypeQueue
 	}{
 		{
 			size:  1,
 			cmds:  []int{1, 0, 2, 0},
-			out:   []Type{1, 2},
-			state: TypeQueue{a: []Type{2}, head: -1, tail: -1},
+			out:   []GenericType{1, 2},
+			state: GenericTypeQueue{a: []GenericType{2}, head: -1, tail: -1},
 		},
 		{
 			size:  1,
 			cmds:  []int{1, 2, 0, 0},
-			out:   []Type{1, 2},
-			state: TypeQueue{a: []Type{1, 2}, head: -1, tail: -1},
+			out:   []GenericType{1, 2},
+			state: GenericTypeQueue{a: []GenericType{1, 2}, head: -1, tail: -1},
 		},
 		{
 			size:  4,
 			cmds:  []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			out:   []Type{1, 2, 3, 4},
-			state: TypeQueue{a: []Type{3, 4, 5, 6, 7, 8, Type(nil), Type(nil)}, head: 2, tail: 6},
+			out:   []GenericType{1, 2, 3, 4},
+			state: GenericTypeQueue{a: []GenericType{3, 4, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, head: 2, tail: 6},
 		},
 		{
 			size:  5,
 			cmds:  []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			out:   []Type{1, 2, 3, 4},
-			state: TypeQueue{a: []Type{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
+			out:   []GenericType{1, 2, 3, 4},
+			state: GenericTypeQueue{a: []GenericType{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
 		},
 		{
 			size:  0,
 			cmds:  []int{1, 2, 3, 4, 0, 0, 0, 0},
-			out:   []Type{1, 2, 3, 4},
-			state: TypeQueue{a: []Type{1, 2, 3, 4, Type(nil), Type(nil), Type(nil), Type(nil)}, head: -1, tail: -1},
+			out:   []GenericType{1, 2, 3, 4},
+			state: GenericTypeQueue{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, head: -1, tail: -1},
 		},
 		{
 			size:  4,
 			cmds:  []int{1, 2, -1, -1, 3, 4, 0, 0},
-			out:   []Type{1, 1, 1, 2},
-			state: TypeQueue{a: []Type{1, 2, 3, 4}, head: 2, tail: 0},
+			out:   []GenericType{1, 1, 1, 2},
+			state: GenericTypeQueue{a: []GenericType{1, 2, 3, 4}, head: 2, tail: 0},
 		},
 	}
 
 	for i, row := range data {
-		q := NewTypeQueue(row.size)
-		out := make([]Type, 0, len(row.out))
+		q := NewGenericTypeQueue(row.size)
+		out := make([]GenericType, 0, len(row.out))
 
 		for _, n := range row.cmds {
 			switch n {

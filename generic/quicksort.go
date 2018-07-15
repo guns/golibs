@@ -4,9 +4,9 @@
 
 package generic
 
-// QuicksortNumberSlice sorts a slice of Number in place. Elements of type
-// Number must be comparable by value.
-func QuicksortNumberSlice(v []Number) {
+// QuicksortGenericNumberSlice sorts a slice of GenericNumber in place.
+// Elements of type GenericNumber must be comparable by value.
+func QuicksortGenericNumberSlice(v []GenericNumber) {
 	switch len(v) {
 	case 0, 1:
 		return
@@ -29,20 +29,20 @@ func QuicksortNumberSlice(v []Number) {
 		return
 	}
 
-	i := PartitionNumberSlice(v)
-	QuicksortNumberSlice(v[:i+1])
-	QuicksortNumberSlice(v[i+1:])
+	i := PartitionGenericNumberSlice(v)
+	QuicksortGenericNumberSlice(v[:i+1])
+	QuicksortGenericNumberSlice(v[i+1:])
 }
 
-// PartitionNumberSlice partitions a slice of Number in place such that every
-// element 0..index is less than or equal to every element index+1..len(v-1).
-// Elements of type Number must be comparable by value.
-func PartitionNumberSlice(v []Number) (index int) {
+// PartitionGenericNumberSlice partitions a slice of GenericNumber in place
+// such that every element 0..index is less than or equal to every element
+// index+1..len(v-1). Elements of type GenericNumber must be comparable by value.
+func PartitionGenericNumberSlice(v []GenericNumber) (index int) {
 	// Hoare's partitioning with median of first, middle, and last as pivot
-	var pivot Number
+	var pivot GenericNumber
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeNumberSamples(v)
+		pivot = MedianOfThreeGenericNumberSamples(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -72,9 +72,9 @@ func PartitionNumberSlice(v []Number) (index int) {
 	}
 }
 
-// MedianOfThreeNumberSamples returns the median of the first, middle, and
-// last element. Elements of type Number must be comparable by value.
-func MedianOfThreeNumberSamples(v []Number) Number {
+// MedianOfThreeGenericNumberSamples returns the median of the first, middle,
+// and last element. Elements of type GenericNumber must be comparable by value.
+func MedianOfThreeGenericNumberSamples(v []GenericNumber) GenericNumber {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]

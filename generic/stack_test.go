@@ -13,44 +13,44 @@ func TestStack(t *testing.T) {
 	data := []struct {
 		size  int
 		cmds  []int
-		out   []Type
-		state TypeStack
+		out   []GenericType
+		state GenericTypeStack
 	}{
 		{
 			size:  1,
 			cmds:  []int{1, 0, 2, 0},
-			out:   []Type{1, 2},
-			state: TypeStack{a: []Type{2}, i: -1},
+			out:   []GenericType{1, 2},
+			state: GenericTypeStack{a: []GenericType{2}, i: -1},
 		},
 		{
 			size:  1,
 			cmds:  []int{1, 2, 0, 0},
-			out:   []Type{2, 1},
-			state: TypeStack{a: []Type{1, 2}, i: -1},
+			out:   []GenericType{2, 1},
+			state: GenericTypeStack{a: []GenericType{1, 2}, i: -1},
 		},
 		{
 			size:  4,
 			cmds:  []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			out:   []Type{4, 3, 8, 7},
-			state: TypeStack{a: []Type{1, 2, 5, 6, 7, 8, Type(nil), Type(nil)}, i: 3},
+			out:   []GenericType{4, 3, 8, 7},
+			state: GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 3},
 		},
 		{
 			size:  5,
 			cmds:  []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			out:   []Type{4, 3, 8, 7},
-			state: TypeStack{a: []Type{1, 2, 5, 6, 7, 8, Type(nil), Type(nil)}, i: 3},
+			out:   []GenericType{4, 3, 8, 7},
+			state: GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 3},
 		},
 		{
 			size:  4,
 			cmds:  []int{1, 2, -1, -1, 3, 4, 0, 0},
-			out:   []Type{2, 2, 4, 3},
-			state: TypeStack{a: []Type{1, 2, 3, 4}, i: 1},
+			out:   []GenericType{2, 2, 4, 3},
+			state: GenericTypeStack{a: []GenericType{1, 2, 3, 4}, i: 1},
 		},
 	}
 
 	for i, row := range data {
-		s := NewTypeStack(row.size)
-		out := make([]Type, 0, len(row.out))
+		s := NewGenericTypeStack(row.size)
+		out := make([]GenericType, 0, len(row.out))
 
 		for _, n := range row.cmds {
 			switch n {

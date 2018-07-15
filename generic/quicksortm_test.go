@@ -166,7 +166,7 @@ func TestQuicksortComparableTypeSlice(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(s2, s1) {
-			t.Logf("QuicksortNumberSlice:")
+			t.Logf("QuicksortGenericNumberSlice:")
 			t.Logf("%v !=", s2)
 			t.Logf("%v", s1)
 			t.Fail()
@@ -190,7 +190,7 @@ func TestMedianOfThreeComparableTypeSamples(t *testing.T) {
 			s[i] = v[i]
 		}
 		if MedianOfThreeComparableTypeSamples(s).(Person).age != 1 {
-			t.Errorf("MedianOfThreeNumberSamples(%v): %v != %v", v, MedianOfThreeComparableTypeSamples(s).(Person).age, 1)
+			t.Errorf("MedianOfThreeGenericNumberSamples(%v): %v != %v", v, MedianOfThreeComparableTypeSamples(s).(Person).age, 1)
 		}
 	}
 }

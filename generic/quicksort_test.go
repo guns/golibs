@@ -11,15 +11,15 @@ import (
 	"testing"
 )
 
-func randNumberSlice(n, max int) []Number {
-	v := make([]Number, n)
+func randGenericNumberSlice(n, max int) []GenericNumber {
+	v := make([]GenericNumber, n)
 	if max > 0 {
 		for i := range v {
-			v[i] = Number(rand.Intn(max))
+			v[i] = GenericNumber(rand.Intn(max))
 		}
 	} else {
 		for i := range v {
-			v[i] = Number(i)
+			v[i] = GenericNumber(i)
 		}
 		// Fisher-Yates shuffle
 		for i := len(v) - 1; i >= 0; i-- {
@@ -30,14 +30,14 @@ func randNumberSlice(n, max int) []Number {
 	return v
 }
 
-func TestQuicksortNumberSlice(t *testing.T) {
+func TestQuicksortGenericNumberSlice(t *testing.T) {
 	for i := 0; i < 100; i++ {
-		var r []Number
+		var r []GenericNumber
 
 		if rand.Intn(2) == 0 {
-			r = randNumberSlice(10*i, 0)
+			r = randGenericNumberSlice(10*i, 0)
 		} else {
-			r = randNumberSlice(10*i, 5*i)
+			r = randGenericNumberSlice(10*i, 5*i)
 		}
 
 		s1 := make([]int, len(r))
@@ -48,14 +48,14 @@ func TestQuicksortNumberSlice(t *testing.T) {
 		}
 
 		sort.Ints(s1)
-		QuicksortNumberSlice(r)
+		QuicksortGenericNumberSlice(r)
 
 		for i := range r {
 			s2[i] = int(r[i])
 		}
 
 		if !reflect.DeepEqual(s2, s1) {
-			t.Logf("QuicksortNumberSlice:")
+			t.Logf("QuicksortGenericNumberSlice:")
 			t.Logf("%v !=", s2)
 			t.Logf("%v", s1)
 			t.Fail()
@@ -63,8 +63,8 @@ func TestQuicksortNumberSlice(t *testing.T) {
 	}
 }
 
-func TestMedianOfThreeNumberSamples(t *testing.T) {
-	data := [][]Number{
+func TestMedianOfThreeGenericNumberSamples(t *testing.T) {
+	data := [][]GenericNumber{
 		{0, 1, 2},
 		{0, 2, 1},
 		{1, 0, 2},
@@ -74,8 +74,8 @@ func TestMedianOfThreeNumberSamples(t *testing.T) {
 	}
 
 	for _, v := range data {
-		if MedianOfThreeNumberSamples(v) != 1 {
-			t.Errorf("MedianOfThreeNumberSamples(%v): %v != %v", v, MedianOfThreeNumberSamples(v), 1)
+		if MedianOfThreeGenericNumberSamples(v) != 1 {
+			t.Errorf("MedianOfThreeGenericNumberSamples(%v): %v != %v", v, MedianOfThreeGenericNumberSamples(v), 1)
 		}
 	}
 }

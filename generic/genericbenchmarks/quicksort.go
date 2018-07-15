@@ -8,10 +8,13 @@
 
 package genericbenchmarks
 
+// QuicksortIntSlice sorts a slice of int in place.
+// Elements of type int must be comparable by value.
 func QuicksortIntSlice(v []int) {
 	switch len(v) {
 	case 0, 1:
 		return
+	// Manually sort small slices
 	case 2:
 		if v[1] < v[0] {
 			v[0], v[1] = v[1], v[0]
@@ -35,12 +38,15 @@ func QuicksortIntSlice(v []int) {
 	QuicksortIntSlice(v[i+1:])
 }
 
-// Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionIntSlice(v []int) int {
+// PartitionIntSlice partitions a slice of int in place
+// such that every element 0..index is less than or equal to every element
+// index+1..len(v-1). Elements of type int must be comparable by value.
+func PartitionIntSlice(v []int) (index int) {
+	// Hoare's partitioning with median of first, middle, and last as pivot
 	var pivot int
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeInt(v)
+		pivot = MedianOfThreeIntSamples(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -70,7 +76,9 @@ func PartitionIntSlice(v []int) int {
 	}
 }
 
-func MedianOfThreeInt(v []int) int {
+// MedianOfThreeIntSamples returns the median of the first, middle,
+// and last element. Elements of type int must be comparable by value.
+func MedianOfThreeIntSamples(v []int) int {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]

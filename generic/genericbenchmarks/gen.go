@@ -2,7 +2,7 @@
 // the standard library.
 package genericbenchmarks
 
-//go:generate genny -pkg=genericbenchmarks -in=../quicksort.go -out=quicksort.go gen Number=int
+//go:generate genny -pkg=genericbenchmarks -in=../quicksort.go -out=quicksort.go gen GenericNumber=int
 //go:generate genny -pkg=genericbenchmarks -in=../quicksortm.go -out=quicksortm.go gen ComparableType=Person
 
 type Person struct {

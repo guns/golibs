@@ -6,37 +6,37 @@ package generic
 
 import "math/bits"
 
-// A TypeStack is an auto-growing stack.
-type TypeStack struct {
-	a []Type
+// A GenericTypeStack is an auto-growing stack.
+type GenericTypeStack struct {
+	a []GenericType
 	i int
 }
 
-// DefaultStackLen is the default size of a TypeStack that is created with a
-// non-positive size.
+// DefaultStackLen is the default size of a GenericTypeStack that is created
+// with a non-positive size.
 const DefaultStackLen = 8
 
-// NewTypeStack returns a new stack that can accommodate at least size items,
+// NewGenericTypeStack returns a new stack that can accommodate at least size items,
 // or DefaultStackLen if size <= 0.
-func NewTypeStack(size int) *TypeStack {
+func NewGenericTypeStack(size int) *GenericTypeStack {
 	if size <= 0 {
 		size = DefaultStackLen
 	}
-	return &TypeStack{
-		a: make([]Type, 1<<uint(bits.Len(uint(size-1)))),
+	return &GenericTypeStack{
+		a: make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
 		i: -1,
 	}
 }
 
 // Len returns the current number of pushed elements.
-func (s *TypeStack) Len() int {
+func (s *GenericTypeStack) Len() int {
 	return s.i + 1
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a new TypeStack twice the size of
-// the original before adding the element.
-func (s *TypeStack) Push(x Type) {
+// the stack, the current stack is moved to a new GenericTypeStack twice the
+// size of the original before adding the element.
+func (s *GenericTypeStack) Push(x GenericType) {
 	if s.i == len(s.a)-1 {
 		s.Grow(1)
 	}
@@ -46,7 +46,7 @@ func (s *TypeStack) Push(x Type) {
 
 // Pop removes and returns the top element from the stack. Calling Pop on an
 // empty stack results in a panic.
-func (s *TypeStack) Pop() Type {
+func (s *GenericTypeStack) Pop() GenericType {
 	if s.Len() == 0 {
 		panic("stack underflow")
 	}
@@ -56,9 +56,9 @@ func (s *TypeStack) Pop() Type {
 
 // Peek returns the top element from the stack without removing it. Peeking an
 // empty stack results in a panic.
-func (s *TypeStack) Peek() Type {
+func (s *GenericTypeStack) Peek() GenericType {
 	if s.Len() == 0 {
-		panic("cannot peek empty TypeStack")
+		panic("cannot peek empty GenericTypeStack")
 	}
 
 	return s.a[s.i]
@@ -66,18 +66,18 @@ func (s *TypeStack) Peek() Type {
 
 // Reset the stack so that its length is zero. Note that the internal slice is
 // NOT cleared.
-func (s *TypeStack) Reset() {
+func (s *GenericTypeStack) Reset() {
 	s.i = -1
 }
 
 // Grow internal slice to accommodate at least n more items.
-func (s *TypeStack) Grow(n int) {
+func (s *GenericTypeStack) Grow(n int) {
 	n -= cap(s.a) - len(s.a)
 	if n <= 0 {
 		return
 	}
 
-	a := make([]Type, 1<<uint(bits.Len(uint(cap(s.a)+n-1))))
+	a := make([]GenericType, 1<<uint(bits.Len(uint(cap(s.a)+n-1))))
 	copy(a, s.a)
 
 	s.a = a

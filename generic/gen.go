@@ -8,6 +8,6 @@ package generic
 
 import "github.com/cheekybits/genny/generic"
 
-type Type generic.Type
-type Number generic.Number
+type GenericType generic.Type
+type GenericNumber generic.Number
 type ComparableType interface{ Less(x *ComparableType) bool } // generic.Type
