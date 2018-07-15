@@ -3,8 +3,8 @@ package bitslice
 
 import "math/bits"
 
-const bMask = 64 - 1
 const bShift = 6
+const bMask = 1<<bShift - 1
 
 // T is a slice of uint64.
 type T []uint64

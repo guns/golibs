@@ -83,10 +83,10 @@ func MedianOfThreeGenericNumberSamples(v []GenericNumber) GenericNumber {
 		a, b = b, a
 	}
 	if c < b {
-		b, c = c, b
+		b = c
 	}
 	if b < a {
-		a, b = b, a
+		b = a
 	}
 
 	return b

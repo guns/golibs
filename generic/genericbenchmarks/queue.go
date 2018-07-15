@@ -10,7 +10,7 @@ package genericbenchmarks
 
 import "math/bits"
 
-// A IntQueue is an auto-growing queue backed by a ring buffer.
+// IntQueue is an auto-growing queue backed by a ring buffer.
 type IntQueue struct {
 	a          []int
 	head, tail int
@@ -95,8 +95,8 @@ func (q *IntQueue) Peek() int {
 	return q.a[q.head]
 }
 
-// Reset the queue so that its length is zero. Note that the internal slice is
-// NOT cleared.
+// Reset the queue so that its length is zero.
+// Note that the internal slice is NOT cleared.
 func (q *IntQueue) Reset() {
 	q.head = -1
 	q.tail = -1

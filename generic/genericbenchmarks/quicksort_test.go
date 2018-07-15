@@ -133,12 +133,12 @@ var names = []string{
 // goos: linux
 // goarch: amd64
 // pkg: github.com/guns/golibs/generic/genericbenchmarks
-// BenchmarkSortInts-4                                30000             62525 ns/op              32 B/op          1 allocs/op
-// BenchmarkQuicksortIntSlice-4                       50000             26684 ns/op               0 B/op          0 allocs/op
-// BenchmarkSortSortPersonSlice-4                     10000            202994 ns/op              32 B/op          1 allocs/op
-// BenchmarkQuicksortPersonSliceMethod-4              10000            175717 ns/op               0 B/op          0 allocs/op
+// BenchmarkSortInts-4                                30000             62906 ns/op              32 B/op          1 allocs/op
+// BenchmarkQuicksortIntSlice-4                       50000             26903 ns/op               0 B/op          0 allocs/op
+// BenchmarkSortSortPersonSlice-4                     10000            203544 ns/op              32 B/op          1 allocs/op
+// BenchmarkQuicksortPersonSliceMethod-4              10000            175966 ns/op               0 B/op          0 allocs/op
 // PASS
-// ok      github.com/guns/golibs/generic/genericbenchmarks        8.159s
+// ok      github.com/guns/golibs/generic/genericbenchmarks        8.186s
 
 const slicelen = 1000
 
