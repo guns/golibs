@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTypeQueue(t *testing.T) {
+func TestQueue(t *testing.T) {
 	data := []struct {
 		size  int
 		cmds  []int
