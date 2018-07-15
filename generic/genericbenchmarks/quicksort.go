@@ -2,6 +2,10 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 package genericbenchmarks
 
 func QuicksortIntSlice(v []int) {

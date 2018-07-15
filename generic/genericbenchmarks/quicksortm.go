@@ -2,41 +2,45 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 package genericbenchmarks
 
-func QuicksortIntSliceF(v []int, less func(a, b int) bool) {
+func QuicksortPersonSlice(v []Person) {
 	switch len(v) {
 	case 0, 1:
 		return
 	case 2:
-		if less(v[1], v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	case 3:
-		if less(v[1], v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
-		if less(v[2], v[1]) {
+		if v[2].Less(&v[1]) {
 			v[1], v[2] = v[2], v[1]
 		}
-		if less(v[1], v[0]) {
+		if v[1].Less(&v[0]) {
 			v[0], v[1] = v[1], v[0]
 		}
 		return
 	}
 
-	i := PartitionIntSliceF(v, less)
-	QuicksortIntSliceF(v[:i+1], less)
-	QuicksortIntSliceF(v[i+1:], less)
+	i := PartitionPersonSlice(v)
+	QuicksortPersonSlice(v[:i+1])
+	QuicksortPersonSlice(v[i+1:])
 }
 
 // Hoare's partitioning with median of first, middle, and last as pivot
-func PartitionIntSliceF(v []int, less func(a, b int) bool) int {
-	var pivot int
+func PartitionPersonSlice(v []Person) int {
+	var pivot Person
 
 	if len(v) > 16 {
-		pivot = MedianOfThreeIntF(v, less)
+		pivot = MedianOfThreePersonM(v)
 	} else {
 		pivot = v[(len(v)-1)/2]
 	}
@@ -46,14 +50,14 @@ func PartitionIntSliceF(v []int, less func(a, b int) bool) int {
 	for {
 		for {
 			i++
-			if !less(v[i], pivot) {
+			if !v[i].Less(&pivot) {
 				break
 			}
 		}
 
 		for {
 			j--
-			if !less(pivot, v[j]) {
+			if !pivot.Less(&v[j]) {
 				break
 			}
 		}
@@ -66,18 +70,18 @@ func PartitionIntSliceF(v []int, less func(a, b int) bool) int {
 	}
 }
 
-func MedianOfThreeIntF(v []int, less func(a, b int) bool) int {
+func MedianOfThreePersonM(v []Person) Person {
 	a := v[0]
 	b := v[(len(v)-1)/2]
 	c := v[len(v)-1]
 
-	if less(b, a) {
+	if b.Less(&a) {
 		a, b = b, a
 	}
-	if less(c, b) {
+	if c.Less(&b) {
 		b, c = c, b
 	}
-	if less(b, a) {
+	if b.Less(&a) {
 		a, b = b, a
 	}
 
