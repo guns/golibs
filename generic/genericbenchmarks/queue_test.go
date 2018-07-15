@@ -9,10 +9,10 @@ import "testing"
 // goos: linux
 // goarch: amd64
 // pkg: github.com/guns/golibs/generic/genericbenchmarks
-// BenchmarkChannelQueue-4            30000             52545 ns/op               0 B/op          0 allocs/op
-// BenchmarkIntQueue-4               200000              7456 ns/op               0 B/op          0 allocs/op
+// BenchmarkChannelQueue-4            20000             78302 ns/op               0 B/op          0 allocs/op
+// BenchmarkIntQueue-4               200000             10684 ns/op               0 B/op          0 allocs/op
 // PASS
-// ok      github.com/guns/golibs/generic/genericbenchmarks        3.683s
+// ok      github.com/guns/golibs/generic/genericbenchmarks        4.608s
 
 const queuedepth = 1000
 
@@ -20,6 +20,12 @@ func BenchmarkChannelQueue(b *testing.B) {
 	ch := make(chan int, queuedepth)
 
 	for i := 0; i < b.N; i++ {
+		for j := 0; j < queuedepth/2; j++ {
+			ch <- j
+		}
+		for len(ch) > 0 {
+			_ = <-ch
+		}
 		for j := 0; j < queuedepth; j++ {
 			ch <- j
 		}
@@ -32,6 +38,12 @@ func BenchmarkIntQueue(b *testing.B) {
 	q := NewIntQueue(queuedepth)
 
 	for i := 0; i < b.N; i++ {
+		for j := 0; j < queuedepth/2; j++ {
+			q.Enqueue(j)
+		}
+		for q.Len() > 0 {
+			_ = q.Dequeue()
+		}
 		for j := 0; j < queuedepth; j++ {
 			q.Enqueue(j)
 		}

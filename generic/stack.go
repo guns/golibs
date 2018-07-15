@@ -6,7 +6,7 @@ package generic
 
 import "math/bits"
 
-// A GenericTypeStack is an auto-growing stack.
+// GenericTypeStack is an auto-growing stack.
 type GenericTypeStack struct {
 	a []GenericType
 	i int
@@ -64,8 +64,8 @@ func (s *GenericTypeStack) Peek() GenericType {
 	return s.a[s.i]
 }
 
-// Reset the stack so that its length is zero. Note that the internal slice is
-// NOT cleared.
+// Reset the stack so that its length is zero.
+// Note that the internal slice is NOT cleared.
 func (s *GenericTypeStack) Reset() {
 	s.i = -1
 }

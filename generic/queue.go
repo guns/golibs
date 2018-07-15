@@ -6,7 +6,7 @@ package generic
 
 import "math/bits"
 
-// A GenericTypeQueue is an auto-growing queue backed by a ring buffer.
+// GenericTypeQueue is an auto-growing queue backed by a ring buffer.
 type GenericTypeQueue struct {
 	a          []GenericType
 	head, tail int
@@ -91,8 +91,8 @@ func (q *GenericTypeQueue) Peek() GenericType {
 	return q.a[q.head]
 }
 
-// Reset the queue so that its length is zero. Note that the internal slice is
-// NOT cleared.
+// Reset the queue so that its length is zero.
+// Note that the internal slice is NOT cleared.
 func (q *GenericTypeQueue) Reset() {
 	q.head = -1
 	q.tail = -1
