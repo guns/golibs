@@ -1,0 +1,67 @@
+package gen
+
+import (
+	"reflect"
+	"testing"
+)
+
+func TestTypeQueue(t *testing.T) {
+	data := []struct {
+		size  int
+		cmds  []Type
+		out   []Type
+		state TypeQueue
+	}{
+		{
+			size:  1,
+			cmds:  []Type{1, 0, 2, 0},
+			out:   []Type{1, 2},
+			state: TypeQueue{a: []Type{2}, head: -1, tail: -1},
+		},
+		{
+			size:  1,
+			cmds:  []Type{1, 2, 0, 0},
+			out:   []Type{1, 2},
+			state: TypeQueue{a: []Type{1, 2}, head: -1, tail: -1},
+		},
+		{
+			size:  4,
+			cmds:  []Type{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
+			out:   []Type{1, 2, 3, 4},
+			state: TypeQueue{a: []Type{3, 4, 5, 6, 7, 8, Type(nil), Type(nil)}, head: 2, tail: 6},
+		},
+		{
+			size:  5,
+			cmds:  []Type{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
+			out:   []Type{1, 2, 3, 4},
+			state: TypeQueue{a: []Type{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
+		},
+		{
+			size:  0,
+			cmds:  []Type{1, 2, 3, 4, 0, 0, 0, 0},
+			out:   []Type{1, 2, 3, 4},
+			state: TypeQueue{a: []Type{1, 2, 3, 4, Type(nil), Type(nil), Type(nil), Type(nil)}, head: -1, tail: -1},
+		},
+	}
+
+	for i, row := range data {
+		q := NewTypeQueue(row.size)
+		out := make([]Type, 0, len(row.out))
+
+		for _, n := range row.cmds {
+			if n == 0 {
+				out = append(out, q.Dequeue())
+			} else {
+				q.Enqueue(n)
+			}
+		}
+
+		if !reflect.DeepEqual(out, row.out) {
+			t.Errorf("[%d] %v != %v", i, out, row.out)
+		}
+
+		if !reflect.DeepEqual(*q, row.state) {
+			t.Errorf("[%d] %v != %v", i, *q, row.state)
+		}
+	}
+}
