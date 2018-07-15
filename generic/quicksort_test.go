@@ -62,3 +62,20 @@ func TestQuicksortNumberSlice(t *testing.T) {
 		}
 	}
 }
+
+func TestMedianOfThreeNumberSamples(t *testing.T) {
+	data := [][]Number{
+		{0, 1, 2},
+		{0, 2, 1},
+		{1, 0, 2},
+		{1, 2, 0},
+		{2, 0, 1},
+		{2, 1, 0},
+	}
+
+	for _, v := range data {
+		if MedianOfThreeNumberSamples(v) != 1 {
+			t.Errorf("MedianOfThreeNumberSamples(%v): %v != %v", v, MedianOfThreeNumberSamples(v), 1)
+		}
+	}
+}

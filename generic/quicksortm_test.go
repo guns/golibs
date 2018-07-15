@@ -173,3 +173,24 @@ func TestQuicksortComparableTypeSlice(t *testing.T) {
 		}
 	}
 }
+
+func TestMedianOfThreeComparableTypeSamples(t *testing.T) {
+	data := [][]Person{
+		{{age: 0}, {age: 1}, {age: 2}},
+		{{age: 0}, {age: 2}, {age: 1}},
+		{{age: 1}, {age: 0}, {age: 2}},
+		{{age: 1}, {age: 2}, {age: 0}},
+		{{age: 2}, {age: 0}, {age: 1}},
+		{{age: 2}, {age: 1}, {age: 0}},
+	}
+
+	for _, v := range data {
+		s := make([]ComparableType, len(v))
+		for i := range v {
+			s[i] = v[i]
+		}
+		if MedianOfThreeComparableTypeSamples(s).(Person).age != 1 {
+			t.Errorf("MedianOfThreeNumberSamples(%v): %v != %v", v, MedianOfThreeComparableTypeSamples(s).(Person).age, 1)
+		}
+	}
+}
