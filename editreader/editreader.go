@@ -67,11 +67,12 @@ func New(r io.Reader, buflen int, secure bool, f EditFn) *T {
 	if f == nil {
 		f = BasicLineEdit
 	}
+	buf := make([]byte, buflen+1)
 	return &T{
 		editFn: f,
 		src:    r,
-		rbuf:   make([]byte, 1),
-		buf:    make([]byte, buflen),
+		rbuf:   buf[:1],
+		buf:    buf[1:],
 		secure: secure,
 	}
 }
