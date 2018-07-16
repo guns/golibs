@@ -145,8 +145,8 @@ func TestBitSlice(t *testing.T) {
 
 		copy(bs, row.bs)
 		v := make([]int, 0, len(row.offsets))
-		if !reflect.DeepEqual(bs.GetOffsets(v), row.offsets) {
-			t.Errorf("%v != %v", bs.GetOffsets(v), row.offsets)
+		if !reflect.DeepEqual(bs.AppendOffsets(v), row.offsets) {
+			t.Errorf("%v != %v", bs.AppendOffsets(v), row.offsets)
 		}
 		if bs.Popcnt() != len(row.offsets) {
 			t.Errorf("%v != %v", bs.Popcnt(), len(row.offsets))

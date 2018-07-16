@@ -72,8 +72,8 @@ func (bs T) CompareAndToggle(i int, state bool) bool {
 	return bs.CompareAndSet(i)
 }
 
-// GetOffsets appends and returns a slice of indices of bits that are set.
-func (bs T) GetOffsets(v []int) []int {
+// AppendOffsets appends and returns a slice of indices of bits that are set.
+func (bs T) AppendOffsets(v []int) []int {
 	for i, n := range bs {
 		for n != 0 {
 			o := bits.TrailingZeros64(n)
