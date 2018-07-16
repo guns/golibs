@@ -24,12 +24,6 @@ func New() *T {
 	return &T{ch: make(chan struct{})}
 }
 
-// Make returns a trigger value. This is only useful when embedding a trigger
-// in a struct.
-func Make() T {
-	return T{ch: make(chan struct{})}
-}
-
 // Activated quickly checks to see if this trigger has been activated.
 func (t *T) Activated() bool {
 	return atomic.LoadUint32(&t.done) != 0

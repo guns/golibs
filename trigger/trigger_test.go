@@ -31,20 +31,3 @@ func TestTrigger(t *testing.T) {
 		t.Errorf("expected: exit.Activated()")
 	}
 }
-
-func TestMake(t *testing.T) {
-	trg := struct {
-		t T
-		u T
-	}{Make(), Make()}
-
-	trg.u.Trigger()
-
-	if trg.t.Activated() {
-		t.Errorf("expected: !trg.t.Activated()")
-	}
-
-	if !trg.u.Activated() {
-		t.Errorf("expected: trg.u.Activated()")
-	}
-}
