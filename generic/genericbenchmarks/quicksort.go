@@ -88,9 +88,9 @@ func MedianOfThreeIntSamples(v []int) int {
 	}
 	if c < b {
 		b = c
-	}
-	if b < a {
-		b = a
+		if b < a {
+			b = a
+		}
 	}
 
 	return b

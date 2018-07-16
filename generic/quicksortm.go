@@ -93,9 +93,9 @@ func MedianOfThreeComparableTypeSamples(v []ComparableType) ComparableType {
 	}
 	if c.Less(&b) {
 		b = c
-	}
-	if b.Less(&a) {
-		b = a
+		if b.Less(&a) {
+			b = a
+		}
 	}
 
 	return b

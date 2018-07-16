@@ -97,9 +97,9 @@ func MedianOfThreePersonSamples(v []Person) Person {
 	}
 	if c.Less(&b) {
 		b = c
-	}
-	if b.Less(&a) {
-		b = a
+		if b.Less(&a) {
+			b = a
+		}
 	}
 
 	return b
