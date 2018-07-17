@@ -117,3 +117,7 @@ func (q *GenericTypeQueue) Grow(n int) {
 
 	*q = r
 }
+
+// GetSlicePointer returns a pointer to the backing slice of this GenericTypeQueue.
+// *WARNING* Use at your own risk.
+func (q *GenericTypeQueue) GetSlicePointer() *[]GenericType { return &q.a }

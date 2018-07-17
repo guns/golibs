@@ -82,3 +82,7 @@ func (s *GenericTypeStack) Grow(n int) {
 
 	s.a = a
 }
+
+// GetSlicePointer returns a pointer to the backing slice of this GenericTypeStack.
+// *WARNING* Use at your own risk.
+func (s *GenericTypeStack) GetSlicePointer() *[]GenericType { return &s.a }
