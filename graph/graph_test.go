@@ -67,7 +67,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 	}
 
-	w := NewWorkspace(0)
+	w := NewWorkspace(4)
 
 	for _, row := range data {
 		g := make(Graph, row.size)

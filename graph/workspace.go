@@ -6,6 +6,7 @@ package graph
 
 import (
 	"math/bits"
+	"unsafe"
 
 	"github.com/guns/golibs/bitslice"
 	"github.com/guns/golibs/generic/impl"
@@ -13,48 +14,51 @@ import (
 
 // A Workspace is used while traversing Graphs.
 type Workspace struct {
-	size    int           // Size of this Workspace
 	buf     []int         // General scratch buffer
 	prev    []int         // Mapping of vertex -> previous vertex
+	visited bitslice.T    // Boolean set of visited vertices
 	queue   impl.IntQueue // BFS queue
 	stack   impl.IntStack // DFS stack
-	visited bitslice.T    // Boolean set of visited vertices
 }
 
 // NewWorkspace returns a new Workspace suitable for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
 	alen := size * 2
+	blen := bitslice.UintLen(size)
 	qlen := 1 << uint(bits.Len(uint(size/2-1)))
-	buf := make([]int, alen+qlen)
+	buf := make([]int, alen+blen+qlen)
+
+	// The bitslice is between the int buffers and the queue buffers
+	bsbuf := buf[alen : alen+blen]
+	bs := *(*bitslice.T)(unsafe.Pointer(&bsbuf))
 
 	// The queue and stack share a slice and cannot be used concurrently.
 	queue := impl.IntQueue{}
 	stack := impl.IntStack{}
-	(*queue.GetSlicePointer()) = buf[alen:]
-	(*stack.GetSlicePointer()) = buf[alen:]
+	(*queue.GetSlicePointer()) = buf[alen+blen:]
+	(*stack.GetSlicePointer()) = buf[alen+blen:]
 
 	return &Workspace{
-		size:    size,
 		buf:     buf[:size],
 		prev:    buf[size:alen],
+		visited: bs,
 		queue:   queue,
 		stack:   stack,
-		visited: bitslice.Make(size),
 	}
 }
 
 // Resize this workspace.
 func (w *Workspace) Resize(size int) {
-	if size <= w.size {
+	if size <= len(w.buf) {
 		return
 	}
 
 	var buf []int
 	alen := size * 2
+	blen := bitslice.UintLen(size)
 	qlen := 1 << uint(bits.Len(uint(size/2-1)))
-	buflen := alen + qlen
-	bitslicelen := (size + 63) / 64
+	buflen := alen + blen + qlen
 
 	// The queue and stack buffers may have been replaced by larger slices
 	// that we might be able to reuse.
@@ -67,24 +71,21 @@ func (w *Workspace) Resize(size int) {
 		buf = make([]int, buflen)
 	}
 
-	w.size = size
 	w.buf = buf[:size]
 	w.prev = buf[size:alen]
-	(*qp) = buf[alen:]
-	(*sp) = buf[alen:]
-
-	for i := len(w.visited); i < bitslicelen; i++ {
-		w.visited = append(w.visited, 0)
-	}
+	bsbuf := buf[alen : alen+blen]
+	w.visited = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
+	(*qp) = buf[alen+blen:]
+	(*sp) = buf[alen+blen:]
 }
 
 // Reset a Workspace.
 func (w *Workspace) Reset() {
-	for i := range w.prev {
+	for i := range w.buf {
 		w.buf[i] = 0
 		w.prev[i] = -1
 	}
+	w.visited.Reset()
 	w.queue.Reset()
 	w.stack.Reset()
-	w.visited.Reset()
 }
