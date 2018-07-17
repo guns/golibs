@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+// N.B. Tests assume 64-bit
+
 func TestBitSlice(t *testing.T) {
 	data := []struct {
 		bs      T
