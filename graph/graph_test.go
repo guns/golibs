@@ -204,13 +204,14 @@ func TestGraphTranspose(t *testing.T) {
 	for _, row := range data {
 		g := make(Graph, row.size)
 		h := make(Graph, row.size)
+		gT := make(Graph, row.size)
 
 		for _, e := range row.edges {
 			g.AddEdge(e.u, e.v, e.w)
 			h.AddEdge(e.v, e.u, e.w)
 		}
 
-		gT := g.Transpose()
+		gT = g.Transpose(gT)
 		if !reflect.DeepEqual(gT, h) {
 			t.Errorf("%v != %v", gT, h)
 		}

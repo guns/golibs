@@ -143,9 +143,13 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	return tsort[j:]
 }
 
-// Transpose returns a copy of the current graph with all edges reversed.
-func (g Graph) Transpose() Graph {
-	h := make(Graph, len(g))
+// Transpose writes to h a copy of the current graph with all edges reversed.
+func (g Graph) Transpose(h Graph) Graph {
+	if cap(h) >= len(g) {
+		h = h[:len(g)]
+	} else {
+		h = make(Graph, len(g))
+	}
 
 	for u := range g {
 		for _, e := range g[u].Edges {
