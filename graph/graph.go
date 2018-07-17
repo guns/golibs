@@ -79,7 +79,7 @@ loop:
 		return path[:0]
 	}
 
-	return writePath(path, u, v, dist[v], w.prev)
+	return writePath(path, v, dist[v], w.prev)
 }
 
 // TopologicalSort returns a slice of vertex indices in topologically sorted
@@ -156,7 +156,7 @@ func (g Graph) Transpose() Graph {
 	return h
 }
 
-func writePath(path []int, u, v, dist int, prev []int) []int {
+func writePath(path []int, v, dist int, prev []int) []int {
 	path = resizeIntSlice(path, dist+1)
 	path[dist] = v
 
