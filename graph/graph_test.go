@@ -148,12 +148,12 @@ func TestGraphTopologicalSort(t *testing.T) {
 			t.Errorf("len(tsort) %v != len(g) %v", len(tsort), len(g))
 		}
 
-		copy(w.buf, tsort)
-		sort.Ints(w.buf)
+		copy(w.a, tsort)
+		sort.Ints(w.a)
 
 		equal := true
 		for i := range g {
-			if w.buf[i] != i {
+			if w.a[i] != i {
 				equal = false
 			}
 		}
@@ -164,7 +164,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 
 		// Create a reverse mapping for easy lookup
 		for i, j := range tsort {
-			w.buf[j] = i
+			w.a[j] = i
 		}
 
 		// A topological sort of a dag G = (V,E) is a linear ordering
@@ -172,7 +172,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		// then u appears before v in the ordering.
 		for i, u := range tsort {
 			for _, e := range g[u].Edges {
-				j := w.buf[e.Vertex]
+				j := w.a[e.Vertex]
 				if j <= i {
 					t.Errorf("edge (%v,%v) out of order in %v\n", u, e.Vertex, tsort)
 				}

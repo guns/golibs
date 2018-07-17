@@ -42,44 +42,45 @@ func (g Graph) TouchVertex(u int) {
 //
 // If no path exists, an empty slice is returned.
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
-	w.Reset()
+	w.Reset(WA|WB, 0, -1)
 
-	// Edge distances from u
-	dist := w.buf
+	dist := w.a      // Edge distances from u
+	prev := w.b      // Mapping of vertex -> previous vertex
+	queue := w.queue // BFS queue
+
+	// BFS
+	queue.Enqueue(u)
 
 	// If u == v, u is the endpoint, so leave it unvisited.
 	if u != v {
-		w.visited.Set(u)
+		prev[u] = u
 	}
 
-	// BFS
-	w.queue.Enqueue(u)
-
 loop:
-	for w.queue.Len() > 0 {
-		i := w.queue.Dequeue()
+	for queue.Len() > 0 {
+		i := queue.Dequeue()
 
 		for _, e := range g[i].Edges {
-			if !w.visited.CompareAndSet(e.Vertex) {
+			if prev[e.Vertex] != -1 {
 				continue
 			}
 
-			w.prev[e.Vertex] = i
+			prev[e.Vertex] = i
 			dist[e.Vertex] = dist[i] + 1
 
 			if e.Vertex == v {
 				break loop
 			}
 
-			w.queue.Enqueue(e.Vertex)
+			queue.Enqueue(e.Vertex)
 		}
 	}
 
-	if w.prev[v] == -1 {
+	if prev[v] == -1 {
 		return path[:0]
 	}
 
-	return writePath(path, v, dist[v], w.prev)
+	return writePath(path, v, dist[v], prev)
 }
 
 // TopologicalSort returns a slice of vertex indices in topologically sorted
@@ -87,7 +88,7 @@ loop:
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.Reset()
+	w.Reset(WA|WBitslice, 0, 0)
 
 	// We require the following to use an iterative DFS for topologically
 	// sorting a directed graph:
@@ -98,28 +99,30 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	//	- A way to flag a vertex whose children have been visited
 	//	  (this enables post-order traversal without recursion)
 
+	stack := w.stack                      // DFS stack
+	active := w.a                         // Boolean set of active vertices
+	visited := w.bitslice                 // Boolean set of visited vertices
 	tsort = resizeIntSlice(tsort, len(g)) // Grow and reslice target buffer
 	j := len(g)                           // Last tsort write index
-	active := w.buf                       // Boolean set of active vertices
 
 	for i := range g {
-		if w.visited.Get(i) {
+		if visited.Get(i) {
 			continue
 		}
 
-		w.stack.Push(i)
+		stack.Push(i)
 
-		for w.stack.Len() > 0 {
-			u := w.stack.Pop()
+		for stack.Len() > 0 {
+			u := stack.Pop()
 
 			// Post-order vertices are encoded as their ones' complement
 			if u < 0 {
 				u = ^u
-				w.visited.Set(u)
+				visited.Set(u)
 				j--
 				tsort[j] = u
 				continue
-			} else if w.visited.Get(u) {
+			} else if visited.Get(u) {
 				continue
 			} else if active[u] == 1 {
 				// This neighboring vertex is active but not yet
@@ -129,13 +132,13 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 
 			// When all children have been visited, this parent
 			// vertex will appear on top of the stack.
-			w.stack.Push(^u)
+			stack.Push(^u)
 
 			// Mark this vertex as active
 			active[u] = 1
 
 			for _, e := range g[u].Edges {
-				w.stack.Push(e.Vertex)
+				stack.Push(e.Vertex)
 			}
 		}
 	}

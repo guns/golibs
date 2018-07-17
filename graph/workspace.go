@@ -14,11 +14,11 @@ import (
 
 // A Workspace is used while traversing Graphs.
 type Workspace struct {
-	buf     []int         // General scratch buffer
-	prev    []int         // Mapping of vertex -> previous vertex
-	visited bitslice.T    // Boolean set of visited vertices
-	queue   impl.IntQueue // BFS queue
-	stack   impl.IntStack // DFS stack
+	a        []int         // Mapping of vertex -> int
+	b        []int         // Mapping of vertex -> int
+	bitslice bitslice.T    // Mapping of vertex -> bool
+	queue    impl.IntQueue // BFS queue
+	stack    impl.IntStack // DFS stack
 }
 
 // NewWorkspace returns a new Workspace suitable for a Graph of a given size.
@@ -40,17 +40,17 @@ func NewWorkspace(size int) *Workspace {
 	(*stack.GetSlicePointer()) = buf[alen+blen:]
 
 	return &Workspace{
-		buf:     buf[:size],
-		prev:    buf[size:alen],
-		visited: bs,
-		queue:   queue,
-		stack:   stack,
+		a:        buf[:size],
+		b:        buf[size:alen],
+		bitslice: bs,
+		queue:    queue,
+		stack:    stack,
 	}
 }
 
 // Resize this workspace.
 func (w *Workspace) Resize(size int) {
-	if size <= len(w.buf) {
+	if size <= len(w.a) {
 		return
 	}
 
@@ -71,21 +71,41 @@ func (w *Workspace) Resize(size int) {
 		buf = make([]int, buflen)
 	}
 
-	w.buf = buf[:size]
-	w.prev = buf[size:alen]
+	w.a = buf[:size]
+	w.b = buf[size:alen]
 	bsbuf := buf[alen : alen+blen]
-	w.visited = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
+	w.bitslice = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
 	(*qp) = buf[alen+blen:]
 	(*sp) = buf[alen+blen:]
 }
 
-// Reset a Workspace.
-func (w *Workspace) Reset() {
-	for i := range w.buf {
-		w.buf[i] = 0
-		w.prev[i] = -1
+const (
+	WA        = 1 << iota // Reset w.a
+	WB                    // Reset w.b
+	WBitslice             // Reset w.bitslice
+	WAll      = WA | WB | WBitslice
+)
+
+// Reset a Workspace. The fields parameter is a bitfield of the Ws* options.
+// The aVal and bVal parameters are the values to which w.a and w.b are set if
+// the corresponding Ws* options are set.
+//
+// Note that the internal queue and stack are always reset.
+func (w *Workspace) Reset(fields uint, aVal, bVal int) {
+	if fields&WA > 0 {
+		for i := range w.a {
+			w.a[i] = aVal
+		}
 	}
-	w.visited.Reset()
+	if fields&WB > 0 {
+		for i := range w.b {
+			w.b[i] = bVal
+		}
+	}
+	if fields&WBitslice > 0 {
+		w.bitslice.Reset()
+	}
+	// Resetting a Queue and Stack is very fast, so just do it
 	w.queue.Reset()
 	w.stack.Reset()
 }
