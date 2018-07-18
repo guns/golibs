@@ -83,8 +83,8 @@ loop:
 	return writePath(path, v, dist[v], prev)
 }
 
-// TopologicalSort returns a slice of vertex indices in topologically sorted
-// order. The offsets are written to the vs slice, which is grown if
+// TopologicalSort returns a slice of vertex indices in topologically
+// sorted order. The offsets are written to the vs slice, which is grown if
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
@@ -94,14 +94,15 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	// sorting a directed graph:
 	//
 	//	- A LIFO queue (stack) of vertices to visit
-	//	- A set of active (queued, but unvisited) vertices
-	//	- A set of visited vertices
+	//	- A table of active (queued, but unvisited) vertices
+	//	- A table of visited vertices
 	//	- A way to flag a vertex whose children have been visited
 	//	  (this enables post-order traversal without recursion)
 
-	stack := w.stack                      // DFS stack
-	active := w.a                         // Boolean set of active vertices
-	visited := w.bitslice                 // Boolean set of visited vertices
+	stack := w.stack      // DFS stack
+	active := w.a         // Map of vertex -> active?
+	visited := w.bitslice // Map of vertex -> visited?
+
 	tsort = resizeIntSlice(tsort, len(g)) // Grow and reslice target buffer
 	j := len(g)                           // tsort write index + 1
 
