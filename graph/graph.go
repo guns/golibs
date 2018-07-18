@@ -94,8 +94,8 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	// sorting a directed graph:
 	//
 	//	- A LIFO queue (stack) of vertices to visit
-	//	- A table of active (queued, but unvisited) vertices
-	//	- A table of visited vertices
+	//	- A set of active (queued, but unvisited) vertices
+	//	- A set of visited vertices
 	//	- A way to flag a vertex whose children have been visited
 	//	  (this enables post-order traversal without recursion)
 
@@ -103,7 +103,7 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	active := w.a                         // Boolean set of active vertices
 	visited := w.bitslice                 // Boolean set of visited vertices
 	tsort = resizeIntSlice(tsort, len(g)) // Grow and reslice target buffer
-	j := len(g)                           // Last tsort write index
+	j := len(g)                           // tsort write index + 1
 
 	for i := range g {
 		if visited.Get(i) {
