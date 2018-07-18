@@ -51,6 +51,8 @@ func NewWorkspace(size int) *Workspace {
 // Resize this workspace.
 func (w *Workspace) Resize(size int) {
 	if size <= len(w.a) {
+		w.a = w.a[:size]
+		w.b = w.b[:size]
 		return
 	}
 
