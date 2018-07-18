@@ -104,28 +104,28 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	visited := w.bitslice // Map of vertex -> visited?
 
 	tsort = resizeIntSlice(tsort, len(g)) // Grow and reslice target buffer
-	j := len(g)                           // tsort write index + 1
+	i := len(g)                           // tsort write index + 1
 
-	for i := range g {
-		if visited.Get(i) {
+	for u := range g {
+		if visited.Get(u) {
 			continue
 		}
 
-		stack.Push(i)
+		stack.Push(u)
 
 		for stack.Len() > 0 {
-			u := stack.Pop()
+			v := stack.Pop()
 
 			// Post-order vertices are encoded as their ones' complement
-			if u < 0 {
-				u = ^u
-				visited.Set(u)
-				j--
-				tsort[j] = u
+			if v < 0 {
+				v = ^v
+				visited.Set(v)
+				i--
+				tsort[i] = v
 				continue
-			} else if visited.Get(u) {
+			} else if visited.Get(v) {
 				continue
-			} else if active[u] == 1 {
+			} else if active[v] == 1 {
 				// This neighboring vertex is active but not yet
 				// visited, so we have discovered a cycle!
 				return tsort[:0]
@@ -133,18 +133,18 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 
 			// When all children have been visited, this parent
 			// vertex will appear on top of the stack.
-			stack.Push(^u)
+			stack.Push(^v)
 
 			// Mark this vertex as active
-			active[u] = 1
+			active[v] = 1
 
-			for _, e := range g[u].Edges {
+			for _, e := range g[v].Edges {
 				stack.Push(e.Vertex)
 			}
 		}
 	}
 
-	return tsort[j:]
+	return tsort[i:]
 }
 
 // Transpose writes to h a copy of the current graph with all edges reversed.
