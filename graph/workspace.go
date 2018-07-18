@@ -14,6 +14,7 @@ import (
 
 // A Workspace is used while traversing Graphs.
 type Workspace struct {
+	cap      int           // Workspace capacity (largest graph supported)
 	a        []int         // Mapping of vertex -> int
 	b        []int         // Mapping of vertex -> int
 	bitslice bitslice.T    // Mapping of vertex -> bool
@@ -40,6 +41,7 @@ func NewWorkspace(size int) *Workspace {
 	(*stack.GetSlicePointer()) = buf[alen+blen:]
 
 	return &Workspace{
+		cap:      size,
 		a:        buf[:size],
 		b:        buf[size:alen],
 		bitslice: bs,
@@ -48,12 +50,16 @@ func NewWorkspace(size int) *Workspace {
 	}
 }
 
-// Resize this workspace.
-func (w *Workspace) Resize(size int) {
-	if size <= len(w.a) {
+// Resize this workspace. Returns true if a reallocation was necessary, and
+// false if not. Note that all buffers are zeroed on reallocation, so a Reset
+// may not be necessary after a Resize that triggers a reallocation.
+func (w *Workspace) Resize(size int) bool {
+	if size == len(w.a) {
+		return false
+	} else if size <= w.cap {
 		w.a = w.a[:size]
 		w.b = w.b[:size]
-		return
+		return false
 	}
 
 	var buf []int
@@ -73,27 +79,34 @@ func (w *Workspace) Resize(size int) {
 		buf = make([]int, buflen)
 	}
 
+	w.cap = size
 	w.a = buf[:size]
 	w.b = buf[size:alen]
 	bsbuf := buf[alen : alen+blen]
 	w.bitslice = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
 	(*qp) = buf[alen+blen:]
 	(*sp) = buf[alen+blen:]
+
+	return true
 }
 
+// ResetField values are constants that communicate which fields of
+// a Workspace should be reset.
+type ResetField uint
+
 const (
-	WA        = 1 << iota // Reset w.a
-	WB                    // Reset w.b
-	WBitslice             // Reset w.bitslice
-	WAll      = WA | WB | WBitslice
+	WA        ResetField            = 1 << iota // Reset w.a
+	WB                                          // Reset w.b
+	WBitslice                                   // Reset w.bitslice
+	WAll      = WA | WB | WBitslice             // Reset all fields
 )
 
-// Reset a Workspace. The fields parameter is a bitfield of the Ws* options.
-// The aVal and bVal parameters are the values to which w.a and w.b are set if
-// the corresponding Ws* options are set.
+// Reset a Workspace. The fields parameter is a bitfield of ResetField values
+// that indicate which fields should be reset. The aVal and bVal parameters
+// indicate the fill values of w.a and w.b.
 //
 // Note that the internal queue and stack are always reset.
-func (w *Workspace) Reset(fields uint, aVal, bVal int) {
+func (w *Workspace) Reset(fields ResetField, aVal, bVal int) {
 	if fields&WA > 0 {
 		for i := range w.a {
 			w.a[i] = aVal
@@ -110,4 +123,21 @@ func (w *Workspace) Reset(fields uint, aVal, bVal int) {
 	// Resetting a Queue and Stack is very fast, so just do it
 	w.queue.Reset()
 	w.stack.Reset()
+}
+
+// Prepare a Workspace for a Graph of a given size. The fields, aVal, and bVal
+// parameters are the same parameters to (*Workspace) Reset.
+func (w *Workspace) Prepare(size int, fields ResetField, aVal, bVal int) {
+	if w.Resize(size) {
+		// New workspaces are zero-filled, so avoid unnecessary work.
+		if aVal == 0 {
+			fields &= ^WA
+		}
+		if bVal == 0 {
+			fields &= ^WB
+		}
+		fields &= ^WBitslice
+	}
+
+	w.Reset(fields, aVal, bVal)
 }
