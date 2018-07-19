@@ -34,6 +34,9 @@ func (g Graph) TouchVertex(u int) {
 	}
 }
 
+// Undefined is a sentinel value for the set of Vertex indices.
+const undefined = -1
+
 // LeastEdgesPath returns a path from Vertex u to v with a minimum number of
 // Edges, irrespective of Edge weights. The length of the path in edges is the
 // size of the returned path minus one.
@@ -45,7 +48,7 @@ func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WB, 0, -1)
 
 	dist := w.a      // Edge distances from u
-	prev := w.b      // Mapping of vertex -> previous vertex (-1 if unvisited)
+	pred := w.b      // Mapping of vertex -> predecessor vertex (undefined if unvisited)
 	queue := w.queue // BFS queue
 
 	// BFS
@@ -53,7 +56,7 @@ func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 
 	// If u == v, u is the endpoint, so leave it unvisited.
 	if u != v {
-		prev[u] = u
+		pred[u] = u
 	}
 
 loop:
@@ -63,11 +66,11 @@ loop:
 		for _, e := range g[i].Edges {
 			w := e.Vertex
 
-			if prev[w] != -1 {
+			if pred[w] != undefined {
 				continue
 			}
 
-			prev[w] = i
+			pred[w] = i
 			dist[w] = dist[i] + 1
 
 			if w == v {
@@ -78,12 +81,12 @@ loop:
 		}
 	}
 
-	if prev[v] == -1 {
+	if pred[v] == undefined {
 		// No path from u -> v was discovered
 		return path[:0]
 	}
 
-	return writePath(path, v, dist[v], prev)
+	return writePath(path, v, dist[v], pred)
 }
 
 // TopologicalSort returns a slice of vertex indices in topologically
@@ -120,15 +123,17 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 		for stack.Len() > 0 {
 			v := stack.Pop()
 
-			// Post-order nodes are encoded as their ones' complement
+			// Post-order visit nodes whose children have been explored.
+			// These nodes are encoded as their ones' complement.
 			if v < 0 {
-				// Vertex v's children have been explored
 				v = ^v
 				explored.Set(v)
 				i--
 				tsort[i] = v
 				continue
-			} else if explored.Get(v) {
+			}
+
+			if explored.Get(v) {
 				// Ignore fully explored nodes
 				continue
 			} else if active[v] == 1 {
@@ -137,12 +142,12 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 				return tsort[:0]
 			}
 
+			// Mark this vertex as visited, but not fully explored.
+			active[v] = 1
+
 			// When all children have been explored, this parent
 			// vertex will appear on top of the stack.
 			stack.Push(^v)
-
-			// Mark this vertex as visited, but not fully explored.
-			active[v] = 1
 
 			for _, e := range g[v].Edges {
 				stack.Push(e.Vertex)
@@ -170,12 +175,12 @@ func (g Graph) Transpose(h Graph) Graph {
 	return h
 }
 
-func writePath(path []int, v, dist int, prev []int) []int {
+func writePath(path []int, v, dist int, pred []int) []int {
 	path = resizeIntSlice(path, dist+1)
 	path[dist] = v
 
 	for i := dist - 1; i >= 0; i-- {
-		v = prev[v]
+		v = pred[v]
 		path[i] = v
 	}
 
