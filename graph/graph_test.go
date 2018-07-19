@@ -114,7 +114,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 	}
 
-	w := NewWorkspace(4)
+	w := NewWorkspace(0)
 
 	for _, row := range data {
 		g := make(Graph, row.size)
@@ -205,7 +205,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		},
 	}
 
-	w := NewWorkspace(4)
+	w := NewWorkspace(0)
 
 	for _, row := range data {
 		g := make(Graph, row.size)

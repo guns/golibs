@@ -22,12 +22,17 @@ type Workspace struct {
 	stack    impl.IntStack // DFS stack
 }
 
+func workspaceInternalSizes(size int) (alen, blen, qlen int) {
+	alen = size * 2
+	blen = bitslice.UintLen(size)
+	qlen = 1 << uint(bits.Len(uint(size/2-1)))
+	return
+}
+
 // NewWorkspace returns a new Workspace suitable for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	alen := size * 2
-	blen := bitslice.UintLen(size)
-	qlen := 1 << uint(bits.Len(uint(size/2-1)))
+	alen, blen, qlen := workspaceInternalSizes(size)
 	buf := make([]int, alen+blen+qlen)
 
 	// The bitslice is between the int buffers and the queue buffers
@@ -63,9 +68,7 @@ func (w *Workspace) Resize(size int) bool {
 	}
 
 	var buf []int
-	alen := size * 2
-	blen := bitslice.UintLen(size)
-	qlen := 1 << uint(bits.Len(uint(size/2-1)))
+	alen, blen, qlen := workspaceInternalSizes(size)
 	buflen := alen + blen + qlen
 
 	// The queue and stack buffers may have been replaced by larger slices
@@ -84,8 +87,8 @@ func (w *Workspace) Resize(size int) bool {
 	w.b = buf[size:alen]
 	bsbuf := buf[alen : alen+blen]
 	w.bitslice = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
-	(*qp) = buf[alen+blen:]
-	(*sp) = buf[alen+blen:]
+	*qp = buf[alen+blen:]
+	*sp = buf[alen+blen:]
 
 	return true
 }
@@ -95,49 +98,53 @@ func (w *Workspace) Resize(size int) bool {
 type ResetField uint
 
 const (
-	WA        ResetField            = 1 << iota // Reset w.a
-	WB                                          // Reset w.b
-	WBitslice                                   // Reset w.bitslice
-	WAll      = WA | WB | WBitslice             // Reset all fields
+	WA        ResetField = 1 << iota // Fill w.a with 0
+	WANeg                            // Fill w.a with -1
+	WB                               // Fill w.b with 0
+	WBNeg                            // Fill w.b with -1
+	WBitslice                        // Reset w.bitslice
 )
 
 // Reset a Workspace. The fields parameter is a bitfield of ResetField values
-// that indicate which fields should be reset. The aVal and bVal parameters
-// indicate the fill values of w.a and w.b.
-//
-// Note that the internal queue and stack are always reset.
-func (w *Workspace) Reset(fields ResetField, aVal, bVal int) {
-	if fields&WA > 0 {
-		for i := range w.a {
-			w.a[i] = aVal
-		}
-	}
-	if fields&WB > 0 {
-		for i := range w.b {
-			w.b[i] = bVal
-		}
-	}
-	if fields&WBitslice > 0 {
-		w.bitslice.Reset()
-	}
+// that indicate which fields should be reset. Note that the internal queue
+// and stack are always reset.
+func (w *Workspace) Reset(fields ResetField) {
 	// Resetting a Queue and Stack is very fast, so just do it
 	w.queue.Reset()
 	w.stack.Reset()
-}
 
-// Prepare a Workspace for a Graph of a given size. The fields, aVal, and bVal
-// parameters are the same parameters to (*Workspace) Reset.
-func (w *Workspace) Prepare(size int, fields ResetField, aVal, bVal int) {
-	if w.Resize(size) {
-		// New workspaces are zero-filled, so avoid unnecessary work.
-		if aVal == 0 {
-			fields &= ^WA
+	if fields&WA > 0 {
+		for i := range w.a {
+			w.a[i] = 0
 		}
-		if bVal == 0 {
-			fields &= ^WB
+	} else if fields&WANeg > 0 {
+		for i := range w.a {
+			w.a[i] = -1
 		}
-		fields &= ^WBitslice
 	}
 
-	w.Reset(fields, aVal, bVal)
+	if fields&WB > 0 {
+		for i := range w.b {
+			w.b[i] = 0
+		}
+	} else if fields&WBNeg > 0 {
+		for i := range w.b {
+			w.b[i] = -1
+		}
+	}
+
+	if fields&WBitslice > 0 {
+		w.bitslice.Reset()
+	}
+}
+
+// Prepare a Workspace for a Graph of a given size. The fields parameter is a
+// bitfield of ResetField values that indicate which fields should be reset.
+func (w *Workspace) Prepare(size int, fields ResetField) {
+	if w.Resize(size) {
+		// New workspaces are zero-filled, so avoid unnecessary work.
+		fields &= ^(WA | WB | WBitslice)
+	}
+
+	w.Reset(fields)
 }

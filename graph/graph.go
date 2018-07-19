@@ -45,7 +45,7 @@ const undefined = -1
 //
 // If no path exists, an empty slice is returned.
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WB, 0, -1)
+	w.Prepare(len(g), WA|WBNeg)
 
 	dist := w.a      // Edge distances from u
 	pred := w.b      // Mapping of vertex -> predecessor vertex (undefined if unvisited)
@@ -94,7 +94,7 @@ loop:
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WBitslice, 0, 0)
+	w.Prepare(len(g), WA|WBitslice)
 
 	// We require the following to use an iterative DFS for topologically
 	// sorting a directed graph:
