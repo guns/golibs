@@ -18,7 +18,7 @@ type Vertex struct {
 	Edges []Edge
 }
 
-// A Graph is a slice of Vertices.
+// A Graph is a slice of Vertex structs.
 type Graph []Vertex
 
 // AddEdge adds a single Edge from Vertex u to v.
@@ -45,7 +45,7 @@ func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WB, 0, -1)
 
 	dist := w.a      // Edge distances from u
-	prev := w.b      // Mapping of vertex -> previous vertex
+	prev := w.b      // Mapping of vertex -> previous vertex (-1 if unvisited)
 	queue := w.queue // BFS queue
 
 	// BFS
@@ -61,22 +61,25 @@ loop:
 		i := queue.Dequeue()
 
 		for _, e := range g[i].Edges {
-			if prev[e.Vertex] != -1 {
+			w := e.Vertex
+
+			if prev[w] != -1 {
 				continue
 			}
 
-			prev[e.Vertex] = i
-			dist[e.Vertex] = dist[i] + 1
+			prev[w] = i
+			dist[w] = dist[i] + 1
 
-			if e.Vertex == v {
+			if w == v {
 				break loop
 			}
 
-			queue.Enqueue(e.Vertex)
+			queue.Enqueue(w)
 		}
 	}
 
 	if prev[v] == -1 {
+		// No path from u -> v was discovered
 		return path[:0]
 	}
 
@@ -93,49 +96,52 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	// We require the following to use an iterative DFS for topologically
 	// sorting a directed graph:
 	//
-	//	- A LIFO queue (stack) of vertices to visit
-	//	- A table of active (queued, but unvisited) vertices
-	//	- A table of visited vertices
-	//	- A way to flag a vertex whose children have been visited
+	//	- A LIFO queue (stack) of nodes to visit
+	//	- A table of active nodes (visited, but not fully explored)
+	//	- A table of explored nodes (vertex and descendents fully explored)
+	//	- A way to flag a vertex whose children have been fully explored
 	//	  (this enables post-order traversal without recursion)
 
-	stack := w.stack      // DFS stack
-	active := w.a         // Map of vertex -> active?
-	visited := w.bitslice // Map of vertex -> visited?
+	active := w.a          // Map of vertex -> active?
+	explored := w.bitslice // Map of vertex -> fully explored?
+	stack := w.stack       // DFS stack
 
-	tsort = resizeIntSlice(tsort, len(g)) // Grow and reslice target buffer
+	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	i := len(g)                           // tsort write index + 1
 
 	for u := range g {
-		if visited.Get(u) {
+		if explored.Get(u) {
 			continue
 		}
 
+		// DFS
 		stack.Push(u)
 
 		for stack.Len() > 0 {
 			v := stack.Pop()
 
-			// Post-order vertices are encoded as their ones' complement
+			// Post-order nodes are encoded as their ones' complement
 			if v < 0 {
+				// Vertex v's children have been explored
 				v = ^v
-				visited.Set(v)
+				explored.Set(v)
 				i--
 				tsort[i] = v
 				continue
-			} else if visited.Get(v) {
+			} else if explored.Get(v) {
+				// Ignore fully explored nodes
 				continue
 			} else if active[v] == 1 {
 				// This neighboring vertex is active but not yet
-				// visited, so we have discovered a cycle!
+				// fully explored, so we have discovered a cycle!
 				return tsort[:0]
 			}
 
-			// When all children have been visited, this parent
+			// When all children have been explored, this parent
 			// vertex will appear on top of the stack.
 			stack.Push(^v)
 
-			// Mark this vertex as active
+			// Mark this vertex as visited, but not fully explored.
 			active[v] = 1
 
 			for _, e := range g[v].Edges {
