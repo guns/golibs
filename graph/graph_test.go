@@ -9,20 +9,30 @@ import (
 func TestGraphLeastEdgesPath(t *testing.T) {
 	data := []struct {
 		size int
-		adj  [][]int
+		adj  map[int][]int // For readability
 		u, v int
 		path []int
 	}{
 		{
 			size: 4,
-			adj:  [][]int{{1}, {0, 2}, {1, 3}, {2}},
+			adj: map[int][]int{
+				0: {1},
+				1: {0, 2},
+				2: {1, 3},
+				3: {2},
+			},
 			u:    0,
 			v:    3,
 			path: []int{0, 1, 2, 3},
 		},
 		{
 			size: 4,
-			adj:  [][]int{{1}, {0, 2, 3}, {1, 3}, {2}},
+			adj: map[int][]int{
+				0: {1},
+				1: {0, 2, 3},
+				2: {1, 3},
+				3: {2},
+			},
 			u:    0,
 			v:    3,
 			path: []int{0, 1, 3},
@@ -30,7 +40,12 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// No path
 		{
 			size: 4,
-			adj:  [][]int{{1}, {2}, {}, {0}},
+			adj: map[int][]int{
+				0: {1},
+				1: {2},
+				2: {},
+				3: {0},
+			},
 			u:    0,
 			v:    3,
 			path: []int{},
@@ -38,7 +53,12 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// Cycle
 		{
 			size: 4,
-			adj:  [][]int{{1}, {0, 2}, {1, 3}, {2}},
+			adj: map[int][]int{
+				0: {1},
+				1: {0, 2},
+				2: {1, 3},
+				3: {2},
+			},
 			u:    0,
 			v:    0,
 			path: []int{0, 1, 0},
@@ -46,21 +66,48 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// Self-loop
 		{
 			size: 4,
-			adj:  [][]int{{0, 1}, {0, 2}, {1, 3}, {2}},
+			adj: map[int][]int{
+				0: {0, 1},
+				1: {0, 2},
+				2: {1, 3},
+				3: {2},
+			},
 			u:    0,
 			v:    0,
 			path: []int{0, 0},
 		},
 		{
 			size: 10,
-			adj:  [][]int{{8}, {3, 7, 9, 2}, {8, 1, 4}, {4, 5, 1}, {2, 3}, {3, 6}, {7, 5}, {1, 6}, {2, 0, 9}, {1, 8}},
+			adj: map[int][]int{
+				0: {8},
+				1: {3, 7, 9, 2},
+				2: {8, 1, 4},
+				3: {4, 5, 1},
+				4: {2, 3},
+				5: {3, 6},
+				6: {7, 5},
+				7: {1, 6},
+				8: {2, 0, 9},
+				9: {1, 8},
+			},
 			u:    0,
 			v:    5,
 			path: []int{0, 8, 2, 1, 3, 5},
 		},
 		{
 			size: 10,
-			adj:  [][]int{{8}, {3, 7, 9, 2}, {8, 1, 4}, {4, 5, 1}, {2, 3}, {3, 6}, {7, 5}, {1, 6}, {2, 0, 9}, {1, 8}},
+			adj: map[int][]int{
+				0: {8},
+				1: {3, 7, 9, 2},
+				2: {8, 1, 4},
+				3: {4, 5, 1},
+				4: {2, 3},
+				5: {3, 6},
+				6: {7, 5},
+				7: {1, 6},
+				8: {2, 0, 9},
+				9: {1, 8},
+			},
 			u:    1,
 			v:    0,
 			path: []int{1, 9, 8, 0}, // also {1, 2, 8, 0}
@@ -72,8 +119,8 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 	for _, row := range data {
 		g := make(Graph, row.size)
 
-		for u, adj := range row.adj {
-			for _, v := range adj {
+		for u, edges := range row.adj {
+			for _, v := range edges {
 				g.AddEdge(u, v, 1)
 			}
 		}
@@ -89,37 +136,71 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 func TestGraphTopologicalSort(t *testing.T) {
 	data := []struct {
 		size   int
-		adj    [][]int
+		adj    map[int][]int // For readability
 		cyclic bool
 	}{
 		{
 			size: 8,
-			adj:  [][]int{{1, 2}, {3, 4}, {3}, {5}, {6}, {6, 7}, {}, {6}},
+			adj: map[int][]int{
+				0: {1, 2},
+				1: {3, 4},
+				2: {3},
+				3: {5},
+				4: {6},
+				5: {6, 7},
+				6: {},
+				7: {6},
+			},
 		},
 		// Figure 22.7 CLRS (topologically sorted clothes)
 		{
 			size: 9,
-			adj:  [][]int{{3, 4}, {4}, {}, {4, 5}, {}, {8}, {5, 7}, {8}, {}},
+			adj: map[int][]int{
+				0: {3, 4},
+				1: {4},
+				2: {},
+				3: {4, 5},
+				4: {},
+				5: {8},
+				6: {5, 7},
+				7: {8},
+				8: {},
+			},
 		},
 		// Unconnected vertices
 		{
 			size: 10,
-			adj:  [][]int{},
+			adj:  map[int][]int{},
 		},
 		// Sparse graph
 		{
 			size: 4,
-			adj:  [][]int{{}, {3}, {}, {}},
+			adj: map[int][]int{
+				0: {},
+				1: {3},
+				2: {},
+				3: {},
+			},
 		},
 		// Cyclic graphs
 		{
-			size:   4,
-			adj:    [][]int{{1}, {2}, {3}, {0}},
+			size: 4,
+			adj: map[int][]int{
+				0: {1},
+				1: {2},
+				2: {3},
+				3: {0},
+			},
 			cyclic: true,
 		},
 		{
-			size:   4,
-			adj:    [][]int{{1}, {2}, {2, 3}, {}},
+			size: 4,
+			adj: map[int][]int{
+				0: {1},
+				1: {2},
+				2: {2, 3},
+				3: {},
+			},
 			cyclic: true,
 		},
 	}
@@ -196,8 +277,16 @@ func TestGraphTranspose(t *testing.T) {
 			edges: []edge{{0, 1, 1}},
 		},
 		{
-			size:  5,
-			edges: []edge{{0, 1, 2.1}, {1, 2, 3.2}, {2, 0, 0.7}, {2, 3, 4.1}, {3, 2, 0.2}, {3, 1, 3.6}, {4, 4, 0.5}},
+			size: 5,
+			edges: []edge{
+				{0, 1, 2.1},
+				{1, 2, 3.2},
+				{2, 0, 0.7},
+				{2, 3, 4.1},
+				{3, 2, 0.2},
+				{3, 1, 3.6},
+				{4, 4, 0.5},
+			},
 		},
 	}
 
