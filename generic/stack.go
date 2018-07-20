@@ -34,14 +34,32 @@ func (s *GenericTypeStack) Len() int {
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a new GenericTypeStack twice the
-// size of the original before adding the element.
+// the stack, the current stack is moved to a larger GenericTypeStack before
+// adding the element.
 func (s *GenericTypeStack) Push(x GenericType) {
 	if s.Len() == len(s.a) {
 		s.Grow(1)
 	}
 	s.a[s.i] = x
 	s.i++
+}
+
+// PushSlice adds a slice of GenericType onto the stack. If adding these
+// elements would overflow the stack, the current stack is moved to a larger
+// GenericTypeStack before adding the elements. Note that the slice is copied
+// into the stack in-order instead of being pushed onto the stack one by one.
+func (s *GenericTypeStack) PushSlice(xs []GenericType) {
+	if len(xs) == 0 {
+		return
+	}
+
+	newlen := s.Len() + len(xs)
+	if newlen > len(s.a) {
+		s.Grow(newlen - len(s.a))
+	}
+
+	copy(s.a[s.i:], xs)
+	s.i += len(xs)
 }
 
 // Pop removes and returns the top element from the stack. Calling Pop on an

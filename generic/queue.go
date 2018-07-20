@@ -33,17 +33,35 @@ func NewGenericTypeQueue(size int) *GenericTypeQueue {
 func (q *GenericTypeQueue) Len() int {
 	switch {
 	case q.head == -1:
+		// Queue is empty:
+		//
+		//	h
+		//	 [_ _ _ _ _ _]
+		//	t
+		//
 		return 0
 	case q.head < q.tail:
+		// Elements are in order:
+		//
+		//	    h
+		//	 [_ 1 2 3 _ _]
+		//	          t
+		//
 		return q.tail - q.head
 	default:
+		// Elements begin at rear and continue at front:
+		//
+		//	        h
+		//	 [0 1 _ 3 4 5]
+		//	      t
+		//
 		return len(q.a) - q.head + q.tail
 	}
 }
 
 // Enqueue a new element into the queue. If adding this element would overflow
-// the queue, the current queue is moved to a new GenericTypeQueue twice the
-// size of the original before adding the element.
+// the queue, the current queue is moved to a larger GenericTypeQueue before
+// adding the element.
 func (q *GenericTypeQueue) Enqueue(x GenericType) {
 	if q.tail == -1 {
 		q.head = 0
@@ -57,6 +75,63 @@ func (q *GenericTypeQueue) Enqueue(x GenericType) {
 	q.tail++
 	if q.tail >= len(q.a) {
 		q.tail -= len(q.a)
+	}
+}
+
+// EnqueueSlice adds a slice of GenericType into the queue. If adding these
+// elements would overflow the queue, the current queue is moved to a larger
+// GenericTypeQueue before adding the elements.
+func (q *GenericTypeQueue) EnqueueSlice(xs []GenericType) {
+	if len(xs) == 0 {
+		return
+	}
+
+	newlen := q.Len() + len(xs)
+	if newlen > len(q.a) {
+		q.Grow(newlen - len(q.a))
+	}
+
+	switch {
+	case q.head == -1:
+		// Queue is empty:
+		//
+		//	h
+		//	 [_ _ _ _ _ _]
+		//	t
+		//
+		copy(q.a, xs)
+		q.head = 0
+		q.tail = len(xs)
+
+		if q.tail >= len(q.a) {
+			q.tail -= len(q.a)
+		}
+	case q.tail < q.head:
+		// Free segment is contiguous:
+		//
+		//	          h
+		//	 [0 _ _ _ 4 5]
+		//	    t
+		//
+		copy(q.a[q.tail:], xs)
+		q.tail += len(xs)
+	default:
+		// Free segment begins at rear and continues at front:
+		//
+		//	      h
+		//	 [_ _ 2 3 _ _]
+		//	          t
+		//
+		n := copy(q.a[q.tail:], xs)
+
+		if n < len(xs) {
+			n += copy(q.a, xs[n:])
+		}
+
+		q.tail += n
+		if q.tail >= len(q.a) {
+			q.tail -= len(q.a)
+		}
 	}
 }
 
@@ -101,17 +176,31 @@ func (q *GenericTypeQueue) Grow(n int) {
 	a := make([]GenericType, 1<<uint(bits.Len(uint(len(q.a)+n-1))))
 
 	switch {
-	// Queue is empty
 	case q.head == -1:
+		// Queue is empty:
+		//
+		//	h
+		//	 [_ _ _ _ _ _]
+		//	t
 		q.a = a
-	// Elements are in order
 	case q.head < q.tail:
+		// Elements are in order:
+		//
+		//	    h
+		//	 [_ 1 2 3 _ _]
+		//	          t
+		//
 		copy(a, q.a[q.head:q.tail])
 		q.a = a
 		q.tail -= q.head
 		q.head = 0
-	// First segment of elements are at the rear of the array
 	default:
+		// Elements begin at rear and continue at front:
+		//
+		//	        h
+		//	 [0 1 _ 3 4 5]
+		//	      t
+		//
 		n := copy(a, q.a[q.head:])
 		n += copy(a[n:], q.a[:q.tail])
 		q.a = a

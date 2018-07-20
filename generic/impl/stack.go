@@ -13,7 +13,7 @@ import "math/bits"
 // IntStack is an auto-growing stack.
 type IntStack struct {
 	a []int
-	i int
+	i int // Next write index
 }
 
 // DefaultIntStackLen is the default size of a IntStack that
@@ -28,43 +28,61 @@ func NewIntStack(size int) *IntStack {
 	}
 	return &IntStack{
 		a: make([]int, 1<<uint(bits.Len(uint(size-1)))),
-		i: -1,
+		i: 0,
 	}
 }
 
 // Len returns the current number of pushed elements.
 func (s *IntStack) Len() int {
-	return s.i + 1
+	return s.i
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a new IntStack twice the
-// size of the original before adding the element.
+// the stack, the current stack is moved to a larger IntStack before
+// adding the element.
 func (s *IntStack) Push(x int) {
-	if s.i == len(s.a)-1 {
+	if s.Len() == len(s.a) {
 		s.Grow(1)
 	}
-	s.i++
 	s.a[s.i] = x
+	s.i++
+}
+
+// PushSlice adds a slice of int onto the stack. If adding these
+// elements would overflow the stack, the current stack is moved to a larger
+// IntStack before adding the elements. Note that the slice is copied
+// into the stack in-order instead of being pushed onto the stack one by one.
+func (s *IntStack) PushSlice(xs []int) {
+	if len(xs) == 0 {
+		return
+	}
+
+	newlen := s.Len() + len(xs)
+	if newlen > len(s.a) {
+		s.Grow(newlen - len(s.a))
+	}
+
+	copy(s.a[s.i:], xs)
+	s.i += len(xs)
 }
 
 // Pop removes and returns the top element from the stack. Calling Pop on an
 // empty stack results in a panic.
 func (s *IntStack) Pop() int {
 	s.i--
-	return s.a[s.i+1]
+	return s.a[s.i]
 }
 
 // Peek returns the top element from the stack without removing it. Peeking an
 // empty stack results in a panic.
 func (s *IntStack) Peek() int {
-	return s.a[s.i]
+	return s.a[s.i-1]
 }
 
 // Reset the stack so that its length is zero.
 // Note that the internal slice is NOT cleared.
 func (s *IntStack) Reset() {
-	s.i = -1
+	s.i = 0
 }
 
 // Grow internal slice to accommodate at least n more items.

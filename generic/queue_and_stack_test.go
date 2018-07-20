@@ -9,82 +9,147 @@ import (
 	"testing"
 )
 
+const pop = -1
+const peek = -2
+const grow = -3
+
 func TestQueueAndStack(t *testing.T) {
+	type T = GenericType
+	type Queue = GenericTypeQueue
+	type Stack = GenericTypeStack
+
 	data := []struct {
 		size     int
-		cmds     []int
-		queueOut []GenericType
-		queue    GenericTypeQueue
-		stackOut []GenericType
-		stack    GenericTypeStack
+		cmds     []interface{}
+		queueOut []T
+		queue    Queue
+		stackOut []T
+		stack    Stack
+		len      int
 	}{
 		{
 			size:     1,
-			cmds:     []int{1, 0, 2, 0},
-			queueOut: []GenericType{1, 2},
-			queue:    GenericTypeQueue{a: []GenericType{2}, head: -1, tail: -1},
-			stackOut: []GenericType{1, 2},
-			stack:    GenericTypeStack{a: []GenericType{2}, i: 0},
+			cmds:     []interface{}{1, pop, 2, pop},
+			queueOut: []T{1, 2},
+			queue:    Queue{a: []T{2}, head: -1, tail: -1},
+			stackOut: []T{1, 2},
+			stack:    Stack{a: []T{2}, i: 0},
+			len:      0,
 		},
 		{
 			size:     1,
-			cmds:     []int{1, 2, 0, 0},
-			queueOut: []GenericType{1, 2},
-			queue:    GenericTypeQueue{a: []GenericType{1, 2}, head: -1, tail: -1},
-			stackOut: []GenericType{2, 1},
-			stack:    GenericTypeStack{a: []GenericType{1, 2}, i: 0},
+			cmds:     []interface{}{1, 2, pop, pop},
+			queueOut: []T{1, 2},
+			queue:    Queue{a: []T{1, 2}, head: -1, tail: -1},
+			stackOut: []T{2, 1},
+			stack:    Stack{a: []T{1, 2}, i: 0},
+			len:      0,
 		},
 		{
 			size:     4,
-			cmds:     []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			queueOut: []GenericType{1, 2, 3, 4},
-			queue:    GenericTypeQueue{a: []GenericType{3, 4, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, head: 2, tail: 6},
-			stackOut: []GenericType{4, 3, 8, 7},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 4},
+			cmds:     []interface{}{1, 2, 3, 4, pop, pop, 5, 6, 7, 8, pop, pop},
+			queueOut: []T{1, 2, 3, 4},
+			queue:    Queue{a: []T{3, 4, 5, 6, 7, 8, T(nil), T(nil)}, head: 2, tail: 6},
+			stackOut: []T{4, 3, 8, 7},
+			stack:    Stack{a: []T{1, 2, 5, 6, 7, 8, T(nil), T(nil)}, i: 4},
+			len:      4,
 		},
 		{
 			size:     5,
-			cmds:     []int{1, 2, 3, 4, 0, 0, 5, 6, 7, 8, 0, 0},
-			queueOut: []GenericType{1, 2, 3, 4},
-			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
-			stackOut: []GenericType{4, 3, 8, 7},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 4},
+			cmds:     []interface{}{1, 2, 3, 4, pop, pop, 5, 6, 7, 8, pop, pop},
+			queueOut: []T{1, 2, 3, 4},
+			queue:    Queue{a: []T{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
+			stackOut: []T{4, 3, 8, 7},
+			stack:    Stack{a: []T{1, 2, 5, 6, 7, 8, T(nil), T(nil)}, i: 4},
+			len:      4,
 		},
 		{
 			size:     4,
-			cmds:     []int{1, 2, -1, -1, 3, 4, 0, 0},
-			queueOut: []GenericType{1, 1, 1, 2},
-			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4}, head: 2, tail: 0},
-			stackOut: []GenericType{2, 2, 4, 3},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4}, i: 2},
+			cmds:     []interface{}{1, 2, peek, peek, 3, 4, pop, pop},
+			queueOut: []T{1, 1, 1, 2},
+			queue:    Queue{a: []T{1, 2, 3, 4}, head: 2, tail: 0},
+			stackOut: []T{2, 2, 4, 3},
+			stack:    Stack{a: []T{1, 2, 3, 4}, i: 2},
+			len:      2,
 		},
+		// Default size
 		{
 			size:     0,
-			cmds:     []int{1, 2, 3, 4, 0, 0, 0, 0},
-			queueOut: []GenericType{1, 2, 3, 4},
-			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, head: -1, tail: -1},
-			stackOut: []GenericType{4, 3, 2, 1},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, i: 0},
+			cmds:     []interface{}{1, 2, 3, 4, pop, pop, pop, pop},
+			queueOut: []T{1, 2, 3, 4},
+			queue:    Queue{a: []T{1, 2, 3, 4, T(nil), T(nil), T(nil), T(nil)}, head: -1, tail: -1},
+			stackOut: []T{4, 3, 2, 1},
+			stack:    Stack{a: []T{1, 2, 3, 4, T(nil), T(nil), T(nil), T(nil)}, i: 0},
+			len:      0,
+		},
+		// Grow
+		{
+			size:     1,
+			cmds:     []interface{}{grow - 0, grow - 0},
+			queueOut: []T{},
+			queue:    *NewGenericTypeQueue(1),
+			stackOut: []T{},
+			stack:    *NewGenericTypeStack(1),
+			len:      0,
+		},
+		{
+			size:     1,
+			cmds:     []interface{}{grow - 1, 1, grow - 2, 2, 3, 4, pop, pop, 5, 6},
+			queueOut: []T{1, 2},
+			queue:    Queue{a: []T{5, 6, 3, 4}, head: 2, tail: 2},
+			stackOut: []T{4, 3},
+			stack:    Stack{a: []T{1, 2, 5, 6}, i: 4},
+			len:      4,
+		},
+		// Add slices
+		{
+			size:     4,
+			cmds:     []interface{}{[]T{1, 2, 3}, pop, []T{4, 5}},
+			queueOut: []T{1},
+			queue:    Queue{a: []T{5, 2, 3, 4}, head: 1, tail: 1},
+			stackOut: []T{3},
+			stack:    Stack{a: []T{1, 2, 4, 5}, i: 4},
+			len:      4,
+		},
+		{
+			size:     4,
+			cmds:     []interface{}{[]T{1, 2, 3, 4}, pop, pop, []T{}, pop, 5, []T{6, 7}},
+			queueOut: []T{1, 2, 3},
+			queue:    Queue{a: []T{5, 6, 7, 4}, head: 3, tail: 3},
+			stackOut: []T{4, 3, 2},
+			stack:    Stack{a: []T{1, 5, 6, 7}, i: 4},
+			len:      4,
 		},
 	}
 
 	for i, row := range data {
 		q := NewGenericTypeQueue(row.size)
 		s := NewGenericTypeStack(row.size)
-		qout := make([]GenericType, 0, len(row.queueOut))
-		sout := make([]GenericType, 0, len(row.stackOut))
+		qout := make([]T, 0, len(row.queueOut))
+		sout := make([]T, 0, len(row.stackOut))
 
-		for _, n := range row.cmds {
-			switch n {
-			case -1:
-				qout = append(qout, q.Peek())
-				sout = append(sout, s.Peek())
-			case 0:
+		for _, x := range row.cmds {
+			n, isNum := x.(int)
+			xs, isSlice := x.([]T)
+
+			switch {
+			case isNum && n == pop:
 				qout = append(qout, q.Dequeue())
 				sout = append(sout, s.Pop())
+			case isNum && n == peek:
+				qout = append(qout, q.Peek())
+				sout = append(sout, s.Peek())
+			case isNum && n <= grow:
+				q.Grow(-x.(int) - -grow)
+				s.Grow(-x.(int) - -grow)
 			default:
-				q.Enqueue(n)
-				s.Push(n)
+				if isSlice {
+					q.EnqueueSlice(xs)
+					s.PushSlice(xs)
+				} else {
+					q.Enqueue(x)
+					s.Push(x)
+				}
 			}
 		}
 
@@ -111,11 +176,17 @@ func TestQueueAndStack(t *testing.T) {
 			t.Errorf("%p != %p", sp, &s.a)
 		}
 
+		if q.Len() != row.len {
+			t.Errorf("%v != %v", q.Len(), row.len)
+		}
+		if s.Len() != row.len {
+			t.Errorf("%v != %v", s.Len(), row.len)
+		}
 		q.Reset()
+		s.Reset()
 		if q.Len() != 0 {
 			t.Errorf("%v != %v", q.Len(), 0)
 		}
-		s.Reset()
 		if s.Len() != 0 {
 			t.Errorf("%v != %v", s.Len(), 0)
 		}
