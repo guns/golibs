@@ -67,10 +67,6 @@ func (q *IntQueue) Enqueue(x int) {
 // Dequeue removes and returns the next element from the queue. Calling
 // Dequeue on an empty queue results in a panic.
 func (q *IntQueue) Dequeue() int {
-	if q.head == -1 {
-		panic("intQueue underflow")
-	}
-
 	x := q.a[q.head]
 
 	q.head++
@@ -88,10 +84,6 @@ func (q *IntQueue) Dequeue() int {
 // Peek returns the next element from the queue without removing it. Peeking
 // an empty queue results in a panic.
 func (q *IntQueue) Peek() int {
-	if q.head == -1 {
-		panic("cannot peek empty IntQueue")
-	}
-
 	return q.a[q.head]
 }
 
@@ -125,4 +117,6 @@ func (q *IntQueue) Grow(n int) {
 
 // GetSlicePointer returns a pointer to the backing slice of this IntQueue.
 // *WARNING* Use at your own risk.
-func (q *IntQueue) GetSlicePointer() *[]int { return &q.a }
+func (q *IntQueue) GetSlicePointer() *[]int {
+	return &q.a
+}

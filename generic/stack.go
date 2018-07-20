@@ -47,9 +47,6 @@ func (s *GenericTypeStack) Push(x GenericType) {
 // Pop removes and returns the top element from the stack. Calling Pop on an
 // empty stack results in a panic.
 func (s *GenericTypeStack) Pop() GenericType {
-	if s.Len() == 0 {
-		panic("stack underflow")
-	}
 	s.i--
 	return s.a[s.i+1]
 }
@@ -57,10 +54,6 @@ func (s *GenericTypeStack) Pop() GenericType {
 // Peek returns the top element from the stack without removing it. Peeking an
 // empty stack results in a panic.
 func (s *GenericTypeStack) Peek() GenericType {
-	if s.Len() == 0 {
-		panic("cannot peek empty GenericTypeStack")
-	}
-
 	return s.a[s.i]
 }
 
@@ -86,4 +79,6 @@ func (s *GenericTypeStack) Grow(n int) {
 
 // GetSlicePointer returns a pointer to the backing slice of this GenericTypeStack.
 // *WARNING* Use at your own risk.
-func (s *GenericTypeStack) GetSlicePointer() *[]GenericType { return &s.a }
+func (s *GenericTypeStack) GetSlicePointer() *[]GenericType {
+	return &s.a
+}

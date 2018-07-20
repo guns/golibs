@@ -51,9 +51,6 @@ func (s *IntStack) Push(x int) {
 // Pop removes and returns the top element from the stack. Calling Pop on an
 // empty stack results in a panic.
 func (s *IntStack) Pop() int {
-	if s.Len() == 0 {
-		panic("stack underflow")
-	}
 	s.i--
 	return s.a[s.i+1]
 }
@@ -61,10 +58,6 @@ func (s *IntStack) Pop() int {
 // Peek returns the top element from the stack without removing it. Peeking an
 // empty stack results in a panic.
 func (s *IntStack) Peek() int {
-	if s.Len() == 0 {
-		panic("cannot peek empty IntStack")
-	}
-
 	return s.a[s.i]
 }
 
@@ -90,4 +83,6 @@ func (s *IntStack) Grow(n int) {
 
 // GetSlicePointer returns a pointer to the backing slice of this IntStack.
 // *WARNING* Use at your own risk.
-func (s *IntStack) GetSlicePointer() *[]int { return &s.a }
+func (s *IntStack) GetSlicePointer() *[]int {
+	return &s.a
+}

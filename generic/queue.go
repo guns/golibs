@@ -63,10 +63,6 @@ func (q *GenericTypeQueue) Enqueue(x GenericType) {
 // Dequeue removes and returns the next element from the queue. Calling
 // Dequeue on an empty queue results in a panic.
 func (q *GenericTypeQueue) Dequeue() GenericType {
-	if q.head == -1 {
-		panic("GenericTypeQueue underflow")
-	}
-
 	x := q.a[q.head]
 
 	q.head++
@@ -84,10 +80,6 @@ func (q *GenericTypeQueue) Dequeue() GenericType {
 // Peek returns the next element from the queue without removing it. Peeking
 // an empty queue results in a panic.
 func (q *GenericTypeQueue) Peek() GenericType {
-	if q.head == -1 {
-		panic("cannot peek empty GenericTypeQueue")
-	}
-
 	return q.a[q.head]
 }
 
@@ -121,4 +113,6 @@ func (q *GenericTypeQueue) Grow(n int) {
 
 // GetSlicePointer returns a pointer to the backing slice of this GenericTypeQueue.
 // *WARNING* Use at your own risk.
-func (q *GenericTypeQueue) GetSlicePointer() *[]GenericType { return &q.a }
+func (q *GenericTypeQueue) GetSlicePointer() *[]GenericType {
+	return &q.a
+}
