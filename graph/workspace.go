@@ -15,31 +15,19 @@ import (
 type Workspace struct {
 	len, cap int // Not buffer length/capacity
 	a, b, c  []int
-	bs       bitslice.T
-}
-
-func workspaceInternalOffsets(size int) (a, b, c, buflen int) {
-	a = size
-	b = a + size
-	c = b + size
-	buflen = c + bitslice.UintLen(size)
-	return
 }
 
 // NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	a, b, c, buflen := workspaceInternalOffsets(size)
-	buf := make([]int, buflen)
-	bs := buf[c:]
+	buf := make([]int, size*3)
 
 	return &Workspace{
 		len: size,
 		cap: size,
-		a:   buf[:a],
-		b:   buf[a:b],
-		c:   buf[b:c],
-		bs:  *(*bitslice.T)(unsafe.Pointer(&bs)),
+		a:   buf[:size],
+		b:   buf[size : size*2],
+		c:   buf[size*2:],
 	}
 }
 
@@ -71,7 +59,6 @@ const (
 	WBNeg                            // Reset w.b with -1
 	WC                               // Select w.c or reset w.c with 0
 	WCNeg                            // Reset w.c with -1
-	WBS                              // Select w.bs or reset w.bs
 )
 
 func (w *Workspace) selectSlice(field WorkspaceField) []int {
@@ -88,7 +75,7 @@ func (w *Workspace) selectSlice(field WorkspaceField) []int {
 
 }
 
-// MakeQueue returns an IntQueue with the specified field as a backing slice.
+// MakeQueue returns an empty IntQueue with the specified field as a backing slice.
 func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
 	buf := w.selectSlice(field)[:w.cap]
 	q := impl.IntQueue{}
@@ -99,7 +86,7 @@ func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
 	return q
 }
 
-// MakeStack returns an IntStack with the specified field as a backing slice.
+// MakeStack returns an empty IntStack with the specified field as a backing slice.
 func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
 	buf := w.selectSlice(field)[:w.cap]
 	s := impl.IntStack{}
@@ -108,6 +95,33 @@ func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
 	s.Reset()
 
 	return s
+}
+
+// MakeBitsliceN returns a slice of n empty bitslice.T with the specified
+// field as a backing slice. Each bitslice has a capacity equal to the current
+// size of the workspace. The maximum number of bitslices that can be returned
+// is equal to:
+//
+//	currentWorkspaceLen / bitslice.UintLen(currentWorkspaceLen)
+//
+func (w *Workspace) MakeBitsliceN(n int, field WorkspaceField) []bitslice.T {
+	buf := w.selectSlice(field)[:w.cap]
+	bs := make([]bitslice.T, n)
+	blen := bitslice.UintLen(w.len)
+	offset := 0
+
+	for i := 0; i < n; i++ {
+		b := buf[offset : offset+blen]
+		bs[i] = *(*bitslice.T)(unsafe.Pointer(&b))
+		offset += blen
+	}
+
+	s := buf[:offset]
+	for i := range s {
+		s[i] = 0
+	}
+
+	return bs
 }
 
 // Reset a Workspace. The fields parameter is a bitfield of WorkspaceField
@@ -146,10 +160,6 @@ func (w *Workspace) Reset(fields WorkspaceField) {
 			w.c[i] = -1
 		}
 	}
-
-	if fields&WBS > 0 {
-		w.bs.Reset()
-	}
 }
 
 // Prepare a Workspace for a Graph of a given size. The fields parameter is a
@@ -157,7 +167,7 @@ func (w *Workspace) Reset(fields WorkspaceField) {
 func (w *Workspace) Prepare(size int, fields WorkspaceField) {
 	if w.Resize(size) {
 		// New workspaces are zero-filled, so avoid unnecessary work.
-		fields &= ^(WA | WB | WC | WBS)
+		fields &= ^(WA | WB | WC)
 	}
 
 	w.Reset(fields)

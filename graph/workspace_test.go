@@ -19,6 +19,7 @@ func TestWorkspace(t *testing.T) {
 	stack := w.MakeStack(WC)
 	qp := queue.GetSlicePointer()
 	sp := stack.GetSlicePointer()
+	bs := w.MakeBitsliceN(2, WC)
 
 	if w.len != 8 {
 		t.Errorf("%v != %v", w.len, 8)
@@ -45,17 +46,17 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, s) {
 		t.Errorf("%v != %v", w.c, s)
 	}
-	if !reflect.DeepEqual(w.bs, bitslice.T{uint(n)}) {
-		t.Errorf("%v != %v", w.bs, bitslice.T{uint(n)})
-	}
 	if !reflect.DeepEqual(*qp, s) {
 		t.Errorf("%v != %v", *qp, s)
 	}
 	if !reflect.DeepEqual(*sp, s) {
 		t.Errorf("%v != %v", *sp, s)
 	}
+	if !reflect.DeepEqual(bs, []bitslice.T{{uint(n)}, {uint(n)}}) {
+		t.Errorf("%v != %v", bs, []bitslice.T{{uint(n)}, {uint(n)}})
+	}
 
-	// Check to see that w.c, queue, and stack refer to the same memory
+	// Check to see that w.c, bs, queue, and stack refer to the same memory
 
 	for i := range w.c {
 		w.c[i] = ^n
@@ -72,6 +73,9 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(*sp, s) {
 		t.Errorf("%v != %v", *sp, s)
 	}
+	if !reflect.DeepEqual(bs, []bitslice.T{{uint(^n)}, {uint(^n)}}) {
+		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
+	}
 
 	// Prepare the workspace for a smaller graph
 
@@ -79,7 +83,7 @@ func TestWorkspace(t *testing.T) {
 	zneg := []int{-1, -1, -1, -1}
 	s = s[:4]
 
-	w.Prepare(4, WA|WBNeg|WBS)
+	w.Prepare(4, WA|WBNeg)
 
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
@@ -97,14 +101,14 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, s) {
 		t.Errorf("%v != %v", w.c, s)
 	}
-	if !reflect.DeepEqual(w.bs, bitslice.T{0}) {
-		t.Errorf("%v != %v", w.bs, bitslice.T{0})
-	}
 	if !reflect.DeepEqual(*qp, s[:8]) {
 		t.Errorf("%v != %v", *qp, s)
 	}
 	if !reflect.DeepEqual(*qp, s[:8]) {
 		t.Errorf("%v != %v", *qp, s)
+	}
+	if !reflect.DeepEqual(bs, []bitslice.T{{uint(^n)}, {uint(^n)}}) {
+		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
 	}
 
 	w.Prepare(4, WC)
@@ -118,6 +122,9 @@ func TestWorkspace(t *testing.T) {
 	}
 	if !reflect.DeepEqual(*sp, s) {
 		t.Errorf("%v != %v", *sp, s)
+	}
+	if !reflect.DeepEqual(bs, []bitslice.T{{0}, {0}}) {
+		t.Errorf("%v != %v", bs, []bitslice.T{{0}, {0}})
 	}
 
 	// Grow the workspace
@@ -141,7 +148,14 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, z) {
 		t.Errorf("%v != %v", w.c, z)
 	}
-	if !reflect.DeepEqual(w.bs, bitslice.T{0}) {
-		t.Errorf("%v != %v", w.bs, bitslice.T{0})
+
+	if !reflect.DeepEqual(*qp, s) {
+		t.Errorf("%v != %v", *qp, s)
+	}
+	if !reflect.DeepEqual(*sp, s) {
+		t.Errorf("%v != %v", *sp, s)
+	}
+	if !reflect.DeepEqual(bs, []bitslice.T{{0}, {0}}) {
+		t.Errorf("%v != %v", bs, []bitslice.T{{0}, {0}})
 	}
 }

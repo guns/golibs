@@ -47,8 +47,8 @@ const undefined = -1
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WBNeg)
 
-	dist := w.a              // Edge distances from u
-	pred := w.b              // Mapping of vertex -> predecessor vertex (undefined if unvisited)
+	dist := w.a              // Slice of vertex -> edge distance from u
+	pred := w.b              // Slice of vertex -> predecessor vertex (undefined if unvisited)
 	queue := w.MakeQueue(WC) // BFS queue
 
 	// BFS
@@ -94,10 +94,11 @@ loop:
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WBS)
+	w.Prepare(len(g), 0)
 
-	active := w.a            // Map of vertex -> active?
-	explored := w.bs         // Map of vertex -> fully explored?
+	bs := w.MakeBitsliceN(2, WA)
+	active := bs[0]          // Bitslice of vertex -> active?
+	explored := bs[1]        // Bitslice of vertex -> fully explored?
 	stack := w.MakeStack(WB) // DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
@@ -127,14 +128,14 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 			if explored.Get(v) {
 				// Ignore fully explored nodes
 				continue
-			} else if active[v] == 1 {
+			} else if active.Get(v) {
 				// This neighboring vertex is active but not yet
 				// fully explored, so we have discovered a cycle!
 				return tsort[:0]
 			}
 
 			// Mark this vertex as visited, but not fully explored.
-			active[v] = 1
+			active.Set(v)
 
 			// When all children have been explored, this parent
 			// vertex will appear on top of the stack.
