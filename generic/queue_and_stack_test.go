@@ -24,7 +24,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 2},
 			queue:    GenericTypeQueue{a: []GenericType{2}, head: -1, tail: -1},
 			stackOut: []GenericType{1, 2},
-			stack:    GenericTypeStack{a: []GenericType{2}, i: -1},
+			stack:    GenericTypeStack{a: []GenericType{2}, i: 0},
 		},
 		{
 			size:     1,
@@ -32,7 +32,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 2},
 			queue:    GenericTypeQueue{a: []GenericType{1, 2}, head: -1, tail: -1},
 			stackOut: []GenericType{2, 1},
-			stack:    GenericTypeStack{a: []GenericType{1, 2}, i: -1},
+			stack:    GenericTypeStack{a: []GenericType{1, 2}, i: 0},
 		},
 		{
 			size:     4,
@@ -40,7 +40,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 2, 3, 4},
 			queue:    GenericTypeQueue{a: []GenericType{3, 4, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, head: 2, tail: 6},
 			stackOut: []GenericType{4, 3, 8, 7},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 3},
+			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 4},
 		},
 		{
 			size:     5,
@@ -48,7 +48,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 2, 3, 4},
 			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4, 5, 6, 7, 8}, head: 4, tail: 0},
 			stackOut: []GenericType{4, 3, 8, 7},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 3},
+			stack:    GenericTypeStack{a: []GenericType{1, 2, 5, 6, 7, 8, GenericType(nil), GenericType(nil)}, i: 4},
 		},
 		{
 			size:     4,
@@ -56,7 +56,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 1, 1, 2},
 			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4}, head: 2, tail: 0},
 			stackOut: []GenericType{2, 2, 4, 3},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4}, i: 1},
+			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4}, i: 2},
 		},
 		{
 			size:     0,
@@ -64,7 +64,7 @@ func TestQueueAndStack(t *testing.T) {
 			queueOut: []GenericType{1, 2, 3, 4},
 			queue:    GenericTypeQueue{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, head: -1, tail: -1},
 			stackOut: []GenericType{4, 3, 2, 1},
-			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, i: -1},
+			stack:    GenericTypeStack{a: []GenericType{1, 2, 3, 4, GenericType(nil), GenericType(nil), GenericType(nil), GenericType(nil)}, i: 0},
 		},
 	}
 

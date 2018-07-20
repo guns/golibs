@@ -9,7 +9,7 @@ import "math/bits"
 // GenericTypeStack is an auto-growing stack.
 type GenericTypeStack struct {
 	a []GenericType
-	i int
+	i int // Next write index
 }
 
 // DefaultGenericTypeStackLen is the default size of a GenericTypeStack that
@@ -24,43 +24,43 @@ func NewGenericTypeStack(size int) *GenericTypeStack {
 	}
 	return &GenericTypeStack{
 		a: make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
-		i: -1,
+		i: 0,
 	}
 }
 
 // Len returns the current number of pushed elements.
 func (s *GenericTypeStack) Len() int {
-	return s.i + 1
+	return s.i
 }
 
 // Push a new element onto the stack. If adding this element would overflow
 // the stack, the current stack is moved to a new GenericTypeStack twice the
 // size of the original before adding the element.
 func (s *GenericTypeStack) Push(x GenericType) {
-	if s.i == len(s.a)-1 {
+	if s.Len() == len(s.a) {
 		s.Grow(1)
 	}
-	s.i++
 	s.a[s.i] = x
+	s.i++
 }
 
 // Pop removes and returns the top element from the stack. Calling Pop on an
 // empty stack results in a panic.
 func (s *GenericTypeStack) Pop() GenericType {
 	s.i--
-	return s.a[s.i+1]
+	return s.a[s.i]
 }
 
 // Peek returns the top element from the stack without removing it. Peeking an
 // empty stack results in a panic.
 func (s *GenericTypeStack) Peek() GenericType {
-	return s.a[s.i]
+	return s.a[s.i-1]
 }
 
 // Reset the stack so that its length is zero.
 // Note that the internal slice is NOT cleared.
 func (s *GenericTypeStack) Reset() {
-	s.i = -1
+	s.i = 0
 }
 
 // Grow internal slice to accommodate at least n more items.
