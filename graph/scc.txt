@@ -1,0 +1,109 @@
+// Tarjan's strongly connected components algorithm from Wikipedia:
+//
+// https://en.wikipedia.org/wiki/Tarjan's_strongly_connected_components_algorithm
+algorithm tarjan(V, E):
+	storage:
+		i          // Visit index
+		S          // Visit stack for recording components
+		onStack    // Bitarray for fast lookup of v ∈ S
+		index      // Array of v -> visit index
+		rindex     // Array of v -> local root index
+		call stack // For recursive traversal
+
+	i = 0
+
+	for each u in V:
+		if index[u] is undefined:
+			strongconnect(u)
+
+	procedure strongconnect(u):
+		// Visit unvisited node u by assigning it the current visit index.
+		index[u] = i
+		rindex[u] = i
+		i++
+
+		// Push this node onto the stack of active nodes.
+		S.push(u)
+		onStack[u] = true
+
+		// Consider successors of u.
+		for each (u, v) in E:
+			if index[v] is undefined:
+				// Visit unvisited successor v.
+				strongconnect(v)
+
+				// rindex[v] now contains lowest visit index of active nodes reachable
+				// from v. Since v is a successor of u, rindex[u] should be adjusted if
+				// rindex[v] is smaller.
+				rindex[u] = min(rindex[u], rindex[v]) // POSTORDER
+			else if onStack[v]:
+				// Successor v is in stack S and hence in the current SCC. rindex[v] has
+				// not yet been fully adjusted, so set rindex[u] to index[v] if index[v]
+				// is the smallest visit index seen so far.
+				rindex[u] = min(rindex[u], index[v])
+
+				// Successor v has been visited and is not on the stack of active nodes.
+				// Therefore v is part of another SCC, and (u, v) is a cross-edge that can
+				// be ignored.
+
+		// POSTORDER
+
+		// If u is a root node, pop the stack and generate an SCC
+		if rindex[u] == index[u]:
+			start a new strongly connected component
+			repeat
+				v = S.pop()
+				onStack[v] = false
+				add v to current strongly connected component
+			while (v != u)
+			output the current strongly connected component
+
+// Pearce's memory efficient strongly connected components algorithm:
+//
+// http://homepages.ecs.vuw.ac.nz/~djp/files/IPL15-preprint.pdf
+algorithm PEA_FIND_SCC2(V, E):
+	storage:
+		i          // Visit index
+		c          // Component index
+		rindex     // Array of v -> local root index
+		S          // Visit stack
+		call stack // For recursive traversal
+
+	i = 0
+	c = |V| - 1
+
+	for u in V:
+		if rindex[u] is undefined:
+			visit(u)
+
+	return rindex
+
+	procedure visit(u):
+		root = true // Local variable
+		rindex[u] = i
+		i++
+
+		for each (u, v) in E:
+			if rindex[v] is undefined:
+				visit(v)
+
+			// POSTORDER
+			if rindex[v] < rindex[u]:
+				rindex[u] = rindex[v]
+				root = false
+
+		// POSTORDER
+		if root:
+			i--
+
+			while S is not empty AND rindex[u] <= S.peek():
+				v = S.pop() // v in SCC with u
+				rindex[v] = c
+				i--
+
+			rindex[u] = c
+			c--
+		else:
+			S.push(u)
+
+// vim:ft=go:
