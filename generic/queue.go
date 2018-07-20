@@ -98,17 +98,26 @@ func (q *GenericTypeQueue) Grow(n int) {
 		return
 	}
 
-	r := GenericTypeQueue{
-		a:    make([]GenericType, 1<<uint(bits.Len(uint(len(q.a)+n-1)))),
-		head: -1,
-		tail: -1,
-	}
+	a := make([]GenericType, 1<<uint(bits.Len(uint(len(q.a)+n-1))))
 
-	for q.Len() > 0 {
-		r.Enqueue(q.Dequeue())
+	switch {
+	// Queue is empty
+	case q.head == -1:
+		q.a = a
+	// Elements are in order
+	case q.head < q.tail:
+		copy(a, q.a[q.head:q.tail])
+		q.a = a
+		q.tail -= q.head
+		q.head = 0
+	// First segment of elements are at the rear of the array
+	default:
+		n := copy(a, q.a[q.head:])
+		n += copy(a[n:], q.a[:q.tail])
+		q.a = a
+		q.head = 0
+		q.tail = n
 	}
-
-	*q = r
 }
 
 // GetSlicePointer returns a pointer to the backing slice of this GenericTypeQueue.
