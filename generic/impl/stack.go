@@ -104,3 +104,102 @@ func (s *IntStack) Grow(n int) {
 func (s *IntStack) GetSlicePointer() *[]int {
 	return &s.a
 }
+
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
+// UintStack is an auto-growing stack.
+type UintStack struct {
+	a []uint
+	i int // Next write index
+}
+
+// DefaultUintStackLen is the default size of a UintStack that
+// is created with a non-positive size.
+const DefaultUintStackLen = 8
+
+// NewUintStack returns a new stack that can accommodate at least size items,
+// or DefaultStackLen if size <= 0.
+func NewUintStack(size int) *UintStack {
+	if size <= 0 {
+		size = DefaultUintStackLen
+	}
+	return &UintStack{
+		a: make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+		i: 0,
+	}
+}
+
+// Len returns the current number of pushed elements.
+func (s *UintStack) Len() int {
+	return s.i
+}
+
+// Push a new element onto the stack. If adding this element would overflow
+// the stack, the current stack is moved to a larger UintStack before
+// adding the element.
+func (s *UintStack) Push(x uint) {
+	if s.Len() == len(s.a) {
+		s.Grow(1)
+	}
+	s.a[s.i] = x
+	s.i++
+}
+
+// PushSlice adds a slice of uint onto the stack. If adding these
+// elements would overflow the stack, the current stack is moved to a larger
+// UintStack before adding the elements. Note that the slice is copied
+// into the stack in-order instead of being pushed onto the stack one by one.
+func (s *UintStack) PushSlice(xs []uint) {
+	if len(xs) == 0 {
+		return
+	}
+
+	newlen := s.Len() + len(xs)
+	if newlen > len(s.a) {
+		s.Grow(newlen - len(s.a))
+	}
+
+	copy(s.a[s.i:], xs)
+	s.i += len(xs)
+}
+
+// Pop removes and returns the top element from the stack. Calling Pop on an
+// empty stack results in a panic.
+func (s *UintStack) Pop() uint {
+	s.i--
+	return s.a[s.i]
+}
+
+// Peek returns the top element from the stack without removing it. Peeking an
+// empty stack results in a panic.
+func (s *UintStack) Peek() uint {
+	return s.a[s.i-1]
+}
+
+// Reset the stack so that its length is zero.
+// Note that the internal slice is NOT cleared.
+func (s *UintStack) Reset() {
+	s.i = 0
+}
+
+// Grow internal slice to accommodate at least n more items.
+func (s *UintStack) Grow(n int) {
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
+	// never have unused capacity.
+	if n <= 0 {
+		return
+	}
+
+	a := make([]uint, 1<<uint(bits.Len(uint(len(s.a)+n-1))))
+	copy(a, s.a)
+
+	s.a = a
+}
+
+// GetSlicePointer returns a pointer to the backing slice of this UintStack.
+// *WARNING* Use at your own risk.
+func (s *UintStack) GetSlicePointer() *[]uint {
+	return &s.a
+}

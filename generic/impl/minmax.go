@@ -95,3 +95,95 @@ func MaxIntSlice(nums []int) int {
 
 	return max
 }
+
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
+// MinUint2 returns the minimum of a and b.
+func MinUint2(a, b uint) uint {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// MinUint3 returns the minimum of a, b, and c.
+func MinUint3(a, b, c uint) uint {
+	if a < b {
+		if a < c {
+			return a
+		}
+		return c
+	}
+	if b < c {
+		return b
+	}
+	return c
+}
+
+// MinUintV returns the minimum of all uint parameters.
+func MinUintV(nums ...uint) uint {
+	return MinUintSlice(nums)
+}
+
+// MinUintSlice returns the minimum of a slice of uint.
+func MinUintSlice(nums []uint) uint {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	min := nums[0]
+
+	for _, n := range nums[1:] {
+		if n < min {
+			min = n
+		}
+	}
+
+	return min
+}
+
+// MaxUint2 returns the maximum of a and b.
+func MaxUint2(a, b uint) uint {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// MaxUint3 returns the maximum of a, b, and c.
+func MaxUint3(a, b, c uint) uint {
+	if a > b {
+		if a > c {
+			return a
+		}
+		return c
+	}
+	if b > c {
+		return b
+	}
+	return c
+}
+
+// MaxUintV returns the maximum of all uint parameters.
+func MaxUintV(nums ...uint) uint {
+	return MaxUintSlice(nums)
+}
+
+// MaxUintSlice returns the maximum of a slice of uint.
+func MaxUintSlice(nums []uint) uint {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	max := nums[0]
+
+	for _, n := range nums[1:] {
+		if n > max {
+			max = n
+		}
+	}
+
+	return max
+}
