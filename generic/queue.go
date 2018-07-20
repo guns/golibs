@@ -100,13 +100,14 @@ func (q *GenericTypeQueue) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (q *GenericTypeQueue) Grow(n int) {
-	n -= cap(q.a) - len(q.a)
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
+	// never have unused capacity.
 	if n <= 0 {
 		return
 	}
 
 	r := GenericTypeQueue{
-		a:    make([]GenericType, 1<<uint(bits.Len(uint(cap(q.a)+n-1)))),
+		a:    make([]GenericType, 1<<uint(bits.Len(uint(len(q.a)+n-1)))),
 		head: -1,
 		tail: -1,
 	}

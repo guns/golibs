@@ -76,12 +76,13 @@ func (s *IntStack) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (s *IntStack) Grow(n int) {
-	n -= cap(s.a) - len(s.a)
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
+	// never have unused capacity.
 	if n <= 0 {
 		return
 	}
 
-	a := make([]int, 1<<uint(bits.Len(uint(cap(s.a)+n-1))))
+	a := make([]int, 1<<uint(bits.Len(uint(len(s.a)+n-1))))
 	copy(a, s.a)
 
 	s.a = a
