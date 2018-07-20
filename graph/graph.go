@@ -64,20 +64,20 @@ loop:
 		i := queue.Dequeue()
 
 		for _, e := range g[i].Edges {
-			w := e.Vertex
+			u := e.Vertex
 
-			if pred[w] != undefined {
+			if pred[u] != undefined {
 				continue
 			}
 
-			pred[w] = i
-			dist[w] = dist[i] + 1
+			pred[u] = i
+			dist[u] = dist[i] + 1
 
-			if w == v {
+			if u == v {
 				break loop
 			}
 
-			queue.Enqueue(w)
+			queue.Enqueue(u)
 		}
 	}
 
@@ -112,36 +112,37 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 		// DFS
 		stack.Push(u)
 
+		// visit(u)
 		for stack.Len() > 0 {
-			v := stack.Pop()
+			u := stack.Pop()
 
 			// Post-order visit nodes whose children have been explored.
 			// These nodes are encoded as their ones' complement.
-			if v < 0 {
-				v = ^v
-				explored.Set(v)
+			if u < 0 {
+				u = ^u
+				explored.Set(u)
 				i--
-				tsort[i] = v
+				tsort[i] = u
 				continue
 			}
 
-			if explored.Get(v) {
+			if explored.Get(u) {
 				// Ignore fully explored nodes
 				continue
-			} else if active.Get(v) {
+			} else if active.Get(u) {
 				// This neighboring vertex is active but not yet
 				// fully explored, so we have discovered a cycle!
 				return tsort[:0]
 			}
 
 			// Mark this vertex as visited, but not fully explored.
-			active.Set(v)
+			active.Set(u)
 
 			// When all children have been explored, this parent
 			// vertex will appear on top of the stack.
-			stack.Push(^v)
+			stack.Push(^u)
 
-			for _, e := range g[v].Edges {
+			for _, e := range g[u].Edges {
 				stack.Push(e.Vertex)
 			}
 		}
