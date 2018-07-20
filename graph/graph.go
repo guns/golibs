@@ -96,18 +96,9 @@ loop:
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WBS)
 
-	// We require the following to use an iterative DFS for topologically
-	// sorting a directed graph:
-	//
-	//	- A LIFO queue (stack) of nodes to visit
-	//	- A table of active nodes (visited, but not fully explored)
-	//	- A table of explored nodes (vertex and descendents fully explored)
-	//	- A way to flag a vertex whose children have been fully explored
-	//	  (this enables post-order traversal without recursion)
-
 	active := w.a            // Map of vertex -> active?
 	explored := w.bs         // Map of vertex -> fully explored?
-	stack := w.MakeStack(WC) // DFS stack
+	stack := w.MakeStack(WB) // DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	i := len(g)                           // tsort write index + 1
