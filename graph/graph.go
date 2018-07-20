@@ -47,9 +47,9 @@ const undefined = -1
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WBNeg)
 
-	dist := w.a      // Edge distances from u
-	pred := w.b      // Mapping of vertex -> predecessor vertex (undefined if unvisited)
-	queue := w.queue // BFS queue
+	dist := w.a              // Edge distances from u
+	pred := w.b              // Mapping of vertex -> predecessor vertex (undefined if unvisited)
+	queue := w.MakeQueue(WC) // BFS queue
 
 	// BFS
 	queue.Enqueue(u)
@@ -94,7 +94,7 @@ loop:
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WBitslice)
+	w.Prepare(len(g), WA|WBS)
 
 	// We require the following to use an iterative DFS for topologically
 	// sorting a directed graph:
@@ -105,9 +105,9 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	//	- A way to flag a vertex whose children have been fully explored
 	//	  (this enables post-order traversal without recursion)
 
-	active := w.a          // Map of vertex -> active?
-	explored := w.bitslice // Map of vertex -> fully explored?
-	stack := w.stack       // DFS stack
+	active := w.a            // Map of vertex -> active?
+	explored := w.bs         // Map of vertex -> fully explored?
+	stack := w.MakeStack(WC) // DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	i := len(g)                           // tsort write index + 1

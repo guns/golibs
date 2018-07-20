@@ -5,53 +5,41 @@
 package graph
 
 import (
-	"math/bits"
 	"unsafe"
 
 	"github.com/guns/golibs/bitslice"
 	"github.com/guns/golibs/generic/impl"
 )
 
-// A Workspace is used while traversing Graphs.
+// A Workspace provides general-purpose storage while traversing Graphs.
 type Workspace struct {
-	cap      int           // Workspace capacity (largest graph supported)
-	a        []int         // Mapping of vertex -> int
-	b        []int         // Mapping of vertex -> int
-	bitslice bitslice.T    // Mapping of vertex -> bool
-	queue    impl.IntQueue // BFS queue
-	stack    impl.IntStack // DFS stack
+	len, cap int // Not buffer length/capacity
+	a, b, c  []int
+	bs       bitslice.T
 }
 
-func workspaceInternalSizes(size int) (alen, blen, qlen int) {
-	alen = size * 2
-	blen = bitslice.UintLen(size)
-	qlen = 1 << uint(bits.Len(uint(size/2-1)))
+func workspaceInternalOffsets(size int) (a, b, c, buflen int) {
+	a = size
+	b = a + size
+	c = b + size
+	buflen = c + bitslice.UintLen(size)
 	return
 }
 
-// NewWorkspace returns a new Workspace suitable for a Graph of a given size.
+// NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	alen, blen, qlen := workspaceInternalSizes(size)
-	buf := make([]int, alen+blen+qlen)
-
-	// The bitslice is between the int buffers and the queue buffers
-	bsbuf := buf[alen : alen+blen]
-	bs := *(*bitslice.T)(unsafe.Pointer(&bsbuf))
-
-	// The queue and stack share a slice and cannot be used concurrently.
-	queue := impl.IntQueue{}
-	stack := impl.IntStack{}
-	(*queue.GetSlicePointer()) = buf[alen+blen:]
-	(*stack.GetSlicePointer()) = buf[alen+blen:]
+	a, b, c, buflen := workspaceInternalOffsets(size)
+	buf := make([]int, buflen)
+	bs := buf[c:]
 
 	return &Workspace{
-		cap:      size,
-		a:        buf[:size],
-		b:        buf[size:alen],
-		bitslice: bs,
-		queue:    queue,
-		stack:    stack,
+		len: size,
+		cap: size,
+		a:   buf[:a],
+		b:   buf[a:b],
+		c:   buf[b:c],
+		bs:  *(*bitslice.T)(unsafe.Pointer(&bs)),
 	}
 }
 
@@ -59,59 +47,75 @@ func NewWorkspace(size int) *Workspace {
 // false if not. Note that all buffers are zeroed on reallocation, so a Reset
 // may not be necessary after a Resize that triggers a reallocation.
 func (w *Workspace) Resize(size int) bool {
-	if size == len(w.a) {
+	if size == w.len {
 		return false
 	} else if size <= w.cap {
+		w.len = size
 		w.a = w.a[:size]
 		w.b = w.b[:size]
+		w.c = w.c[:size]
 		return false
 	}
 
-	var buf []int
-	alen, blen, qlen := workspaceInternalSizes(size)
-	buflen := alen + blen + qlen
-
-	// The queue and stack buffers may have been replaced by larger slices
-	// that we might be able to reuse.
-	qp, sp := w.queue.GetSlicePointer(), w.stack.GetSlicePointer()
-	if len(*qp) >= buflen {
-		buf = *qp
-	} else if len(*sp) >= buflen {
-		buf = *sp
-	} else {
-		buf = make([]int, buflen)
-	}
-
-	w.cap = size
-	w.a = buf[:size]
-	w.b = buf[size:alen]
-	bsbuf := buf[alen : alen+blen]
-	w.bitslice = *(*bitslice.T)(unsafe.Pointer(&bsbuf))
-	*qp = buf[alen+blen:]
-	*sp = buf[alen+blen:]
-
+	*w = *NewWorkspace(size)
 	return true
 }
 
-// ResetField values are constants that communicate which fields of
-// a Workspace should be reset.
-type ResetField uint
+// WorkspaceField values represent fields of a Workspace.
+type WorkspaceField uint
 
 const (
-	WA        ResetField = 1 << iota // Fill w.a with 0
-	WANeg                            // Fill w.a with -1
-	WB                               // Fill w.b with 0
-	WBNeg                            // Fill w.b with -1
-	WBitslice                        // Reset w.bitslice
+	WA    WorkspaceField = 1 << iota // Select w.a or reset w.a with 0
+	WANeg                            // Reset w.a with -1
+	WB                               // Select w.b or reset w.b with 0
+	WBNeg                            // Reset w.b with -1
+	WC                               // Select w.c or reset w.c with 0
+	WCNeg                            // Reset w.c with -1
+	WBS                              // Select w.bs or reset w.bs
 )
 
-// Reset a Workspace. The fields parameter is a bitfield of ResetField values
-// that indicate which fields should be reset. Note that the internal queue
-// and stack are always reset.
-func (w *Workspace) Reset(fields ResetField) {
-	// Resetting a Queue and Stack is very fast, so just do it
-	w.queue.Reset()
-	w.stack.Reset()
+func (w *Workspace) selectSlice(field WorkspaceField) []int {
+	switch field {
+	case WA:
+		return w.a
+	case WB:
+		return w.b
+	case WC:
+		return w.c
+	default:
+		return nil // panic() defeats inlining
+	}
+
+}
+
+// MakeQueue returns an IntQueue with the specified field as a backing slice.
+func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
+	buf := w.selectSlice(field)[:w.cap]
+	q := impl.IntQueue{}
+
+	*q.GetSlicePointer() = buf
+	q.Reset()
+
+	return q
+}
+
+// MakeStack returns an IntStack with the specified field as a backing slice.
+func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
+	buf := w.selectSlice(field)[:w.cap]
+	s := impl.IntStack{}
+
+	*s.GetSlicePointer() = buf
+	s.Reset()
+
+	return s
+}
+
+// Reset a Workspace. The fields parameter is a bitfield of WorkspaceField
+// values that specify which fields to reset.
+func (w *Workspace) Reset(fields WorkspaceField) {
+	if fields == 0 {
+		return
+	}
 
 	if fields&WA > 0 {
 		for i := range w.a {
@@ -133,17 +137,27 @@ func (w *Workspace) Reset(fields ResetField) {
 		}
 	}
 
-	if fields&WBitslice > 0 {
-		w.bitslice.Reset()
+	if fields&WC > 0 {
+		for i := range w.c {
+			w.c[i] = 0
+		}
+	} else if fields&WCNeg > 0 {
+		for i := range w.c {
+			w.c[i] = -1
+		}
+	}
+
+	if fields&WBS > 0 {
+		w.bs.Reset()
 	}
 }
 
 // Prepare a Workspace for a Graph of a given size. The fields parameter is a
-// bitfield of ResetField values that indicate which fields should be reset.
-func (w *Workspace) Prepare(size int, fields ResetField) {
+// bitfield of WorkspaceField values that specify which fields to reset.
+func (w *Workspace) Prepare(size int, fields WorkspaceField) {
 	if w.Resize(size) {
 		// New workspaces are zero-filled, so avoid unnecessary work.
-		fields &= ^(WA | WB | WBitslice)
+		fields &= ^(WA | WB | WC | WBS)
 	}
 
 	w.Reset(fields)
