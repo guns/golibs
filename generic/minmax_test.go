@@ -7,36 +7,38 @@ package generic
 import "testing"
 
 func TestMinMax(t *testing.T) {
+	type N = GenericNumber
+
 	data := []struct {
-		v        []GenericNumber
-		min, max [8]GenericNumber
+		v        []N
+		min, max [8]N
 	}{
 		{
-			v:   []GenericNumber{-2, -1, 0, 1, 2},
-			min: [8]GenericNumber{-2, -2, 0, -2, -2, -2, -2, -2},
-			max: [8]GenericNumber{-1, 0, 0, -2, -1, 0, 1, 2},
+			v:   []N{-2, -1, 0, 1, 2},
+			min: [8]N{-2, -2, 0, -2, -2, -2, -2, -2},
+			max: [8]N{-1, 0, 0, -2, -1, 0, 1, 2},
 		},
 		{
-			v:   []GenericNumber{2, 3, -1, 4, 5},
-			min: [8]GenericNumber{2, -1, 0, 2, 2, -1, -1, -1},
-			max: [8]GenericNumber{3, 3, 0, 2, 3, 3, 4, 5},
+			v:   []N{2, 3, -1, 4, 5},
+			min: [8]N{2, -1, 0, 2, 2, -1, -1, -1},
+			max: [8]N{3, 3, 0, 2, 3, 3, 4, 5},
 		},
 		{
-			v:   []GenericNumber{-2, -3, -1, 0, 1},
-			min: [8]GenericNumber{-3, -3, 0, -2, -3, -3, -3, -3},
-			max: [8]GenericNumber{-2, -1, 0, -2, -2, -1, 0, 1},
+			v:   []N{-2, -3, -1, 0, 1},
+			min: [8]N{-3, -3, 0, -2, -3, -3, -3, -3},
+			max: [8]N{-2, -1, 0, -2, -2, -1, 0, 1},
 		},
 		{
-			v:   []GenericNumber{1, 0, -1, 0, 1},
-			min: [8]GenericNumber{0, -1, 0, 1, 0, -1, -1, -1},
-			max: [8]GenericNumber{1, 1, 0, 1, 1, 1, 1, 1},
+			v:   []N{1, 0, -1, 0, 1},
+			min: [8]N{0, -1, 0, 1, 0, -1, -1, -1},
+			max: [8]N{1, 1, 0, 1, 1, 1, 1, 1},
 		},
 	}
 
 	for _, row := range data {
 		v := row.v
-		min := [8]GenericNumber{}
-		max := [8]GenericNumber{}
+		min := [8]N{}
+		max := [8]N{}
 
 		min[0] = MinGenericNumber2(v[0], v[1])
 		min[1] = MinGenericNumber3(v[0], v[1], v[2])
