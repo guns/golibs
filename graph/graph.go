@@ -47,9 +47,9 @@ const undefined = -1
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.Prepare(len(g), WA|WBNeg)
 
-	dist := w.a              // Slice of vertex -> edge distance from u
-	pred := w.b              // Slice of vertex -> predecessor vertex (undefined if unvisited)
-	queue := w.MakeQueue(WC) // BFS queue
+	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
+	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex (undefined if unvisited)
+	queue := w.MakeQueue(WC) // |V|w · BFS queue
 
 	// BFS
 	queue.Enqueue(u)
@@ -97,9 +97,9 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	w.Prepare(len(g), 0)
 
 	bs := w.MakeBitsliceN(2, WA)
-	active := bs[0]          // Bitslice of vertex -> active?
-	explored := bs[1]        // Bitslice of vertex -> fully explored?
-	stack := w.MakeStack(WB) // DFS stack
+	active := bs[0]          // |V|  · Bitslice of vertex -> active?
+	explored := bs[1]        // |V|  · Bitslice of vertex -> fully explored?
+	stack := w.MakeStack(WB) // |V|w · DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	i := len(g)                           // tsort write index + 1

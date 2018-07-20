@@ -1,14 +1,17 @@
 // Tarjan's strongly connected components algorithm from Wikipedia:
 //
 // https://en.wikipedia.org/wiki/Tarjan's_strongly_connected_components_algorithm
+//
 algorithm tarjan(V, E):
 	storage:
-		i          // Visit index
-		S          // Visit stack for recording components
-		onStack    // Bitarray for fast lookup of v ∈ S
-		index      // Array of v -> visit index
-		rindex     // Array of v -> local root index
-		call stack // For recursive traversal
+		call stack // 2|V|w · Current vertex and edge iteration variable per stack frame
+		S          // |V|w  · Backtracking stack
+		index      // |V|w  · Array of v -> visit index
+		rindex     // |V|w  · Array of v -> local root index
+		onStack    // |V|   · Bitarray for fast lookup of v ∈ S
+		visited    // |V|   · Bitarray of v -> visited?
+		i          // w     · Visit index
+		           //       = O(|V|(2 + 5w))
 
 	i = 0
 
@@ -61,13 +64,15 @@ algorithm tarjan(V, E):
 // Pearce's memory efficient strongly connected components algorithm:
 //
 // http://homepages.ecs.vuw.ac.nz/~djp/files/IPL15-preprint.pdf
+//
 algorithm PEA_FIND_SCC2(V, E):
 	storage:
-		i          // Visit index
-		c          // Component index
-		rindex     // Array of v -> local root index
-		S          // Visit stack
-		call stack // For recursive traversal
+		call stack // |V| + 2|V|w · Root bool, current vertex, and edge iteration variable per stack frame
+		rindex     // |V|w        · Array of v -> local root index
+		S          // |V|w        · Backtrack stack (can share storage with visit stack if iterative)
+		i          // w           · Visit index
+		c          // w           · Component index
+		           //             = O(|V|(1 + 4w)), or O(|V|(1 + 3w)) if using a double-ended stack
 
 	i = 0
 	c = |V| - 1
