@@ -10,25 +10,28 @@ package impl
 
 import "math/bits"
 
-// IntStack is an auto-growing stack.
+// IntStack is an optionally auto-growing stack.
 type IntStack struct {
-	a []int
-	i int // Next write index
+	a        []int
+	i        int
+	autoGrow bool
 }
 
 // DefaultIntStackLen is the default size of a IntStack that
 // is created with a non-positive size.
 const DefaultIntStackLen = 8
 
-// NewIntStack returns a new stack that can accommodate at least size items,
-// or DefaultStackLen if size <= 0.
-func NewIntStack(size int) *IntStack {
+// NewIntStack returns a new stack that can accommodate at least size
+// items, or DefaultIntStackLen if size <= 0. The autoGrow parameter
+// specifies whether the stack should grow when necessary.
+func NewIntStack(size int, autoGrow bool) *IntStack {
 	if size <= 0 {
 		size = DefaultIntStackLen
 	}
 	return &IntStack{
-		a: make([]int, 1<<uint(bits.Len(uint(size-1)))),
-		i: 0,
+		a:        make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		i:        0,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -41,7 +44,7 @@ func (s *IntStack) Len() int {
 // the stack, the current stack is moved to a larger IntStack before
 // adding the element.
 func (s *IntStack) Push(x int) {
-	if s.Len() == len(s.a) {
+	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
 	}
 	s.a[s.i] = x
@@ -58,7 +61,7 @@ func (s *IntStack) PushSlice(xs []int) {
 	}
 
 	newlen := s.Len() + len(xs)
-	if newlen > len(s.a) {
+	if s.autoGrow && newlen > len(s.a) {
 		s.Grow(newlen - len(s.a))
 	}
 
@@ -109,25 +112,28 @@ func (s *IntStack) GetSlicePointer() *[]int {
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// UintStack is an auto-growing stack.
+// UintStack is an optionally auto-growing stack.
 type UintStack struct {
-	a []uint
-	i int // Next write index
+	a        []uint
+	i        int
+	autoGrow bool
 }
 
 // DefaultUintStackLen is the default size of a UintStack that
 // is created with a non-positive size.
 const DefaultUintStackLen = 8
 
-// NewUintStack returns a new stack that can accommodate at least size items,
-// or DefaultStackLen if size <= 0.
-func NewUintStack(size int) *UintStack {
+// NewUintStack returns a new stack that can accommodate at least size
+// items, or DefaultUintStackLen if size <= 0. The autoGrow parameter
+// specifies whether the stack should grow when necessary.
+func NewUintStack(size int, autoGrow bool) *UintStack {
 	if size <= 0 {
 		size = DefaultUintStackLen
 	}
 	return &UintStack{
-		a: make([]uint, 1<<uint(bits.Len(uint(size-1)))),
-		i: 0,
+		a:        make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+		i:        0,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -140,7 +146,7 @@ func (s *UintStack) Len() int {
 // the stack, the current stack is moved to a larger UintStack before
 // adding the element.
 func (s *UintStack) Push(x uint) {
-	if s.Len() == len(s.a) {
+	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
 	}
 	s.a[s.i] = x
@@ -157,7 +163,7 @@ func (s *UintStack) PushSlice(xs []uint) {
 	}
 
 	newlen := s.Len() + len(xs)
-	if newlen > len(s.a) {
+	if s.autoGrow && newlen > len(s.a) {
 		s.Grow(newlen - len(s.a))
 	}
 

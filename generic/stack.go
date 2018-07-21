@@ -6,25 +6,28 @@ package generic
 
 import "math/bits"
 
-// GenericTypeStack is an auto-growing stack.
+// GenericTypeStack is an optionally auto-growing stack.
 type GenericTypeStack struct {
-	a []GenericType
-	i int // Next write index
+	a        []GenericType
+	i        int
+	autoGrow bool
 }
 
 // DefaultGenericTypeStackLen is the default size of a GenericTypeStack that
 // is created with a non-positive size.
 const DefaultGenericTypeStackLen = 8
 
-// NewGenericTypeStack returns a new stack that can accommodate at least size items,
-// or DefaultStackLen if size <= 0.
-func NewGenericTypeStack(size int) *GenericTypeStack {
+// NewGenericTypeStack returns a new stack that can accommodate at least size
+// items, or DefaultGenericTypeStackLen if size <= 0. The autoGrow parameter
+// specifies whether the stack should grow when necessary.
+func NewGenericTypeStack(size int, autoGrow bool) *GenericTypeStack {
 	if size <= 0 {
 		size = DefaultGenericTypeStackLen
 	}
 	return &GenericTypeStack{
-		a: make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
-		i: 0,
+		a:        make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		i:        0,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -37,7 +40,7 @@ func (s *GenericTypeStack) Len() int {
 // the stack, the current stack is moved to a larger GenericTypeStack before
 // adding the element.
 func (s *GenericTypeStack) Push(x GenericType) {
-	if s.Len() == len(s.a) {
+	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
 	}
 	s.a[s.i] = x
@@ -54,7 +57,7 @@ func (s *GenericTypeStack) PushSlice(xs []GenericType) {
 	}
 
 	newlen := s.Len() + len(xs)
-	if newlen > len(s.a) {
+	if s.autoGrow && newlen > len(s.a) {
 		s.Grow(newlen - len(s.a))
 	}
 

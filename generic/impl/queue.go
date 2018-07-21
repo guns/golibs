@@ -10,10 +10,11 @@ package impl
 
 import "math/bits"
 
-// IntQueue is an auto-growing queue backed by a ring buffer.
+// IntQueue is an optionally auto-growing queue backed by a ring buffer.
 type IntQueue struct {
 	a          []int
 	head, tail int
+	autoGrow   bool
 }
 
 // DefaultIntQueueLen is the default size of a IntQueue that
@@ -21,15 +22,17 @@ type IntQueue struct {
 const DefaultIntQueueLen = 8
 
 // NewIntQueue returns a new queue that can accommodate at least size
-// items, or DefaultQueueLen if size <= 0.
-func NewIntQueue(size int) *IntQueue {
+// items, or DefaultIntQueueLen if size <= 0. The autoGrow parameter
+// specifies whether the queue should grow when necessary.
+func NewIntQueue(size int, autoGrow bool) *IntQueue {
 	if size <= 0 {
 		size = DefaultIntQueueLen
 	}
 	return &IntQueue{
-		a:    make([]int, 1<<uint(bits.Len(uint(size-1)))),
-		head: -1,
-		tail: -1,
+		a:        make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		head:     -1,
+		tail:     -1,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -70,7 +73,7 @@ func (q *IntQueue) Enqueue(x int) {
 	if q.tail == -1 {
 		q.head = 0
 		q.tail = 0
-	} else if q.head == q.tail {
+	} else if q.autoGrow && q.head == q.tail {
 		q.Grow(1)
 	}
 
@@ -91,7 +94,7 @@ func (q *IntQueue) EnqueueSlice(xs []int) {
 	}
 
 	newlen := q.Len() + len(xs)
-	if newlen > len(q.a) {
+	if q.autoGrow && newlen > len(q.a) {
 		q.Grow(newlen - len(q.a))
 	}
 
@@ -223,10 +226,11 @@ func (q *IntQueue) GetSlicePointer() *[]int {
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// UintQueue is an auto-growing queue backed by a ring buffer.
+// UintQueue is an optionally auto-growing queue backed by a ring buffer.
 type UintQueue struct {
 	a          []uint
 	head, tail int
+	autoGrow   bool
 }
 
 // DefaultUintQueueLen is the default size of a UintQueue that
@@ -234,15 +238,17 @@ type UintQueue struct {
 const DefaultUintQueueLen = 8
 
 // NewUintQueue returns a new queue that can accommodate at least size
-// items, or DefaultQueueLen if size <= 0.
-func NewUintQueue(size int) *UintQueue {
+// items, or DefaultUintQueueLen if size <= 0. The autoGrow parameter
+// specifies whether the queue should grow when necessary.
+func NewUintQueue(size int, autoGrow bool) *UintQueue {
 	if size <= 0 {
 		size = DefaultUintQueueLen
 	}
 	return &UintQueue{
-		a:    make([]uint, 1<<uint(bits.Len(uint(size-1)))),
-		head: -1,
-		tail: -1,
+		a:        make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+		head:     -1,
+		tail:     -1,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -283,7 +289,7 @@ func (q *UintQueue) Enqueue(x uint) {
 	if q.tail == -1 {
 		q.head = 0
 		q.tail = 0
-	} else if q.head == q.tail {
+	} else if q.autoGrow && q.head == q.tail {
 		q.Grow(1)
 	}
 
@@ -304,7 +310,7 @@ func (q *UintQueue) EnqueueSlice(xs []uint) {
 	}
 
 	newlen := q.Len() + len(xs)
-	if newlen > len(q.a) {
+	if q.autoGrow && newlen > len(q.a) {
 		q.Grow(newlen - len(q.a))
 	}
 

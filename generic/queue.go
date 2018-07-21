@@ -6,10 +6,11 @@ package generic
 
 import "math/bits"
 
-// GenericTypeQueue is an auto-growing queue backed by a ring buffer.
+// GenericTypeQueue is an optionally auto-growing queue backed by a ring buffer.
 type GenericTypeQueue struct {
 	a          []GenericType
 	head, tail int
+	autoGrow   bool
 }
 
 // DefaultGenericTypeQueueLen is the default size of a GenericTypeQueue that
@@ -17,15 +18,17 @@ type GenericTypeQueue struct {
 const DefaultGenericTypeQueueLen = 8
 
 // NewGenericTypeQueue returns a new queue that can accommodate at least size
-// items, or DefaultQueueLen if size <= 0.
-func NewGenericTypeQueue(size int) *GenericTypeQueue {
+// items, or DefaultGenericTypeQueueLen if size <= 0. The autoGrow parameter
+// specifies whether the queue should grow when necessary.
+func NewGenericTypeQueue(size int, autoGrow bool) *GenericTypeQueue {
 	if size <= 0 {
 		size = DefaultGenericTypeQueueLen
 	}
 	return &GenericTypeQueue{
-		a:    make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
-		head: -1,
-		tail: -1,
+		a:        make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		head:     -1,
+		tail:     -1,
+		autoGrow: autoGrow,
 	}
 }
 
@@ -66,7 +69,7 @@ func (q *GenericTypeQueue) Enqueue(x GenericType) {
 	if q.tail == -1 {
 		q.head = 0
 		q.tail = 0
-	} else if q.head == q.tail {
+	} else if q.autoGrow && q.head == q.tail {
 		q.Grow(1)
 	}
 
@@ -87,7 +90,7 @@ func (q *GenericTypeQueue) EnqueueSlice(xs []GenericType) {
 	}
 
 	newlen := q.Len() + len(xs)
-	if newlen > len(q.a) {
+	if q.autoGrow && newlen > len(q.a) {
 		q.Grow(newlen - len(q.a))
 	}
 
