@@ -10,24 +10,26 @@ import (
 )
 
 func TestPacked2DIntSlice(t *testing.T) {
+	type p2d = Packed2DIntSlice
+
 	data := []struct {
 		cmds       []int
-		out, clear Packed2DIntSlice
+		out, clear p2d
 	}{
 		{
 			cmds:  []int{0, 0, 0},
-			out:   Packed2DIntSlice{{}, {}, {}, {}},
-			clear: Packed2DIntSlice{{}, {}, {}, {}},
+			out:   p2d{{}, {}, {}, {}},
+			clear: p2d{{}, {}, {}, {}},
 		},
 		{
 			cmds:  []int{1, 0, 2, 0, 3},
-			out:   Packed2DIntSlice{{1}, {2}, {3}},
-			clear: Packed2DIntSlice{{-1}, {-1}, {-1}},
+			out:   p2d{{1}, {2}, {3}},
+			clear: p2d{{-1}, {-1}, {-1}},
 		},
 		{
 			cmds:  []int{1, 2, 3, 0, 4, 5, 6},
-			out:   Packed2DIntSlice{{1, 2, 3}, {4, 5, 6}},
-			clear: Packed2DIntSlice{{-1, -1, -1}, {-1, -1, -1}},
+			out:   p2d{{1, 2, 3}, {4, 5, 6}},
+			clear: p2d{{-1, -1, -1}, {-1, -1, -1}},
 		},
 	}
 
