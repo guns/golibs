@@ -7,148 +7,160 @@ package graph
 
 import "math/bits"
 
-// An Edge is a single weighted path to a Vertex.
-type Edge struct {
-	Vertex int
-	Weight float64
+// A Graph is a set { (V, E) : V ⊆ ℤ⁺ and E ⊆ { (u, v) ∈ V } }.
+// Concretely, a Graph is implemented as an adjacency list of (v, []v), where
+// v is a positive unsigned number. Notice that because Graph indices begin
+// at 0 and vertices begin at 1, the first entry of a Graph is always empty.
+// Accordingly, iterating through a graph's edges should be done like this:
+//
+//	for u := 1; u < len(g); u++ {
+//		for _, v := range g[u] {
+//			// Edge (u, v)
+//		}
+//	}
+//
+// All edges are directed and unweighted. Undirected graphs can be constructed
+// by simply adding the reverse of each edge, and edge weights can be stored
+// in a parallel data structure.
+//
+type Graph [][]uint
+
+// Undefined is an invalid sentinel vertex.
+const Undefined = 0
+
+// MakeGraph returns a new Graph with the given logical size.
+func MakeGraph(size int) Graph {
+	return make(Graph, size+1)
 }
 
-// A Vertex contains a list of Edges.
-type Vertex struct {
-	Edges []Edge
+// Len returns the logical size of the graph.
+func (g Graph) Len() int {
+	return len(g) - 1
 }
 
-// A Graph is a slice of Vertex structs.
-type Graph []Vertex
-
-// AddEdge adds a single Edge from Vertex u to v.
-func (g Graph) AddEdge(u, v int, weight float64) {
-	g[u].Edges = append(g[u].Edges, Edge{Vertex: v, Weight: weight})
-	g.TouchVertex(v)
+// AddEdge adds a single directed edge from vertex u to v.
+func (g Graph) AddEdge(u, v uint) {
+	g[u] = append(g[u], v)
+	g.Touch(v)
 }
 
-// TouchVertex makes a Vertex non-nil.
-func (g Graph) TouchVertex(u int) {
-	if g[u].Edges == nil {
-		g[u].Edges = []Edge{}
+// Touch makes a vertex non-nil.
+func (g Graph) Touch(u uint) {
+	if g[u] == nil {
+		g[u] = []uint{}
 	}
 }
 
-// Undefined is a sentinel value for the set of Vertex indices.
-const undefined = -1
-
-// LeastEdgesPath returns a path from Vertex u to v with a minimum number of
-// Edges, irrespective of Edge weights. The length of the path in edges is the
-// size of the returned path minus one.
+// LeastEdgesPath returns a path from vertex u to v with a minimum number of
+// edges. The length of the path is the length of the returned path minus one.
 //
 // The path is written to the path slice, which is grown if necessary.
 //
 // If no path exists, an empty slice is returned.
-func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WBNeg)
+func (g Graph) LeastEdgesPath(path []uint, u, v uint, w *Workspace) []uint {
+	w.Prepare(len(g), WA|WB)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
-	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex (undefined if unvisited)
+	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex
 	queue := w.MakeQueue(WC) // |V|w · BFS queue
 
 	// BFS
 	queue.Enqueue(u)
 
 	// If u == v, u is the endpoint, so leave it unvisited.
-	if u != v {
+	target := v
+	if u != target {
 		pred[u] = u
 	}
 
 loop:
 	for queue.Len() > 0 {
-		i := queue.Dequeue()
+		u := queue.Dequeue()
 
-		for _, e := range g[i].Edges {
-			u := e.Vertex
-
-			if pred[u] != undefined {
+		for _, v := range g[u] {
+			if pred[v] != Undefined {
 				continue
 			}
 
-			pred[u] = i
-			dist[u] = dist[i] + 1
+			pred[v] = u
+			dist[v] = dist[u] + 1
 
-			if u == v {
+			if v == target {
 				break loop
 			}
 
-			queue.Enqueue(u)
+			queue.Enqueue(v)
 		}
 	}
 
-	if pred[v] == undefined {
+	if pred[v] == Undefined {
 		// No path from u -> v was discovered
 		return path[:0]
 	}
 
-	return writePath(path, v, dist[v], pred)
+	return writePath(path, pred, v, int(dist[v]))
 }
 
-// TopologicalSort returns a slice of vertex indices in topologically
-// sorted order. The offsets are written to the vs slice, which is grown if
+// TopologicalSort returns a slice of vertex indices in topologically sorted
+// order. The offsets are written to the tsort parameter, which is grown if
 // necessary. If a topological sort is impossible because there is a cycle in
-// the graph, an empty slice is returned.
-func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
+// the graph, an empty slice (tsort[:0]) is returned.
+func (g Graph) TopologicalSort(tsort []uint, w *Workspace) []uint {
 	w.Prepare(len(g), 0)
 
-	bs := w.MakeBitsliceN(2, WA)
+	bs := w.MakeBitsliceN(3, WA)
 	active := bs[0]          // |V|  · Bitslice of vertex -> active?
 	explored := bs[1]        // |V|  · Bitslice of vertex -> fully explored?
+	postorder := bs[2]       // |V|  · Bitslice of stack depth -> children fully explored?
 	stack := w.MakeStack(WB) // |V|w · DFS stack
 
-	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
-	i := len(g)                           // tsort write index + 1
+	tsort = resizeUintSlice(tsort, g.Len()) // Prepare write buffer
+	idx := len(tsort)                       // tsort write index + 1
 
-	for u := range g {
+	for u := 1; u < len(g); u++ {
 		if explored.Get(u) {
 			continue
 		}
 
 		// DFS
-		stack.Push(u)
+		stack.Push(uint(u))
 
 		// visit(u)
 		for stack.Len() > 0 {
 			u := stack.Pop()
 
 			// Post-order visit nodes whose children have been explored.
-			// These nodes are encoded as their ones' complement.
-			if u < 0 {
-				u = ^u
-				explored.Set(u)
-				i--
-				tsort[i] = u
+			if postorder.CompareAndClear(stack.Len()) {
+				explored.Set(int(u))
+				idx--
+				tsort[idx] = u
 				continue
 			}
 
-			if explored.Get(u) {
+			if explored.Get(int(u)) {
 				// Ignore fully explored nodes
 				continue
-			} else if active.Get(u) {
+			} else if active.Get(int(u)) {
 				// This neighboring vertex is active but not yet
 				// fully explored, so we have discovered a cycle!
 				return tsort[:0]
 			}
 
 			// Mark this vertex as visited, but not fully explored.
-			active.Set(u)
+			active.Set(int(u))
 
-			// When all children have been explored, this parent
-			// vertex will appear on top of the stack.
-			stack.Push(^u)
+			// Postorder visit this parent vertex after all its
+			// children have been fully explored.
+			postorder.Set(stack.Len())
+			stack.Push(u)
 
-			for _, e := range g[u].Edges {
-				stack.Push(e.Vertex)
+			for _, v := range g[u] {
+				stack.Push(v)
 			}
 		}
 	}
 
-	return tsort[i:]
+	return tsort[idx:]
 }
 
 // Transpose writes to h a copy of the current graph with all edges reversed.
@@ -159,20 +171,20 @@ func (g Graph) Transpose(h Graph) Graph {
 		h = make(Graph, len(g))
 	}
 
-	for u := range g {
-		for _, e := range g[u].Edges {
-			h.AddEdge(e.Vertex, u, e.Weight)
+	for u := 1; u < len(g); u++ {
+		for _, v := range g[u] {
+			h.AddEdge(v, uint(u))
 		}
 	}
 
 	return h
 }
 
-func writePath(path []int, v, dist int, pred []int) []int {
-	path = resizeIntSlice(path, dist+1)
-	path[dist] = v
+func writePath(path, pred []uint, v uint, pathLen int) []uint {
+	path = resizeUintSlice(path, pathLen+1)
+	path[pathLen] = v
 
-	for i := dist - 1; i >= 0; i-- {
+	for i := pathLen - 1; i >= 0; i-- {
 		v = pred[v]
 		path[i] = v
 	}
@@ -180,9 +192,9 @@ func writePath(path []int, v, dist int, pred []int) []int {
 	return path
 }
 
-func resizeIntSlice(s []int, size int) []int {
+func resizeUintSlice(s []uint, size int) []uint {
 	if cap(s) >= size {
 		return s[:size]
 	}
-	return make([]int, size, 1<<uint(bits.Len(uint(size-1))))
+	return make([]uint, size, 1<<uint(bits.Len(uint(size-1))))
 }

@@ -2,130 +2,133 @@ package graph
 
 import (
 	"reflect"
-	"sort"
 	"testing"
+
+	"github.com/guns/golibs/generic/impl"
 )
 
 func TestGraphLeastEdgesPath(t *testing.T) {
+	type adj = map[uint][]uint
+
 	data := []struct {
 		size int
-		adj  map[int][]int // For readability
-		u, v int
-		path []int
+		adj  adj
+		u, v uint
+		path []uint
 	}{
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
-				1: {0, 2},
+			adj: adj{
+				1: {2},
 				2: {1, 3},
-				3: {2},
+				3: {2, 4},
+				4: {3},
 			},
-			u:    0,
-			v:    3,
-			path: []int{0, 1, 2, 3},
+			u:    1,
+			v:    4,
+			path: []uint{1, 2, 3, 4},
 		},
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
-				1: {0, 2, 3},
-				2: {1, 3},
-				3: {2},
+			adj: adj{
+				1: {2},
+				2: {1, 3, 4},
+				3: {2, 4},
+				4: {3},
 			},
-			u:    0,
-			v:    3,
-			path: []int{0, 1, 3},
+			u:    1,
+			v:    4,
+			path: []uint{1, 2, 4},
 		},
 		// No path
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
+			adj: adj{
 				1: {2},
-				2: {},
-				3: {0},
+				2: {3},
+				3: {},
+				4: {1},
 			},
-			u:    0,
-			v:    3,
-			path: []int{},
+			u:    1,
+			v:    4,
+			path: []uint{},
 		},
 		// Cycle
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
-				1: {0, 2},
+			adj: adj{
+				1: {2},
 				2: {1, 3},
-				3: {2},
+				3: {2, 4},
+				4: {3},
 			},
-			u:    0,
-			v:    0,
-			path: []int{0, 1, 0},
+			u:    1,
+			v:    1,
+			path: []uint{1, 2, 1},
 		},
 		// Self-loop
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {0, 1},
-				1: {0, 2},
+			adj: adj{
+				1: {1, 2},
 				2: {1, 3},
-				3: {2},
-			},
-			u:    0,
-			v:    0,
-			path: []int{0, 0},
-		},
-		{
-			size: 10,
-			adj: map[int][]int{
-				0: {8},
-				1: {3, 7, 9, 2},
-				2: {8, 1, 4},
-				3: {4, 5, 1},
-				4: {2, 3},
-				5: {3, 6},
-				6: {7, 5},
-				7: {1, 6},
-				8: {2, 0, 9},
-				9: {1, 8},
-			},
-			u:    0,
-			v:    5,
-			path: []int{0, 8, 2, 1, 3, 5},
-		},
-		{
-			size: 10,
-			adj: map[int][]int{
-				0: {8},
-				1: {3, 7, 9, 2},
-				2: {8, 1, 4},
-				3: {4, 5, 1},
-				4: {2, 3},
-				5: {3, 6},
-				6: {7, 5},
-				7: {1, 6},
-				8: {2, 0, 9},
-				9: {1, 8},
+				3: {2, 4},
+				4: {3},
 			},
 			u:    1,
-			v:    0,
-			path: []int{1, 9, 8, 0}, // also {1, 2, 8, 0}
+			v:    1,
+			path: []uint{1, 1},
+		},
+		{
+			size: 10,
+			adj: adj{
+				1:  {9},
+				2:  {4, 8, 10, 3},
+				3:  {9, 2, 5},
+				4:  {5, 6, 2},
+				5:  {3, 4},
+				6:  {4, 7},
+				7:  {8, 6},
+				8:  {2, 7},
+				9:  {3, 1, 10},
+				10: {2, 9},
+			},
+			u:    1,
+			v:    6,
+			path: []uint{1, 9, 3, 2, 4, 6},
+		},
+		{
+			size: 10,
+			adj: adj{
+				1:  {9},
+				2:  {4, 8, 10, 3},
+				3:  {9, 2, 5},
+				4:  {5, 6, 2},
+				5:  {3, 4},
+				6:  {4, 7},
+				7:  {8, 6},
+				8:  {2, 7},
+				9:  {3, 1, 10},
+				10: {2, 9},
+			},
+			u:    2,
+			v:    1,
+			path: []uint{2, 10, 9, 1}, // also {2, 3, 9, 1}
 		},
 	}
 
 	w := NewWorkspace(0)
 
 	for _, row := range data {
-		g := make(Graph, row.size)
+		g := MakeGraph(row.size)
 
 		for u, edges := range row.adj {
 			for _, v := range edges {
-				g.AddEdge(u, v, 1)
+				g.AddEdge(u, v)
 			}
 		}
 
-		path := g.LeastEdgesPath([]int{}, row.u, row.v, w)
+		path := g.LeastEdgesPath([]uint{}, row.u, row.v, w)
 
 		if !reflect.DeepEqual(path, row.path) {
 			t.Errorf("%v != %v", path, row.path)
@@ -134,72 +137,74 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 }
 
 func TestGraphTopologicalSort(t *testing.T) {
+	type adj = map[uint][]uint
+
 	data := []struct {
 		size   int
-		adj    map[int][]int // For readability
+		adj    adj
 		cyclic bool
 	}{
 		{
 			size: 8,
-			adj: map[int][]int{
-				0: {1, 2},
-				1: {3, 4},
-				2: {3},
-				3: {5},
+			adj: adj{
+				1: {2, 3},
+				2: {4, 5},
+				3: {4},
 				4: {6},
-				5: {6, 7},
-				6: {},
-				7: {6},
+				5: {7},
+				6: {7, 8},
+				7: {},
+				8: {7},
 			},
 		},
 		// Figure 22.7 CLRS (topologically sorted clothes)
 		{
 			size: 9,
-			adj: map[int][]int{
-				0: {3, 4},
-				1: {4},
-				2: {},
-				3: {4, 5},
-				4: {},
-				5: {8},
-				6: {5, 7},
-				7: {8},
-				8: {},
+			adj: adj{
+				1: {4, 5},
+				2: {5},
+				3: {},
+				4: {5, 6},
+				5: {},
+				6: {9},
+				7: {6, 8},
+				8: {9},
+				9: {},
 			},
 		},
 		// Unconnected vertices
 		{
 			size: 10,
-			adj:  map[int][]int{},
+			adj:  adj{},
 		},
 		// Sparse graph
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {},
-				1: {3},
-				2: {},
+			adj: adj{
+				1: {},
+				2: {4},
 				3: {},
+				4: {},
 			},
 		},
 		// Cyclic graphs
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
+			adj: adj{
 				1: {2},
 				2: {3},
-				3: {0},
+				3: {4},
+				4: {1},
 			},
 			cyclic: true,
 		},
 		{
 			size: 4,
-			adj: map[int][]int{
-				0: {1},
+			adj: adj{
 				1: {2},
-				2: {2, 3},
-				3: {},
+				2: {3},
+				3: {3, 4},
+				4: {},
 			},
 			cyclic: true,
 		},
@@ -208,15 +213,15 @@ func TestGraphTopologicalSort(t *testing.T) {
 	w := NewWorkspace(0)
 
 	for _, row := range data {
-		g := make(Graph, row.size)
+		g := MakeGraph(row.size)
 
-		for u, adj := range row.adj {
-			for _, v := range adj {
-				g.AddEdge(u, v, 1)
+		for u, vs := range row.adj {
+			for _, v := range vs {
+				g.AddEdge(u, v)
 			}
 		}
 
-		tsort := g.TopologicalSort(make([]int, 0, row.size), w)
+		tsort := g.TopologicalSort(make([]uint, 0, row.size), w)
 
 		if row.cyclic {
 			if len(tsort) != 0 {
@@ -225,16 +230,34 @@ func TestGraphTopologicalSort(t *testing.T) {
 			continue
 		}
 
-		if len(tsort) != len(g) {
-			t.Errorf("len(tsort) %v != len(g) %v", len(tsort), len(g))
+		rsort := make([]uint, len(g))
+
+		// Create a reverse mapping for easy lookup
+		for i, j := range tsort {
+			rsort[j] = uint(i)
 		}
 
-		copy(w.a, tsort)
-		sort.Ints(w.a)
+		// A topological sort of a dag G = (V,E) is a linear ordering of all its
+		// vertices such that if G contains an edge (u,v), then u appears before v
+		// in the ordering.
+		for i, u := range tsort {
+			for _, v := range g[u] {
+				j := rsort[v]
+				if j <= uint(i) {
+					t.Errorf("edge (%v,%v) out of order in %v\n", u, v, tsort)
+				}
+			}
+		}
+
+		if len(tsort) != g.Len() {
+			t.Errorf("len(tsort) %v != g.Len() %v", len(tsort), g.Len())
+		}
+
+		impl.QuicksortUintSlice(tsort)
 
 		equal := true
-		for i := range g {
-			if w.a[i] != i {
+		for u := 1; u < len(g); u++ {
+			if tsort[u-1] != uint(u) {
 				equal = false
 			}
 		}
@@ -243,61 +266,46 @@ func TestGraphTopologicalSort(t *testing.T) {
 			t.Errorf("tsort: %v does not contain all graph vertices", tsort)
 		}
 
-		// Create a reverse mapping for easy lookup
-		for i, j := range tsort {
-			w.a[j] = i
-		}
-
-		// A topological sort of a dag G = (V,E) is a linear ordering
-		// of all its vertices such that if G contains an edge (u,v),
-		// then u appears before v in the ordering.
-		for i, u := range tsort {
-			for _, e := range g[u].Edges {
-				j := w.a[e.Vertex]
-				if j <= i {
-					t.Errorf("edge (%v,%v) out of order in %v\n", u, e.Vertex, tsort)
-				}
-			}
-		}
 	}
 }
 
 func TestGraphTranspose(t *testing.T) {
-	type edge struct {
-		u, v int
-		w    float64
-	}
 	data := []struct {
 		size  int
-		edges []edge
+		edges [][]uint
 	}{
-		{size: 0, edges: nil},
 		{
-			size:  2,
-			edges: []edge{{0, 1, 1}},
+			size:  0,
+			edges: nil,
+		},
+		{
+			size: 2,
+			edges: [][]uint{
+				{1, 2},
+			},
 		},
 		{
 			size: 5,
-			edges: []edge{
-				{0, 1, 2.1},
-				{1, 2, 3.2},
-				{2, 0, 0.7},
-				{2, 3, 4.1},
-				{3, 2, 0.2},
-				{3, 1, 3.6},
-				{4, 4, 0.5},
+			edges: [][]uint{
+				{1, 2},
+				{2, 3},
+				{3, 1},
+				{3, 4},
+				{4, 3},
+				{4, 2},
+				{5, 5},
 			},
 		},
 	}
 
 	for _, row := range data {
-		g := make(Graph, row.size)
-		h := make(Graph, row.size)
-		gT := make(Graph, row.size)
+		g := MakeGraph(row.size)
+		h := MakeGraph(row.size)
+		gT := MakeGraph(row.size)
 
 		for _, e := range row.edges {
-			g.AddEdge(e.u, e.v, e.w)
-			h.AddEdge(e.v, e.u, e.w)
+			g.AddEdge(e[0], e[1])
+			h.AddEdge(e[1], e[0])
 		}
 
 		gT = g.Transpose(gT)
