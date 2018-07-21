@@ -65,7 +65,7 @@ func (w *Workspace) selectSlice(field WorkspaceField) []uint {
 	case WC:
 		return w.c
 	default:
-		return nil // panic() defeats inlining
+		return nil // panic() defeats inlining [go1.11]
 	}
 
 }
