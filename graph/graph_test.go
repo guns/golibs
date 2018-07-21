@@ -8,17 +8,17 @@ import (
 )
 
 func TestGraphLeastEdgesPath(t *testing.T) {
-	type adj = map[uint][]uint
+	type Adj = map[uint][]uint
 
 	data := []struct {
 		size int
-		adj  adj
+		adj  Adj
 		u, v uint
 		path []uint
 	}{
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {1, 3},
 				3: {2, 4},
@@ -30,7 +30,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {1, 3, 4},
 				3: {2, 4},
@@ -43,7 +43,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// No path
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {3},
 				3: {},
@@ -56,7 +56,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// Cycle
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {1, 3},
 				3: {2, 4},
@@ -69,7 +69,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		// Self-loop
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {1, 2},
 				2: {1, 3},
 				3: {2, 4},
@@ -81,7 +81,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 		{
 			size: 10,
-			adj: adj{
+			adj: Adj{
 				1:  {9},
 				2:  {4, 8, 10, 3},
 				3:  {9, 2, 5},
@@ -99,7 +99,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 		{
 			size: 10,
-			adj: adj{
+			adj: Adj{
 				1:  {9},
 				2:  {4, 8, 10, 3},
 				3:  {9, 2, 5},
@@ -137,16 +137,16 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 }
 
 func TestGraphTopologicalSort(t *testing.T) {
-	type adj = map[uint][]uint
+	type Adj = map[uint][]uint
 
 	data := []struct {
 		size   int
-		adj    adj
+		adj    Adj
 		cyclic bool
 	}{
 		{
 			size: 8,
-			adj: adj{
+			adj: Adj{
 				1: {2, 3},
 				2: {4, 5},
 				3: {4},
@@ -160,7 +160,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		// Figure 22.7 CLRS (topologically sorted clothes)
 		{
 			size: 9,
-			adj: adj{
+			adj: Adj{
 				1: {4, 5},
 				2: {5},
 				3: {},
@@ -175,12 +175,12 @@ func TestGraphTopologicalSort(t *testing.T) {
 		// Unconnected vertices
 		{
 			size: 10,
-			adj:  adj{},
+			adj:  Adj{},
 		},
 		// Sparse graph
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {},
 				2: {4},
 				3: {},
@@ -190,7 +190,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		// Cyclic graphs
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {3},
 				3: {4},
@@ -200,7 +200,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		},
 		{
 			size: 4,
-			adj: adj{
+			adj: Adj{
 				1: {2},
 				2: {3},
 				3: {3, 4},

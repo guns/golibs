@@ -10,29 +10,29 @@ import (
 )
 
 func TestPacked2DUintSlice(t *testing.T) {
-	type p2d = Packed2DUintSlice
+	type P2D = Packed2DUintSlice
 
 	const new = 0
 	const max = ^uint(0)
 
 	data := []struct {
 		cmds       []uint
-		out, clear p2d
+		out, clear P2D
 	}{
 		{
 			cmds:  []uint{new, new, new},
-			out:   p2d{{}, {}, {}, {}},
-			clear: p2d{{}, {}, {}, {}},
+			out:   P2D{{}, {}, {}, {}},
+			clear: P2D{{}, {}, {}, {}},
 		},
 		{
 			cmds:  []uint{2, new, 3, new, 4},
-			out:   p2d{{2}, {3}, {4}},
-			clear: p2d{{max}, {max}, {max}},
+			out:   P2D{{2}, {3}, {4}},
+			clear: P2D{{max}, {max}, {max}},
 		},
 		{
 			cmds:  []uint{2, 3, 4, new, 5, 6, 7},
-			out:   p2d{{2, 3, 4}, {5, 6, 7}},
-			clear: p2d{{max, max, max}, {max, max, max}},
+			out:   P2D{{2, 3, 4}, {5, 6, 7}},
+			clear: P2D{{max, max, max}, {max, max, max}},
 		},
 	}
 
