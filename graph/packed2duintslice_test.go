@@ -9,36 +9,39 @@ import (
 	"testing"
 )
 
-func TestPacked2DIntSlice(t *testing.T) {
-	type p2d = Packed2DIntSlice
+func TestPacked2DUintSlice(t *testing.T) {
+	type p2d = Packed2DUintSlice
+
+	const new = 0
+	const max = ^uint(0)
 
 	data := []struct {
-		cmds       []int
+		cmds       []uint
 		out, clear p2d
 	}{
 		{
-			cmds:  []int{0, 0, 0},
+			cmds:  []uint{new, new, new},
 			out:   p2d{{}, {}, {}, {}},
 			clear: p2d{{}, {}, {}, {}},
 		},
 		{
-			cmds:  []int{1, 0, 2, 0, 3},
-			out:   p2d{{1}, {2}, {3}},
-			clear: p2d{{-1}, {-1}, {-1}},
+			cmds:  []uint{2, new, 3, new, 4},
+			out:   p2d{{2}, {3}, {4}},
+			clear: p2d{{max}, {max}, {max}},
 		},
 		{
-			cmds:  []int{1, 2, 3, 0, 4, 5, 6},
-			out:   p2d{{1, 2, 3}, {4, 5, 6}},
-			clear: p2d{{-1, -1, -1}, {-1, -1, -1}},
+			cmds:  []uint{2, 3, 4, new, 5, 6, 7},
+			out:   p2d{{2, 3, 4}, {5, 6, 7}},
+			clear: p2d{{max, max, max}, {max, max, max}},
 		},
 	}
 
 	for _, row := range data {
-		p := MakePacked2DIntSlice(len(row.cmds))
+		p := MakePacked2DUintSlice(len(row.cmds))
 
 		for _, cmd := range row.cmds {
 			switch cmd {
-			case 0:
+			case new:
 				p = p.StartNewSlice()
 			default:
 				p = p.Append(cmd)
@@ -49,10 +52,10 @@ func TestPacked2DIntSlice(t *testing.T) {
 			t.Errorf("%v != %v", p, row.out)
 		}
 
-		// Fill the backing slice with -1
+		// Fill the backing slice with ^0
 		s := p[0][:cap(p[0])]
 		for i := range s {
-			s[i] = -1
+			s[i] = max
 		}
 
 		if !reflect.DeepEqual(p, row.clear) {
