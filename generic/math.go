@@ -4,6 +4,15 @@
 
 package generic
 
+// AbsGenericNumber returns the absolute value of a. Note that this is a
+// useless function for unsigned values.
+func AbsGenericNumber(a GenericNumber) GenericNumber {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+
 // MinGenericNumber2 returns the minimum of a and b.
 func MinGenericNumber2(a, b GenericNumber) GenericNumber {
 	if a < b {

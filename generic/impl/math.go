@@ -8,6 +8,15 @@
 
 package impl
 
+// AbsInt returns the absolute value of a. Note that this is a
+// useless function for unsigned values.
+func AbsInt(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+
 // MinInt2 returns the minimum of a and b.
 func MinInt2(a, b int) int {
 	if a < b {
@@ -99,6 +108,15 @@ func MaxIntSlice(nums []int) int {
 // Copyright (c) 2018 Sung Pae <self@sungpae.com>
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
+
+// AbsUint returns the absolute value of a. Note that this is a
+// useless function for unsigned values.
+func AbsUint(a uint) uint {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
 
 // MinUint2 returns the minimum of a and b.
 func MinUint2(a, b uint) uint {

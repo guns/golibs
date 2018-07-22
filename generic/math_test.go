@@ -6,6 +6,25 @@ package generic
 
 import "testing"
 
+func TestAbs(t *testing.T) {
+	type N = GenericNumber
+
+	data := []struct {
+		in  GenericNumber
+		out GenericNumber
+	}{
+		{in: 0, out: 0},
+		{in: -1, out: 1},
+		{in: 2, out: 2},
+	}
+
+	for _, row := range data {
+		if AbsGenericNumber(row.in) != row.out {
+			t.Errorf("%v != %v", AbsGenericNumber(row.in), row.out)
+		}
+	}
+}
+
 func TestMinMax(t *testing.T) {
 	type N = GenericNumber
 
