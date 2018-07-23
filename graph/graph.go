@@ -7,48 +7,33 @@ package graph
 
 import "math/bits"
 
-// A Graph is a set { (V, E) : V ⊆ ℤ⁺ and E ⊆ { (u, v) ∈ V } }.
+// A Graph is a set { (V, E) : V ⊆ ℕ⁰ and E ⊆ { (u, v) ∈ V } }.
 //
-// Concretely, a Graph is implemented as an adjacency list of (v, []v), where
-// v is a positive unsigned number. Notice that because Graph indices begin
-// at 0 and vertices begin at 1, the first entry of a Graph is always empty.
-// Accordingly, iterating through a graph's edges should be done like this:
-//
-//	for u := 1; u < len(g); u++ {
-//		for _, v := range g[u] {
-//			// Edge (u, v)
-//		}
-//	}
+// Concretely, a Graph is implemented as an adjacency list of (ℕ⁰, []ℕ⁰).
+// Note that vertices are numbered from zero.
 //
 // All edges are directed and unweighted. Undirected graphs can be constructed
 // by simply adding the reverse of each edge, and edge weights can be stored
 // in a parallel data structure.
 //
-type Graph [][]uint
+// Because vertices are represented as signed integers, the maximum size of a
+// graph is machineUintLen/2.
+//
+type Graph [][]int
 
-// Undefined is an invalid sentinel vertex.
-const Undefined = 0
-
-// MakeGraph returns a new Graph with the given logical size.
-func MakeGraph(size int) Graph {
-	return make(Graph, size+1)
-}
-
-// Len returns the logical size of the graph.
-func (g Graph) Len() int {
-	return len(g) - 1
-}
+// Undefined is a sentinel value for the set of Vertex indices.
+const Undefined = -1
 
 // AddEdge adds a single directed edge from vertex u to v.
-func (g Graph) AddEdge(u, v uint) {
+func (g Graph) AddEdge(u, v int) {
 	g[u] = append(g[u], v)
 	g.Touch(v)
 }
 
 // Touch makes a vertex non-nil.
-func (g Graph) Touch(u uint) {
+func (g Graph) Touch(u int) {
 	if g[u] == nil {
-		g[u] = []uint{}
+		g[u] = []int{}
 	}
 }
 
@@ -61,8 +46,8 @@ func (g Graph) Touch(u uint) {
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
-func (g Graph) LeastEdgesPath(path []uint, u, v uint, w *Workspace) []uint {
-	w.Prepare(len(g), WA|WB)
+func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
+	w.Prepare(len(g), WA|WBNeg)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
 	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex
@@ -106,57 +91,57 @@ loop:
 }
 
 // TopologicalSort returns a slice of vertex indices in topologically sorted
-// order. The offsets are written to the tsort parameter, which is grown if
+// order. The indices are written to the tsort parameter, which is grown if
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice (tsort[:0]) is returned.
-func (g Graph) TopologicalSort(tsort []uint, w *Workspace) []uint {
+func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	w.Prepare(len(g), 0)
 
-	bs := w.MakeBitsliceN(3, WA)
+	bs := w.MakeBitsliceN(2, WA)
 	active := bs[0]          // |V|  · Bitslice of vertex -> active?
 	explored := bs[1]        // |V|  · Bitslice of vertex -> fully explored?
-	postorder := bs[2]       // |V|  · Bitslice of stack depth -> children fully explored?
 	stack := w.MakeStack(WB) // |V|w · DFS stack
 
-	tsort = resizeUintSlice(tsort, g.Len()) // Prepare write buffer
-	idx := len(tsort)                       // tsort write index + 1
+	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
+	idx := len(g)                         // tsort write index + 1
 
-	for u := 1; u < len(g); u++ {
+	for u := range g {
 		if explored.Get(u) {
 			continue
 		}
 
 		// DFS
-		stack.Push(uint(u))
+		stack.Push(u)
 
 		// visit(u)
 		for stack.Len() > 0 {
 			u := stack.Pop()
 
 			// Post-order visit nodes whose children have been explored.
-			if postorder.CompareAndClear(stack.Len()) {
-				explored.Set(int(u))
+			// These nodes are encoded as their ones' complement.
+			if u < 0 {
+				u = ^u
+				explored.Set(u)
 				idx--
 				tsort[idx] = u
 				continue
 			}
 
-			if explored.Get(int(u)) {
+			if explored.Get(u) {
 				// Ignore fully explored nodes
 				continue
-			} else if active.Get(int(u)) {
+			} else if active.Get(u) {
 				// This neighboring vertex is active but not yet
 				// fully explored, so we have discovered a cycle!
 				return tsort[:0]
 			}
 
 			// Mark this vertex as visited, but not fully explored.
-			active.Set(int(u))
+			active.Set(u)
 
-			// Postorder visit this parent vertex after all its
+			// Post-order visit this parent vertex after all its
 			// children have been fully explored.
-			postorder.Set(stack.Len())
-			stack.Push(u)
+			stack.Push(^u)
 
 			for _, v := range g[u] {
 				stack.Push(v)
@@ -175,17 +160,17 @@ func (g Graph) Transpose(h Graph) Graph {
 		h = make(Graph, len(g))
 	}
 
-	for u := 1; u < len(g); u++ {
+	for u := range g {
 		for _, v := range g[u] {
-			h.AddEdge(v, uint(u))
+			h.AddEdge(v, u)
 		}
 	}
 
 	return h
 }
 
-func writePath(path, pred []uint, v uint, pathLen int) []uint {
-	path = resizeUintSlice(path, pathLen+1)
+func writePath(path, pred []int, v int, pathLen int) []int {
+	path = resizeIntSlice(path, pathLen+1)
 	path[pathLen] = v
 
 	for i := pathLen - 1; i >= 0; i-- {
@@ -196,9 +181,9 @@ func writePath(path, pred []uint, v uint, pathLen int) []uint {
 	return path
 }
 
-func resizeUintSlice(s []uint, size int) []uint {
+func resizeIntSlice(s []int, size int) []int {
 	if cap(s) >= size {
 		return s[:size]
 	}
-	return make([]uint, size, 1<<uint(bits.Len(uint(size-1))))
+	return make([]int, size, 1<<uint(bits.Len(uint(size-1))))
 }

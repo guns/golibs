@@ -5,20 +5,22 @@
 package graph
 
 import (
+	"unsafe"
+
 	"github.com/guns/golibs/bitslice"
 	"github.com/guns/golibs/generic/impl"
 )
 
-// A Workspace provides general-purpose storage while traversing Graphs.
+// A Workspace provides general-purpose scratch storage for Graph methods.
 type Workspace struct {
 	len, cap int // Not buffer length/capacity
-	a, b, c  []uint
+	a, b, c  []int
 }
 
 // NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
-	// Single shared uint buffer
-	buf := make([]uint, size*3)
+	// Single shared int buffer
+	buf := make([]int, size*3)
 
 	return &Workspace{
 		len: size,
@@ -51,12 +53,15 @@ func (w *Workspace) Resize(size int) bool {
 type WorkspaceField uint
 
 const (
-	WA WorkspaceField = 1 << iota // Select or reset (*Workspace).a
-	WB                            // Select or reset (*Workspace).b
-	WC                            // Select or reset (*Workspace).c
+	WA    WorkspaceField = 1 << iota // Select or reset (*Workspace).a
+	WB                               // Select or reset (*Workspace).b
+	WC                               // Select or reset (*Workspace).c
+	WANeg                            // Fill (*Workspace).a with -1
+	WBNeg                            // Fill (*Workspace).b with -1
+	WCNeg                            // Fill (*Workspace).c with -1
 )
 
-func (w *Workspace) selectSlice(field WorkspaceField) []uint {
+func (w *Workspace) selectSlice(field WorkspaceField) []int {
 	switch field {
 	case WA:
 		return w.a
@@ -70,10 +75,10 @@ func (w *Workspace) selectSlice(field WorkspaceField) []uint {
 
 }
 
-// MakeQueue returns an empty UintQueue with the specified field as a backing slice.
-func (w *Workspace) MakeQueue(field WorkspaceField) impl.UintQueue {
+// MakeQueue returns an empty IntQueue with the specified field as a backing slice.
+func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
 	buf := w.selectSlice(field)[:w.cap]
-	q := impl.UintQueue{}
+	q := impl.IntQueue{}
 
 	*q.GetSlicePointer() = buf
 	q.Reset()
@@ -81,10 +86,10 @@ func (w *Workspace) MakeQueue(field WorkspaceField) impl.UintQueue {
 	return q
 }
 
-// MakeStack returns an empty UintStack with the specified field as a backing slice.
-func (w *Workspace) MakeStack(field WorkspaceField) impl.UintStack {
+// MakeStack returns an empty IntStack with the specified field as a backing slice.
+func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
 	buf := w.selectSlice(field)[:w.cap]
-	s := impl.UintStack{}
+	s := impl.IntStack{}
 
 	*s.GetSlicePointer() = buf
 	s.Reset()
@@ -106,7 +111,8 @@ func (w *Workspace) MakeBitsliceN(n int, field WorkspaceField) []bitslice.T {
 	offset := 0
 
 	for i := 0; i < n; i++ {
-		bs[i] = buf[offset : offset+blen]
+		b := buf[offset : offset+blen]
+		bs[i] = *(*bitslice.T)(unsafe.Pointer(&b))
 		offset += blen
 	}
 
@@ -121,9 +127,17 @@ func (w *Workspace) MakeBitsliceN(n int, field WorkspaceField) []bitslice.T {
 // Reset a Workspace. The fields parameter is a bitfield of WorkspaceField
 // values that specify which fields to reset.
 func (w *Workspace) Reset(fields WorkspaceField) {
+	if fields == 0 {
+		return
+	}
+
 	if fields&WA > 0 {
 		for i := range w.a {
 			w.a[i] = 0
+		}
+	} else if fields&WANeg > 0 {
+		for i := range w.a {
+			w.a[i] = -1
 		}
 	}
 
@@ -131,11 +145,19 @@ func (w *Workspace) Reset(fields WorkspaceField) {
 		for i := range w.b {
 			w.b[i] = 0
 		}
+	} else if fields&WBNeg > 0 {
+		for i := range w.b {
+			w.b[i] = -1
+		}
 	}
 
 	if fields&WC > 0 {
 		for i := range w.c {
 			w.c[i] = 0
+		}
+	} else if fields&WCNeg > 0 {
+		for i := range w.c {
+			w.c[i] = -1
 		}
 	}
 }
@@ -143,8 +165,10 @@ func (w *Workspace) Reset(fields WorkspaceField) {
 // Prepare a Workspace for a Graph of a given size. The fields parameter is a
 // bitfield of WorkspaceField values that specify which fields to reset.
 func (w *Workspace) Prepare(size int, fields WorkspaceField) {
-	// Reallocated workspaces are zero-filled, so avoid unnecessary work.
-	if !w.Resize(size) {
-		w.Reset(fields)
+	if w.Resize(size) {
+		// New workspaces are zero-filled, so avoid unnecessary work.
+		fields &= ^(WA | WB | WC)
 	}
+
+	w.Reset(fields)
 }
