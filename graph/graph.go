@@ -8,6 +8,7 @@ package graph
 import "math/bits"
 
 // A Graph is a set { (V, E) : V ⊆ ℤ⁺ and E ⊆ { (u, v) ∈ V } }.
+//
 // Concretely, a Graph is implemented as an adjacency list of (v, []v), where
 // v is a positive unsigned number. Notice that because Graph indices begin
 // at 0 and vertices begin at 1, the first entry of a Graph is always empty.
@@ -57,6 +58,9 @@ func (g Graph) Touch(u uint) {
 // The path is written to the path slice, which is grown if necessary.
 //
 // If no path exists, an empty slice is returned.
+//
+// Note that trivial paths are not considered; i.e. there is no path from a
+// vertex u to itself except through a cycle or self-edge.
 func (g Graph) LeastEdgesPath(path []uint, u, v uint, w *Workspace) []uint {
 	w.Prepare(len(g), WA|WB)
 
