@@ -21,8 +21,8 @@ import "math/bits"
 //
 type Graph [][]int
 
-// Undefined is a sentinel value for the set of Vertex indices.
-const Undefined = -1
+// undefined is a sentinel value for the set of Vertex indices.
+const undefined = -1
 
 // AddEdge adds a single directed edge from vertex u to v.
 func (g Graph) AddEdge(u, v int) {
@@ -59,7 +59,7 @@ loop:
 		u := queue.Dequeue()
 
 		for _, v := range g[u] {
-			if pred[v] != Undefined {
+			if pred[v] != undefined {
 				continue
 			}
 
@@ -74,7 +74,7 @@ loop:
 		}
 	}
 
-	if pred[v] == Undefined {
+	if pred[v] == undefined {
 		// No path from u -> v was discovered
 		return path[:0]
 	}
