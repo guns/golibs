@@ -29,7 +29,7 @@ func NewIntQueue(size int) *IntQueue {
 }
 
 // NewIntQueueWithBuffer returns an auto-growing queue that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewIntQueueWithBuffer(buf []int) *IntQueue {
 	return &IntQueue{
 		a:        buf,
@@ -75,8 +75,8 @@ func (q *IntQueue) Len() int {
 }
 
 // Enqueue a new element into the queue. If adding this element would overflow
-// the queue, the current queue is moved to a larger IntQueue before
-// adding the element.
+// the queue and auto-growing is enabled, the current queue is moved to a
+// larger IntQueue before adding the element.
 func (q *IntQueue) Enqueue(x int) {
 	if q.tail == -1 {
 		q.head = 0
@@ -94,8 +94,8 @@ func (q *IntQueue) Enqueue(x int) {
 }
 
 // EnqueueSlice adds a slice of int into the queue. If adding these
-// elements would overflow the queue, the current queue is moved to a larger
-// IntQueue before adding the elements.
+// elements would overflow the queue and auto-growing is enabled, the current
+// queue is moved to a larger IntQueue before adding the elements.
 func (q *IntQueue) EnqueueSlice(xs []int) {
 	if len(xs) == 0 {
 		return
@@ -182,8 +182,8 @@ func (q *IntQueue) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (q *IntQueue) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}
@@ -247,7 +247,7 @@ func NewUintQueue(size int) *UintQueue {
 }
 
 // NewUintQueueWithBuffer returns an auto-growing queue that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewUintQueueWithBuffer(buf []uint) *UintQueue {
 	return &UintQueue{
 		a:        buf,
@@ -293,8 +293,8 @@ func (q *UintQueue) Len() int {
 }
 
 // Enqueue a new element into the queue. If adding this element would overflow
-// the queue, the current queue is moved to a larger UintQueue before
-// adding the element.
+// the queue and auto-growing is enabled, the current queue is moved to a
+// larger UintQueue before adding the element.
 func (q *UintQueue) Enqueue(x uint) {
 	if q.tail == -1 {
 		q.head = 0
@@ -312,8 +312,8 @@ func (q *UintQueue) Enqueue(x uint) {
 }
 
 // EnqueueSlice adds a slice of uint into the queue. If adding these
-// elements would overflow the queue, the current queue is moved to a larger
-// UintQueue before adding the elements.
+// elements would overflow the queue and auto-growing is enabled, the current
+// queue is moved to a larger UintQueue before adding the elements.
 func (q *UintQueue) EnqueueSlice(xs []uint) {
 	if len(xs) == 0 {
 		return
@@ -400,8 +400,8 @@ func (q *UintQueue) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (q *UintQueue) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}

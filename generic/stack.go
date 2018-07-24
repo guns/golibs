@@ -25,7 +25,7 @@ func NewGenericTypeStack(size int) *GenericTypeStack {
 }
 
 // NewGenericTypeStackWithBuffer returns an auto-growing stack that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewGenericTypeStackWithBuffer(buf []GenericType) *GenericTypeStack {
 	return &GenericTypeStack{
 		a:        buf,
@@ -45,8 +45,8 @@ func (s *GenericTypeStack) Len() int {
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a larger GenericTypeStack before
-// adding the element.
+// the stack and auto-growing is enabled, the current stack is moved to a
+// larger GenericTypeStack before adding the element.
 func (s *GenericTypeStack) Push(x GenericType) {
 	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
@@ -56,9 +56,10 @@ func (s *GenericTypeStack) Push(x GenericType) {
 }
 
 // PushSlice adds a slice of GenericType onto the stack. If adding these
-// elements would overflow the stack, the current stack is moved to a larger
-// GenericTypeStack before adding the elements. Note that the slice is copied
-// into the stack in-order instead of being pushed onto the stack one by one.
+// elements would overflow the stack and auto-growing is enabled, the current
+// stack is moved to a larger GenericTypeStack before adding the elements.
+// Note that the slice is copied into the stack in-order instead of being
+// pushed onto the stack one by one.
 func (s *GenericTypeStack) PushSlice(xs []GenericType) {
 	if len(xs) == 0 {
 		return
@@ -94,8 +95,8 @@ func (s *GenericTypeStack) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (s *GenericTypeStack) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}

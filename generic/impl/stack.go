@@ -29,7 +29,7 @@ func NewIntStack(size int) *IntStack {
 }
 
 // NewIntStackWithBuffer returns an auto-growing stack that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewIntStackWithBuffer(buf []int) *IntStack {
 	return &IntStack{
 		a:        buf,
@@ -49,8 +49,8 @@ func (s *IntStack) Len() int {
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a larger IntStack before
-// adding the element.
+// the stack and auto-growing is enabled, the current stack is moved to a
+// larger IntStack before adding the element.
 func (s *IntStack) Push(x int) {
 	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
@@ -60,9 +60,10 @@ func (s *IntStack) Push(x int) {
 }
 
 // PushSlice adds a slice of int onto the stack. If adding these
-// elements would overflow the stack, the current stack is moved to a larger
-// IntStack before adding the elements. Note that the slice is copied
-// into the stack in-order instead of being pushed onto the stack one by one.
+// elements would overflow the stack and auto-growing is enabled, the current
+// stack is moved to a larger IntStack before adding the elements.
+// Note that the slice is copied into the stack in-order instead of being
+// pushed onto the stack one by one.
 func (s *IntStack) PushSlice(xs []int) {
 	if len(xs) == 0 {
 		return
@@ -98,8 +99,8 @@ func (s *IntStack) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (s *IntStack) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}
@@ -133,7 +134,7 @@ func NewUintStack(size int) *UintStack {
 }
 
 // NewUintStackWithBuffer returns an auto-growing stack that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewUintStackWithBuffer(buf []uint) *UintStack {
 	return &UintStack{
 		a:        buf,
@@ -153,8 +154,8 @@ func (s *UintStack) Len() int {
 }
 
 // Push a new element onto the stack. If adding this element would overflow
-// the stack, the current stack is moved to a larger UintStack before
-// adding the element.
+// the stack and auto-growing is enabled, the current stack is moved to a
+// larger UintStack before adding the element.
 func (s *UintStack) Push(x uint) {
 	if s.autoGrow && s.Len() == len(s.a) {
 		s.Grow(1)
@@ -164,9 +165,10 @@ func (s *UintStack) Push(x uint) {
 }
 
 // PushSlice adds a slice of uint onto the stack. If adding these
-// elements would overflow the stack, the current stack is moved to a larger
-// UintStack before adding the elements. Note that the slice is copied
-// into the stack in-order instead of being pushed onto the stack one by one.
+// elements would overflow the stack and auto-growing is enabled, the current
+// stack is moved to a larger UintStack before adding the elements.
+// Note that the slice is copied into the stack in-order instead of being
+// pushed onto the stack one by one.
 func (s *UintStack) PushSlice(xs []uint) {
 	if len(xs) == 0 {
 		return
@@ -202,8 +204,8 @@ func (s *UintStack) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (s *UintStack) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}

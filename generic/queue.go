@@ -25,7 +25,7 @@ func NewGenericTypeQueue(size int) *GenericTypeQueue {
 }
 
 // NewGenericTypeQueueWithBuffer returns an auto-growing queue that wraps the
-// provided buffer.
+// provided buffer, which is never resliced beyond its current length.
 func NewGenericTypeQueueWithBuffer(buf []GenericType) *GenericTypeQueue {
 	return &GenericTypeQueue{
 		a:        buf,
@@ -71,8 +71,8 @@ func (q *GenericTypeQueue) Len() int {
 }
 
 // Enqueue a new element into the queue. If adding this element would overflow
-// the queue, the current queue is moved to a larger GenericTypeQueue before
-// adding the element.
+// the queue and auto-growing is enabled, the current queue is moved to a
+// larger GenericTypeQueue before adding the element.
 func (q *GenericTypeQueue) Enqueue(x GenericType) {
 	if q.tail == -1 {
 		q.head = 0
@@ -90,8 +90,8 @@ func (q *GenericTypeQueue) Enqueue(x GenericType) {
 }
 
 // EnqueueSlice adds a slice of GenericType into the queue. If adding these
-// elements would overflow the queue, the current queue is moved to a larger
-// GenericTypeQueue before adding the elements.
+// elements would overflow the queue and auto-growing is enabled, the current
+// queue is moved to a larger GenericTypeQueue before adding the elements.
 func (q *GenericTypeQueue) EnqueueSlice(xs []GenericType) {
 	if len(xs) == 0 {
 		return
@@ -178,8 +178,8 @@ func (q *GenericTypeQueue) Reset() {
 
 // Grow internal slice to accommodate at least n more items.
 func (q *GenericTypeQueue) Grow(n int) {
-	// We do not check to see if n <= cap(q.a) - len(q.a) because we'll
-	// never have unused capacity.
+	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
+	// never to reslice the current buffer beyond its current length.
 	if n <= 0 {
 		return
 	}
