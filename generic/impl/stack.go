@@ -17,22 +17,30 @@ type IntStack struct {
 	autoGrow bool
 }
 
-// DefaultIntStackLen is the default size of a IntStack that
-// is created with a non-positive size.
-const DefaultIntStackLen = 8
-
-// NewIntStack returns a new stack that can accommodate at least size
-// items, or DefaultIntStackLen if size <= 0. The autoGrow parameter
-// specifies whether the stack should grow when necessary.
-func NewIntStack(size int, autoGrow bool) *IntStack {
+// NewIntStack returns a new auto-growing stack that can accommodate
+// at least size items.
+func NewIntStack(size int) *IntStack {
 	if size <= 0 {
-		size = DefaultIntStackLen
+		size = 8 // Sane minimum length
 	}
+	return NewIntStackWithBuffer(
+		make([]int, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewIntStackWithBuffer returns an auto-growing stack that wraps the
+// provided buffer.
+func NewIntStackWithBuffer(buf []int) *IntStack {
 	return &IntStack{
-		a:        make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		i:        0,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (s *IntStack) SetAutoGrow(t bool) {
+	s.autoGrow = t
 }
 
 // Len returns the current number of pushed elements.
@@ -102,12 +110,6 @@ func (s *IntStack) Grow(n int) {
 	s.a = a
 }
 
-// GetSlicePointer returns a pointer to the backing slice of this IntStack.
-// *WARNING* Use at your own risk.
-func (s *IntStack) GetSlicePointer() *[]int {
-	return &s.a
-}
-
 // Copyright (c) 2018 Sung Pae <self@sungpae.com>
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
@@ -119,22 +121,30 @@ type UintStack struct {
 	autoGrow bool
 }
 
-// DefaultUintStackLen is the default size of a UintStack that
-// is created with a non-positive size.
-const DefaultUintStackLen = 8
-
-// NewUintStack returns a new stack that can accommodate at least size
-// items, or DefaultUintStackLen if size <= 0. The autoGrow parameter
-// specifies whether the stack should grow when necessary.
-func NewUintStack(size int, autoGrow bool) *UintStack {
+// NewUintStack returns a new auto-growing stack that can accommodate
+// at least size items.
+func NewUintStack(size int) *UintStack {
 	if size <= 0 {
-		size = DefaultUintStackLen
+		size = 8 // Sane minimum length
 	}
+	return NewUintStackWithBuffer(
+		make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewUintStackWithBuffer returns an auto-growing stack that wraps the
+// provided buffer.
+func NewUintStackWithBuffer(buf []uint) *UintStack {
 	return &UintStack{
-		a:        make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		i:        0,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (s *UintStack) SetAutoGrow(t bool) {
+	s.autoGrow = t
 }
 
 // Len returns the current number of pushed elements.
@@ -202,10 +212,4 @@ func (s *UintStack) Grow(n int) {
 	copy(a, s.a)
 
 	s.a = a
-}
-
-// GetSlicePointer returns a pointer to the backing slice of this UintStack.
-// *WARNING* Use at your own risk.
-func (s *UintStack) GetSlicePointer() *[]uint {
-	return &s.a
 }

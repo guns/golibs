@@ -13,23 +13,31 @@ type GenericTypeQueue struct {
 	autoGrow   bool
 }
 
-// DefaultGenericTypeQueueLen is the default size of a GenericTypeQueue that
-// is created with a non-positive size.
-const DefaultGenericTypeQueueLen = 8
-
-// NewGenericTypeQueue returns a new queue that can accommodate at least size
-// items, or DefaultGenericTypeQueueLen if size <= 0. The autoGrow parameter
-// specifies whether the queue should grow when necessary.
-func NewGenericTypeQueue(size int, autoGrow bool) *GenericTypeQueue {
+// NewGenericTypeQueue returns a new auto-growing queue that can accommodate
+// at least size items.
+func NewGenericTypeQueue(size int) *GenericTypeQueue {
 	if size <= 0 {
-		size = DefaultGenericTypeQueueLen
+		size = 8 // Sane minimum length
 	}
+	return NewGenericTypeQueueWithBuffer(
+		make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewGenericTypeQueueWithBuffer returns an auto-growing queue that wraps the
+// provided buffer.
+func NewGenericTypeQueueWithBuffer(buf []GenericType) *GenericTypeQueue {
 	return &GenericTypeQueue{
-		a:        make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		head:     -1,
 		tail:     -1,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (q *GenericTypeQueue) SetAutoGrow(t bool) {
+	q.autoGrow = t
 }
 
 // Len returns the current number of queued elements.
@@ -210,10 +218,4 @@ func (q *GenericTypeQueue) Grow(n int) {
 		q.head = 0
 		q.tail = n
 	}
-}
-
-// GetSlicePointer returns a pointer to the backing slice of this GenericTypeQueue.
-// *WARNING* Use at your own risk.
-func (q *GenericTypeQueue) GetSlicePointer() *[]GenericType {
-	return &q.a
 }

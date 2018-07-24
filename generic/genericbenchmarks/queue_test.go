@@ -35,7 +35,7 @@ func BenchmarkChannelQueue(b *testing.B) {
 	}
 }
 func BenchmarkIntQueue(b *testing.B) {
-	q := NewIntQueue(queuedepth, true)
+	q := NewIntQueue(queuedepth)
 
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < queuedepth/2; j++ {

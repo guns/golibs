@@ -17,23 +17,31 @@ type IntQueue struct {
 	autoGrow   bool
 }
 
-// DefaultIntQueueLen is the default size of a IntQueue that
-// is created with a non-positive size.
-const DefaultIntQueueLen = 8
-
-// NewIntQueue returns a new queue that can accommodate at least size
-// items, or DefaultIntQueueLen if size <= 0. The autoGrow parameter
-// specifies whether the queue should grow when necessary.
-func NewIntQueue(size int, autoGrow bool) *IntQueue {
+// NewIntQueue returns a new auto-growing queue that can accommodate
+// at least size items.
+func NewIntQueue(size int) *IntQueue {
 	if size <= 0 {
-		size = DefaultIntQueueLen
+		size = 8 // Sane minimum length
 	}
+	return NewIntQueueWithBuffer(
+		make([]int, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewIntQueueWithBuffer returns an auto-growing queue that wraps the
+// provided buffer.
+func NewIntQueueWithBuffer(buf []int) *IntQueue {
 	return &IntQueue{
-		a:        make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		head:     -1,
 		tail:     -1,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (q *IntQueue) SetAutoGrow(t bool) {
+	q.autoGrow = t
 }
 
 // Len returns the current number of queued elements.
@@ -216,12 +224,6 @@ func (q *IntQueue) Grow(n int) {
 	}
 }
 
-// GetSlicePointer returns a pointer to the backing slice of this IntQueue.
-// *WARNING* Use at your own risk.
-func (q *IntQueue) GetSlicePointer() *[]int {
-	return &q.a
-}
-
 // Copyright (c) 2018 Sung Pae <self@sungpae.com>
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
@@ -233,23 +235,31 @@ type UintQueue struct {
 	autoGrow   bool
 }
 
-// DefaultUintQueueLen is the default size of a UintQueue that
-// is created with a non-positive size.
-const DefaultUintQueueLen = 8
-
-// NewUintQueue returns a new queue that can accommodate at least size
-// items, or DefaultUintQueueLen if size <= 0. The autoGrow parameter
-// specifies whether the queue should grow when necessary.
-func NewUintQueue(size int, autoGrow bool) *UintQueue {
+// NewUintQueue returns a new auto-growing queue that can accommodate
+// at least size items.
+func NewUintQueue(size int) *UintQueue {
 	if size <= 0 {
-		size = DefaultUintQueueLen
+		size = 8 // Sane minimum length
 	}
+	return NewUintQueueWithBuffer(
+		make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewUintQueueWithBuffer returns an auto-growing queue that wraps the
+// provided buffer.
+func NewUintQueueWithBuffer(buf []uint) *UintQueue {
 	return &UintQueue{
-		a:        make([]uint, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		head:     -1,
 		tail:     -1,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (q *UintQueue) SetAutoGrow(t bool) {
+	q.autoGrow = t
 }
 
 // Len returns the current number of queued elements.
@@ -430,10 +440,4 @@ func (q *UintQueue) Grow(n int) {
 		q.head = 0
 		q.tail = n
 	}
-}
-
-// GetSlicePointer returns a pointer to the backing slice of this UintQueue.
-// *WARNING* Use at your own risk.
-func (q *UintQueue) GetSlicePointer() *[]uint {
-	return &q.a
 }

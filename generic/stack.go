@@ -13,22 +13,30 @@ type GenericTypeStack struct {
 	autoGrow bool
 }
 
-// DefaultGenericTypeStackLen is the default size of a GenericTypeStack that
-// is created with a non-positive size.
-const DefaultGenericTypeStackLen = 8
-
-// NewGenericTypeStack returns a new stack that can accommodate at least size
-// items, or DefaultGenericTypeStackLen if size <= 0. The autoGrow parameter
-// specifies whether the stack should grow when necessary.
-func NewGenericTypeStack(size int, autoGrow bool) *GenericTypeStack {
+// NewGenericTypeStack returns a new auto-growing stack that can accommodate
+// at least size items.
+func NewGenericTypeStack(size int) *GenericTypeStack {
 	if size <= 0 {
-		size = DefaultGenericTypeStackLen
+		size = 8 // Sane minimum length
 	}
+	return NewGenericTypeStackWithBuffer(
+		make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+	)
+}
+
+// NewGenericTypeStackWithBuffer returns an auto-growing stack that wraps the
+// provided buffer.
+func NewGenericTypeStackWithBuffer(buf []GenericType) *GenericTypeStack {
 	return &GenericTypeStack{
-		a:        make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		a:        buf,
 		i:        0,
-		autoGrow: autoGrow,
+		autoGrow: true,
 	}
+}
+
+// SetAutoGrow enables or disables auto-growing.
+func (s *GenericTypeStack) SetAutoGrow(t bool) {
+	s.autoGrow = t
 }
 
 // Len returns the current number of pushed elements.
@@ -96,10 +104,4 @@ func (s *GenericTypeStack) Grow(n int) {
 	copy(a, s.a)
 
 	s.a = a
-}
-
-// GetSlicePointer returns a pointer to the backing slice of this GenericTypeStack.
-// *WARNING* Use at your own risk.
-func (s *GenericTypeStack) GetSlicePointer() *[]GenericType {
-	return &s.a
 }

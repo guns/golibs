@@ -87,9 +87,9 @@ func TestQueueAndStack(t *testing.T) {
 			size:     1,
 			cmds:     []interface{}{grow - 0, grow - 0},
 			queueOut: []T{},
-			queue:    *NewGenericTypeQueue(1, true),
+			queue:    *NewGenericTypeQueue(1),
 			stackOut: []T{},
-			stack:    *NewGenericTypeStack(1, true),
+			stack:    *NewGenericTypeStack(1),
 			len:      0,
 		},
 		{
@@ -112,7 +112,7 @@ func TestQueueAndStack(t *testing.T) {
 			len:      4,
 		},
 		{
-			size:     4,
+			size:     2,
 			cmds:     []interface{}{[]T{1, 2, 3, 4}, pop, pop, []T{}, pop, 5, []T{6, 7}},
 			queueOut: []T{1, 2, 3},
 			queue:    Queue{a: []T{5, 6, 7, 4}, head: 3, tail: 3, autoGrow: true},
@@ -123,8 +123,8 @@ func TestQueueAndStack(t *testing.T) {
 	}
 
 	for i, row := range data {
-		q := NewGenericTypeQueue(row.size, true)
-		s := NewGenericTypeStack(row.size, true)
+		q := NewGenericTypeQueue(row.size)
+		s := NewGenericTypeStack(row.size)
 		qout := make([]T, 0, len(row.queueOut))
 		sout := make([]T, 0, len(row.stackOut))
 
@@ -165,15 +165,6 @@ func TestQueueAndStack(t *testing.T) {
 		}
 		if !reflect.DeepEqual(*s, row.stack) {
 			t.Errorf("[%d] %v != %v", i, *s, row.stack)
-		}
-
-		qp := q.GetSlicePointer()
-		if qp != &q.a {
-			t.Errorf("%p != %p", qp, &q.a)
-		}
-		sp := s.GetSlicePointer()
-		if sp != &s.a {
-			t.Errorf("%p != %p", sp, &s.a)
 		}
 
 		if q.Len() != row.len {
