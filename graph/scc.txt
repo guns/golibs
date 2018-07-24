@@ -74,7 +74,7 @@ algorithm PEA_FIND_SCC2(V, E):
 		c          // w           · Component index
 		           //             = O(|V|(1 + 4w)), or O(|V|(1 + 3w)) if using a double-ended stack
 
-	i = 0
+	i = 1
 	c = |V| - 1
 
 	for u in V:
@@ -99,16 +99,71 @@ algorithm PEA_FIND_SCC2(V, E):
 
 		// POSTORDER
 		if root:
-			i--
-
-			while S is not empty AND rindex[u] <= S.peek():
+			while S is not empty AND rindex[u] <= rindex[S.peek()]:
 				v = S.pop() // v in SCC with u
 				rindex[v] = c
 				i--
 
 			rindex[u] = c
+			i--
 			c--
 		else:
 			S.push(u)
+
+// Tim Leslie's iterative PEA_FIND_SCC2:
+//
+// http://www.timl.id.au/SCC
+//
+algorithm iterative_pearce_scc(V, E):
+	storage:
+		dfs, backtrack // 2|V|w · DFS/backtrack shared stack
+		rindex         // |V|w  · Array of v -> local root index
+		i              // w     · Visit index
+		c              // w     · Component index
+		               //       = O(3|V|w)
+
+	i = 1
+	c = |V| - 1
+
+	for u in V:
+		if rindex[u] is undefined:
+			dfs.push(u)
+			visit()
+
+
+	procedure visit():
+		while dfs is not empty:
+			u = dfs.peek()
+
+			if rindex[u] is undefined:
+				rindex[u] = i
+				i++
+
+				for each (u, v) in E:
+					if rindex[v] is undefined:
+						// Promote v to top if already in stack.
+						// This operation is O(1) if using an
+						// autoPromotingStack.
+						dfs.pushOrPromote(v)
+			else:
+				u = dfs.pop()
+				root = true
+
+				for each (u, v) in E:
+					if rindex[v] < rindex[u]:
+						rindex[u] = rindex[v]
+						root = false
+
+				if root:
+					while backtrack is not empty and rindex[u] <= rindex[backtrack.peek()]:
+						v = backtrack.pop()
+						rindex[v] = c
+						i--
+
+					rindex[u] = c
+					i--
+					c--
+				else:
+					backtrack.push(u)
 
 // vim:ft=go:
