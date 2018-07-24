@@ -27,14 +27,6 @@ const Undefined = -1
 // AddEdge adds a single directed edge from vertex u to v.
 func (g Graph) AddEdge(u, v int) {
 	g[u] = append(g[u], v)
-	g.Touch(v)
-}
-
-// Touch makes a vertex non-nil.
-func (g Graph) Touch(u int) {
-	if g[u] == nil {
-		g[u] = []int{}
-	}
 }
 
 // LeastEdgesPath returns a path from vertex u to v with a minimum number of
