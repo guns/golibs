@@ -24,8 +24,8 @@ func NewGenericTypeStack(size int) *GenericTypeStack {
 	)
 }
 
-// NewGenericTypeStackWithBuffer returns an auto-growing stack that wraps the
-// provided buffer, which is never resliced beyond its current length.
+// NewGenericTypeStackWithBuffer returns a new auto-growing stack that wraps
+// the provided buffer, which is never resliced beyond its current length.
 func NewGenericTypeStackWithBuffer(buf []GenericType) *GenericTypeStack {
 	return &GenericTypeStack{
 		a:        buf,
@@ -87,12 +87,6 @@ func (s *GenericTypeStack) Peek() GenericType {
 	return s.a[s.i-1]
 }
 
-// Reset the stack so that its length is zero.
-// Note that the internal slice is NOT cleared.
-func (s *GenericTypeStack) Reset() {
-	s.i = 0
-}
-
 // Grow internal slice to accommodate at least n more items.
 func (s *GenericTypeStack) Grow(n int) {
 	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
@@ -105,4 +99,10 @@ func (s *GenericTypeStack) Grow(n int) {
 	copy(a, s.a)
 
 	s.a = a
+}
+
+// Reset the stack so that its length is zero.
+// Note that the internal slice is NOT cleared.
+func (s *GenericTypeStack) Reset() {
+	s.i = 0
 }

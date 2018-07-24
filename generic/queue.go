@@ -24,8 +24,8 @@ func NewGenericTypeQueue(size int) *GenericTypeQueue {
 	)
 }
 
-// NewGenericTypeQueueWithBuffer returns an auto-growing queue that wraps the
-// provided buffer, which is never resliced beyond its current length.
+// NewGenericTypeQueueWithBuffer returns a new auto-growing queue that wraps
+// the provided buffer, which is never resliced beyond its current length.
 func NewGenericTypeQueueWithBuffer(buf []GenericType) *GenericTypeQueue {
 	return &GenericTypeQueue{
 		a:        buf,
@@ -169,13 +169,6 @@ func (q *GenericTypeQueue) Peek() GenericType {
 	return q.a[q.head]
 }
 
-// Reset the queue so that its length is zero.
-// Note that the internal slice is NOT cleared.
-func (q *GenericTypeQueue) Reset() {
-	q.head = -1
-	q.tail = -1
-}
-
 // Grow internal slice to accommodate at least n more items.
 func (q *GenericTypeQueue) Grow(n int) {
 	// We do not check to see if n <= cap(q.a) - len(q.a) because we promised
@@ -218,4 +211,11 @@ func (q *GenericTypeQueue) Grow(n int) {
 		q.head = 0
 		q.tail = n
 	}
+}
+
+// Reset the queue so that its length is zero.
+// Note that the internal slice is NOT cleared.
+func (q *GenericTypeQueue) Reset() {
+	q.head = -1
+	q.tail = -1
 }
