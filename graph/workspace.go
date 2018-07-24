@@ -124,7 +124,23 @@ func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
 	return bs
 }
 
-// reset a Workspace. The fields parameter is a bitfield of WorkspaceField
+// makeSharedStacks returns an autoPromotingStack and nonPromotingStack that
+// share memory and are backed by the given fields. The fields parameter must
+// specify two contiguous internal fields.
+func (w *Workspace) makeSharedStacks(fields workspaceField) (autoPromotingStack, nonPromotingStack) {
+	var buf []int
+
+	switch fields {
+	case wA | wB:
+		buf = w.a[:w.len*2]
+	case wB | wC:
+		buf = w.b[:w.len*2]
+	}
+
+	return *newAutoPromotingStack(buf), *newNonPromotingStack(buf)
+}
+
+// reset a Workspace. The fields parameter is a bitfield of workspaceField
 // values that specify which fields to reset.
 func (w *Workspace) reset(fields workspaceField) {
 	if fields == 0 {
@@ -163,7 +179,7 @@ func (w *Workspace) reset(fields workspaceField) {
 }
 
 // prepare a Workspace for a Graph of a given size. The fields parameter is a
-// bitfield of WorkspaceField values that specify which fields to reset.
+// bitfield of workspaceField values that specify which fields to reset.
 func (w *Workspace) prepare(size int, fields workspaceField) {
 	if w.resize(size) {
 		// New workspaces are zero-filled, so avoid unnecessary work.
