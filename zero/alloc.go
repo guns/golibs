@@ -4,7 +4,10 @@
 
 package zero
 
-import "bytes"
+import (
+	"bytes"
+	"math/bits"
+)
 
 // Grow returns a byte slice that can accommodate n more bytes, and the index
 // where bytes should be appended. If a reallocation is needed, old memory is
@@ -15,9 +18,9 @@ func Grow(bs []byte, n int) ([]byte, int) {
 		return bs[:newlen], len(bs)
 	}
 
-	newcap := bytes.MinRead
-	for newcap < newlen {
-		newcap *= 2
+	newcap := 1 << uint(bits.Len(uint(newlen-1)))
+	if newcap < bytes.MinRead {
+		newcap = bytes.MinRead
 	}
 
 	newslice := make([]byte, len(bs), newcap)
