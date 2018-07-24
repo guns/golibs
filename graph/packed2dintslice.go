@@ -15,11 +15,11 @@ func MakePacked2DIntSlice(size int) Packed2DIntSlice {
 
 // Append n to the last []int in p. Panics if there is no more space available.
 func (p Packed2DIntSlice) Append(n int) Packed2DIntSlice {
-	i := len(p) - 1
-	s := p[i]
-	s = s[:len(s)+1]
-	s[len(s)-1] = n
-	p[i] = s
+	i := len(p) - 1  // Index of current slice
+	s := p[i]        // Current slice
+	s = s[:len(s)+1] // Reslice current slice to include one more int
+	s[len(s)-1] = n  // Append int
+	p[i] = s         // Replace current slice with longer slice
 	return p
 }
 
