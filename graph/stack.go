@@ -75,7 +75,7 @@ func (aps *autoPromotingStack) pop() int {
 }
 
 // If index n is on the stack, it is promoted to be the top element.
-func (aps *autoPromotingStack) push(n int) {
+func (aps *autoPromotingStack) pushOrPromote(n int) {
 	if aps.s[n].undefined() {
 		// Standard doubly linked list append
 		if aps.top != undefined {
@@ -89,6 +89,10 @@ func (aps *autoPromotingStack) push(n int) {
 		// n is already promoted
 		return
 	}
+
+	//
+	// Promote n
+	//
 
 	node := aps.s[n]
 

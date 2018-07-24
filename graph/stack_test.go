@@ -81,7 +81,7 @@ func TestAutoPromotingStack(t *testing.T) {
 			case transfer:
 				nps.push(aps.pop())
 			default:
-				aps.push(n)
+				aps.pushOrPromote(n)
 			}
 		}
 
