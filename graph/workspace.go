@@ -31,10 +31,10 @@ func NewWorkspace(size int) *Workspace {
 	}
 }
 
-// Resize this workspace. Returns true if a reallocation was necessary, and
+// resize this workspace. Returns true if a reallocation was necessary, and
 // false if not. Note that all buffers are zeroed on reallocation, so a Reset
-// may not be necessary after a Resize that triggers a reallocation.
-func (w *Workspace) Resize(size int) bool {
+// may not be necessary after a resize that triggers a reallocation.
+func (w *Workspace) resize(size int) bool {
 	if size == w.len {
 		return false
 	} else if size <= w.cap {
@@ -49,25 +49,25 @@ func (w *Workspace) Resize(size int) bool {
 	return true
 }
 
-// WorkspaceField values represent fields of a Workspace.
-type WorkspaceField uint
+// workspaceField values represent fields of a Workspace.
+type workspaceField uint
 
 const (
-	WA    WorkspaceField = 1 << iota // Select or reset (*Workspace).a
-	WB                               // Select or reset (*Workspace).b
-	WC                               // Select or reset (*Workspace).c
-	WANeg                            // Fill (*Workspace).a with -1
-	WBNeg                            // Fill (*Workspace).b with -1
-	WCNeg                            // Fill (*Workspace).c with -1
+	wA    workspaceField = 1 << iota // Select or reset (*Workspace).a
+	wB                               // Select or reset (*Workspace).b
+	wC                               // Select or reset (*Workspace).c
+	wANeg                            // Fill (*Workspace).a with -1
+	wBNeg                            // Fill (*Workspace).b with -1
+	wCNeg                            // Fill (*Workspace).c with -1
 )
 
-func (w *Workspace) selectSlice(field WorkspaceField) []int {
+func (w *Workspace) selectSlice(field workspaceField) []int {
 	switch field {
-	case WA:
+	case wA:
 		return w.a
-	case WB:
+	case wB:
 		return w.b
-	case WC:
+	case wC:
 		return w.c
 	default:
 		return nil // panic() defeats inlining [go1.11]
@@ -75,8 +75,8 @@ func (w *Workspace) selectSlice(field WorkspaceField) []int {
 
 }
 
-// MakeQueue returns an empty IntQueue with the specified field as a backing slice.
-func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
+// makeQueue returns an empty IntQueue with the specified field as a backing slice.
+func (w *Workspace) makeQueue(field workspaceField) impl.IntQueue {
 	buf := w.selectSlice(field)[:w.cap]
 	q := impl.IntQueue{}
 
@@ -86,8 +86,8 @@ func (w *Workspace) MakeQueue(field WorkspaceField) impl.IntQueue {
 	return q
 }
 
-// MakeStack returns an empty IntStack with the specified field as a backing slice.
-func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
+// makeStack returns an empty IntStack with the specified field as a backing slice.
+func (w *Workspace) makeStack(field workspaceField) impl.IntStack {
 	buf := w.selectSlice(field)[:w.cap]
 	s := impl.IntStack{}
 
@@ -97,14 +97,14 @@ func (w *Workspace) MakeStack(field WorkspaceField) impl.IntStack {
 	return s
 }
 
-// MakeBitsliceN returns a slice of n empty bitslice.T with the specified
+// makeBitsliceN returns a slice of n empty bitslice.T with the specified
 // field as a backing slice. Each bitslice has a capacity equal to the current
 // size of the workspace. The maximum number of bitslices that can be returned
 // is equal to:
 //
 //	currentWorkspaceLen / bitslice.UintLen(currentWorkspaceLen)
 //
-func (w *Workspace) MakeBitsliceN(n int, field WorkspaceField) []bitslice.T {
+func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
 	buf := w.selectSlice(field)[:w.cap]
 	bs := make([]bitslice.T, n)
 	blen := bitslice.UintLen(w.len)
@@ -124,51 +124,51 @@ func (w *Workspace) MakeBitsliceN(n int, field WorkspaceField) []bitslice.T {
 	return bs
 }
 
-// Reset a Workspace. The fields parameter is a bitfield of WorkspaceField
+// reset a Workspace. The fields parameter is a bitfield of WorkspaceField
 // values that specify which fields to reset.
-func (w *Workspace) Reset(fields WorkspaceField) {
+func (w *Workspace) reset(fields workspaceField) {
 	if fields == 0 {
 		return
 	}
 
-	if fields&WA > 0 {
+	if fields&wA > 0 {
 		for i := range w.a {
 			w.a[i] = 0
 		}
-	} else if fields&WANeg > 0 {
+	} else if fields&wANeg > 0 {
 		for i := range w.a {
 			w.a[i] = -1
 		}
 	}
 
-	if fields&WB > 0 {
+	if fields&wB > 0 {
 		for i := range w.b {
 			w.b[i] = 0
 		}
-	} else if fields&WBNeg > 0 {
+	} else if fields&wBNeg > 0 {
 		for i := range w.b {
 			w.b[i] = -1
 		}
 	}
 
-	if fields&WC > 0 {
+	if fields&wC > 0 {
 		for i := range w.c {
 			w.c[i] = 0
 		}
-	} else if fields&WCNeg > 0 {
+	} else if fields&wCNeg > 0 {
 		for i := range w.c {
 			w.c[i] = -1
 		}
 	}
 }
 
-// Prepare a Workspace for a Graph of a given size. The fields parameter is a
+// prepare a Workspace for a Graph of a given size. The fields parameter is a
 // bitfield of WorkspaceField values that specify which fields to reset.
-func (w *Workspace) Prepare(size int, fields WorkspaceField) {
-	if w.Resize(size) {
+func (w *Workspace) prepare(size int, fields workspaceField) {
+	if w.resize(size) {
 		// New workspaces are zero-filled, so avoid unnecessary work.
-		fields &= ^(WA | WB | WC)
+		fields &= ^(wA | wB | wC)
 	}
 
-	w.Reset(fields)
+	w.reset(fields)
 }

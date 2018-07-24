@@ -15,11 +15,11 @@ import (
 func TestWorkspace(t *testing.T) {
 	w := NewWorkspace(8)
 	buf := w.a[:cap(w.a)] // Backing slice
-	queue := w.MakeQueue(WC)
-	stack := w.MakeStack(WC)
+	queue := w.makeQueue(wC)
+	stack := w.makeStack(wC)
 	qp := queue.GetSlicePointer()
 	sp := stack.GetSlicePointer()
-	bs := w.MakeBitsliceN(2, WC)
+	bs := w.makeBitsliceN(2, wC)
 
 	if w.len != 8 {
 		t.Errorf("%v != %v", w.len, 8)
@@ -83,7 +83,7 @@ func TestWorkspace(t *testing.T) {
 	zneg := []int{-1, -1, -1, -1}
 	s = s[:4]
 
-	w.Prepare(4, WA|WBNeg)
+	w.prepare(4, wA|wBNeg)
 
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
@@ -111,7 +111,7 @@ func TestWorkspace(t *testing.T) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
 	}
 
-	w.Prepare(4, WC)
+	w.prepare(4, wC)
 	s = []int{0, 0, 0, 0, ^n, ^n, ^n, ^n}
 
 	if !reflect.DeepEqual(w.c, z) {
@@ -129,7 +129,7 @@ func TestWorkspace(t *testing.T) {
 
 	// Grow the workspace
 
-	w.Prepare(16, 0)
+	w.prepare(16, 0)
 	z = make([]int, 16)
 
 	if w.len != 16 {

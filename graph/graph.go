@@ -39,11 +39,11 @@ func (g Graph) AddEdge(u, v int) {
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
 func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
-	w.Prepare(len(g), WA|WBNeg)
+	w.prepare(len(g), wA|wBNeg)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
 	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex
-	queue := w.MakeQueue(WC) // |V|w · BFS queue
+	queue := w.makeQueue(wC) // |V|w · BFS queue
 
 	// BFS
 	queue.Enqueue(u)
@@ -87,12 +87,12 @@ loop:
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice (tsort[:0]) is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.Prepare(len(g), 0)
+	w.prepare(len(g), 0)
 
-	bs := w.MakeBitsliceN(2, WA)
+	bs := w.makeBitsliceN(2, wA)
 	active := bs[0]          // |V|  · Bitslice of vertex -> active?
 	explored := bs[1]        // |V|  · Bitslice of vertex -> fully explored?
-	stack := w.MakeStack(WB) // |V|w · DFS stack
+	stack := w.makeStack(wB) // |V|w · DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	idx := len(g)                         // tsort write index + 1
