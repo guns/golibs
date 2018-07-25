@@ -56,9 +56,9 @@ const (
 	wA    workspaceField = 1 << iota // Select or reset (*Workspace).a
 	wB                               // Select or reset (*Workspace).b
 	wC                               // Select or reset (*Workspace).c
-	wANeg                            // Fill (*Workspace).a with -1
-	wBNeg                            // Fill (*Workspace).b with -1
-	wCNeg                            // Fill (*Workspace).c with -1
+	wANeg                            // Fill (*Workspace).a with undefined
+	wBNeg                            // Fill (*Workspace).b with undefined
+	wCNeg                            // Fill (*Workspace).c with undefined
 )
 
 func (w *Workspace) selectSlice(field workspaceField) []int {
@@ -131,6 +131,10 @@ func (w *Workspace) makeSharedStacks(fields workspaceField) (autoPromotingStack,
 		buf = w.b[:w.len*2]
 	}
 
+	for i := range buf {
+		buf[i] = undefined
+	}
+
 	return *newAutoPromotingStack(buf), *newNonPromotingStack(buf)
 }
 
@@ -147,7 +151,7 @@ func (w *Workspace) reset(fields workspaceField) {
 		}
 	} else if fields&wANeg > 0 {
 		for i := range w.a {
-			w.a[i] = -1
+			w.a[i] = undefined
 		}
 	}
 
@@ -157,7 +161,7 @@ func (w *Workspace) reset(fields workspaceField) {
 		}
 	} else if fields&wBNeg > 0 {
 		for i := range w.b {
-			w.b[i] = -1
+			w.b[i] = undefined
 		}
 	}
 
@@ -167,7 +171,7 @@ func (w *Workspace) reset(fields workspaceField) {
 		}
 	} else if fields&wCNeg > 0 {
 		for i := range w.c {
-			w.c[i] = -1
+			w.c[i] = undefined
 		}
 	}
 }
