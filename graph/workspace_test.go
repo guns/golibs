@@ -173,4 +173,17 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(bs, []bitslice.T{{0}, {0}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{0}, {0}})
 	}
+
+	// Test shared stacks
+
+	w.reset(wANeg | wBNeg)
+	aps, nps := w.makeSharedStacks(wA | wB)
+
+	for i := 0; i < w.len; i++ {
+		aps.pushOrPromote(i)
+	}
+
+	if !reflect.DeepEqual(aps.s, nps.s) {
+		t.Errorf("%v != %v", aps.s, nps.s)
+	}
 }
