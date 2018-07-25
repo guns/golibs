@@ -28,6 +28,25 @@ func NewPacked2DIntBuilder(size int) *Packed2DIntBuilder {
 	)
 }
 
+// NewPacked2DIntBuilderFromRows returns a new auto-growing
+// [][]int builder from the provided 2D int slice.
+//
+// This constructor is equivalent to
+//
+// NewPacked2DIntBuilderWithBuffer(rows[0][:cap(rows[0])])
+//
+// and is intended to help provide a function interface for reusing
+// a [][]int without requiring the caller to pass in a
+// Packed2DIntBuilder.
+//
+func NewPacked2DIntBuilderFromRows(rows [][]int) *Packed2DIntBuilder {
+	if cap(rows) == 0 {
+		return NewPacked2DIntBuilderWithBuffer(nil)
+	}
+	buf := rows[:1][0]
+	return NewPacked2DIntBuilderWithBuffer(buf[:cap(buf)])
+}
+
 // NewPacked2DIntBuilderWithBuffer returns a new auto-growing
 // [][]int builder that wraps the provided buffer, which is never
 // resliced beyond its current length.

@@ -24,6 +24,25 @@ func NewPacked2DGenericTypeBuilder(size int) *Packed2DGenericTypeBuilder {
 	)
 }
 
+// NewPacked2DGenericTypeBuilderFromRows returns a new auto-growing
+// [][]GenericType builder from the provided 2D GenericType slice.
+//
+// This constructor is equivalent to
+//
+//	NewPacked2DGenericTypeBuilderWithBuffer(rows[0][:cap(rows[0])])
+//
+// and is intended to help provide a function interface for reusing
+// a [][]GenericType without requiring the caller to pass in a
+// Packed2DGenericTypeBuilder.
+//
+func NewPacked2DGenericTypeBuilderFromRows(rows [][]GenericType) *Packed2DGenericTypeBuilder {
+	if cap(rows) == 0 {
+		return NewPacked2DGenericTypeBuilderWithBuffer(nil)
+	}
+	buf := rows[:1][0]
+	return NewPacked2DGenericTypeBuilderWithBuffer(buf[:cap(buf)])
+}
+
 // NewPacked2DGenericTypeBuilderWithBuffer returns a new auto-growing
 // [][]GenericType builder that wraps the provided buffer, which is never
 // resliced beyond its current length.
