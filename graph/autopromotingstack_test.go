@@ -10,11 +10,11 @@ import (
 )
 
 func TestAutoPromotingStack(t *testing.T) {
-	const peek = -1
-	const pop = -2
-	const peekNPS = -3
-	const popNPS = -4
-	const transfer = -5
+	const PEEK = -1
+	const POP = -2
+	const PEEKNPS = -3
+	const POPNPS = -4
+	const TRANSFER = -5
 
 	data := []struct {
 		len  int
@@ -28,12 +28,12 @@ func TestAutoPromotingStack(t *testing.T) {
 		},
 		{
 			len:  2,
-			cmds: []int{0, 1, pop},
+			cmds: []int{0, 1, POP},
 			out:  []int{1, 0},
 		},
 		{
 			len:  2,
-			cmds: []int{0, 1, peek},
+			cmds: []int{0, 1, PEEK},
 			out:  []int{1, 0, 1},
 		},
 		{
@@ -43,7 +43,7 @@ func TestAutoPromotingStack(t *testing.T) {
 		},
 		{
 			len:  4,
-			cmds: []int{3, 2, 1, transfer, peekNPS, 0, transfer, popNPS},
+			cmds: []int{3, 2, 1, TRANSFER, PEEKNPS, 0, TRANSFER, POPNPS},
 			out:  []int{1, 0, 3, 2, 1},
 		},
 		{
@@ -70,15 +70,15 @@ func TestAutoPromotingStack(t *testing.T) {
 
 		for _, n := range row.cmds {
 			switch n {
-			case peek:
+			case PEEK:
 				out = append(out, aps.peek())
-			case pop:
+			case POP:
 				out = append(out, aps.pop())
-			case peekNPS:
+			case PEEKNPS:
 				out = append(out, nps.peek())
-			case popNPS:
+			case POPNPS:
 				out = append(out, nps.pop())
-			case transfer:
+			case TRANSFER:
 				nps.push(aps.pop())
 			default:
 				aps.pushOrPromote(n)
