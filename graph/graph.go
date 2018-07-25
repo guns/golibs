@@ -105,7 +105,6 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 		// DFS
 		stack.Push(u)
 
-		// visit(u)
 		for stack.Len() > 0 {
 			u := stack.Pop()
 

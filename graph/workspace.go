@@ -13,7 +13,7 @@ import (
 
 // A Workspace provides general-purpose scratch storage for Graph methods.
 type Workspace struct {
-	len, cap int // Not buffer length/capacity
+	len, cap int // Logical len/cap, not buffer len/cap
 	a, b, c  []int
 }
 
