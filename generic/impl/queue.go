@@ -20,9 +20,6 @@ type IntQueue struct {
 // NewIntQueue returns a new auto-growing queue that can accommodate
 // at least size items.
 func NewIntQueue(size int) *IntQueue {
-	if size <= 0 {
-		size = 8 // Sane minimum length
-	}
 	return NewIntQueueWithBuffer(
 		make([]int, 1<<uint(bits.Len(uint(size-1)))),
 	)
@@ -44,7 +41,7 @@ func (q *IntQueue) SetAutoGrow(t bool) {
 	q.autoGrow = t
 }
 
-// Len returns the current number of queued elements.
+// Len returns the current number of elements in the queue.
 func (q *IntQueue) Len() int {
 	switch {
 	case q.head == -1:
@@ -74,6 +71,12 @@ func (q *IntQueue) Len() int {
 	}
 }
 
+// Cap returns the logical capacity of the queue. Note that this may be
+// smaller than the capacity of the internal slice.
+func (q *IntQueue) Cap() int {
+	return len(q.a)
+}
+
 // Enqueue a new element into the queue. If adding this element would overflow
 // the queue and auto-growing is enabled, the current queue is moved to a
 // larger IntQueue before adding the element.
@@ -81,6 +84,9 @@ func (q *IntQueue) Enqueue(x int) {
 	if q.tail == -1 {
 		q.head = 0
 		q.tail = 0
+		if len(q.a) == 0 {
+			q.Grow(1)
+		}
 	} else if q.autoGrow && q.head == q.tail {
 		q.Grow(1)
 	}
@@ -90,63 +96,6 @@ func (q *IntQueue) Enqueue(x int) {
 	q.tail++
 	if q.tail >= len(q.a) {
 		q.tail -= len(q.a)
-	}
-}
-
-// EnqueueSlice adds a slice of int into the queue. If adding these
-// elements would overflow the queue and auto-growing is enabled, the current
-// queue is moved to a larger IntQueue before adding the elements.
-func (q *IntQueue) EnqueueSlice(xs []int) {
-	if len(xs) == 0 {
-		return
-	}
-
-	newlen := q.Len() + len(xs)
-	if q.autoGrow && newlen > len(q.a) {
-		q.Grow(newlen - len(q.a))
-	}
-
-	switch {
-	case q.head == -1:
-		// Queue is empty:
-		//
-		//	h
-		//	 [_ _ _ _ _ _]
-		//	t
-		//
-		copy(q.a, xs)
-		q.head = 0
-		q.tail = len(xs)
-
-		if q.tail >= len(q.a) {
-			q.tail -= len(q.a)
-		}
-	case q.tail < q.head:
-		// Free segment is contiguous:
-		//
-		//	          h
-		//	 [0 _ _ _ 4 5]
-		//	    t
-		//
-		copy(q.a[q.tail:], xs)
-		q.tail += len(xs)
-	default:
-		// Free segment begins at rear and continues at front:
-		//
-		//	      h
-		//	 [_ _ 2 3 _ _]
-		//	          t
-		//
-		n := copy(q.a[q.tail:], xs)
-
-		if n < len(xs) {
-			n += copy(q.a, xs[n:])
-		}
-
-		q.tail += n
-		if q.tail >= len(q.a) {
-			q.tail -= len(q.a)
-		}
 	}
 }
 
@@ -165,6 +114,114 @@ func (q *IntQueue) Dequeue() int {
 	}
 
 	return x
+}
+
+// EnqueueSlice adds a slice of int into the queue. If adding these
+// elements would overflow the queue and auto-growing is enabled, the current
+// queue is moved to a larger IntQueue before adding the elements.
+func (q *IntQueue) EnqueueSlice(src []int) {
+	if len(src) == 0 {
+		return
+	}
+
+	if q.autoGrow {
+		newlen := q.Len() + len(src)
+		if newlen > len(q.a) {
+			q.Grow(newlen - len(q.a))
+		}
+	}
+
+	switch {
+	case q.head == -1:
+		// Queue is empty:
+		//
+		//	h
+		//	 [_ _ _ _ _ _]
+		//	t
+		//
+		q.head = 0
+		q.tail = 0
+
+		q.tail += copy(q.a, src)
+		if q.tail >= len(q.a) {
+			q.tail -= len(q.a)
+		}
+	case q.tail < q.head:
+		// Free segment is contiguous:
+		//
+		//	          h
+		//	 [0 _ _ _ 4 5]
+		//	    t
+		//
+		q.tail += copy(q.a[q.tail:], src)
+	default:
+		// Free segment begins at rear and continues at front:
+		//
+		//	      h
+		//	 [_ _ 2 3 _ _]
+		//	          t
+		//
+		n := copy(q.a[q.tail:], src)
+		if n < len(src) {
+			n += copy(q.a, src[n:])
+		}
+
+		q.tail += n
+		if q.tail >= len(q.a) {
+			q.tail -= len(q.a)
+		}
+	}
+}
+
+// DequeueSlice removes and writes up to len(dst) elements from the queue into
+// dst. The number of dequeued elements is returned.
+func (q *IntQueue) DequeueSlice(dst []int) (n int) {
+	switch {
+	case q.head == -1:
+		// Queue is empty:
+		//
+		//	h
+		//	 [_ _ _ _ _ _]
+		//	t
+		return 0
+	case q.head < q.tail:
+		// Elements are in order:
+		//
+		//	    h
+		//	 [_ 1 2 3 _ _]
+		//	          t
+		//
+		n := copy(dst, q.a[q.head:q.tail])
+		q.head += n
+
+		if q.head == q.tail {
+			q.Reset()
+		}
+
+		return n
+	default:
+		// Elements begin at rear and continue at front:
+		//
+		//	        h
+		//	 [0 1 _ 3 4 5]
+		//	      t
+		//
+		n := copy(dst, q.a[q.head:])
+		if n < len(dst) {
+			n += copy(dst[n:], q.a[:q.tail])
+		}
+
+		q.head += n
+		if q.head >= len(q.a) {
+			q.head -= len(q.a)
+		}
+
+		if q.head == q.tail {
+			q.Reset()
+		}
+
+		return n
+	}
 }
 
 // Peek returns the next element from the queue without removing it. Peeking
@@ -198,10 +255,9 @@ func (q *IntQueue) Grow(n int) {
 		//	 [_ 1 2 3 _ _]
 		//	          t
 		//
-		copy(a, q.a[q.head:q.tail])
-		q.a = a
-		q.tail -= q.head
+		q.tail = copy(a, q.a[q.head:q.tail])
 		q.head = 0
+		q.a = a
 	default:
 		// Elements begin at rear and continue at front:
 		//
@@ -211,9 +267,9 @@ func (q *IntQueue) Grow(n int) {
 		//
 		n := copy(a, q.a[q.head:])
 		n += copy(a[n:], q.a[:q.tail])
-		q.a = a
-		q.head = 0
 		q.tail = n
+		q.head = 0
+		q.a = a
 	}
 }
 
