@@ -8,18 +8,33 @@ import (
 	"math/rand"
 	"reflect"
 	"testing"
+	"unsafe"
 
 	"github.com/guns/golibs/bitslice"
 )
 
+type IntQueue struct {
+	a          []int
+	head, tail int
+	autoGrow   bool
+}
+
+type IntStack struct {
+	a        []int
+	next     int
+	autoGrow bool
+}
+
 func TestWorkspace(t *testing.T) {
 	w := NewWorkspace(8)
+
 	buf := w.a[:cap(w.a)] // Backing slice
 	queue := w.makeQueue(wC)
 	stack := w.makeStack(wC)
-	qp := queue.GetSlicePointer()
-	sp := stack.GetSlicePointer()
 	bs := w.makeBitsliceN(2, wC)
+
+	qbuf := (*(*IntQueue)(unsafe.Pointer(&queue))).a
+	sbuf := (*(*IntStack)(unsafe.Pointer(&stack))).a
 
 	if w.len != 8 {
 		t.Errorf("%v != %v", w.len, 8)
@@ -46,11 +61,11 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, s) {
 		t.Errorf("%v != %v", w.c, s)
 	}
-	if !reflect.DeepEqual(*qp, s) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
-	if !reflect.DeepEqual(*sp, s) {
-		t.Errorf("%v != %v", *sp, s)
+	if !reflect.DeepEqual(sbuf, s) {
+		t.Errorf("%v != %v", sbuf, s)
 	}
 	if !reflect.DeepEqual(bs, []bitslice.T{{uint(n)}, {uint(n)}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{uint(n)}, {uint(n)}})
@@ -67,11 +82,11 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, s) {
 		t.Errorf("%v != %v", w.c, s)
 	}
-	if !reflect.DeepEqual(*qp, s) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
-	if !reflect.DeepEqual(*sp, s) {
-		t.Errorf("%v != %v", *sp, s)
+	if !reflect.DeepEqual(sbuf, s) {
+		t.Errorf("%v != %v", sbuf, s)
 	}
 	if !reflect.DeepEqual(bs, []bitslice.T{{uint(^n)}, {uint(^n)}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
@@ -101,11 +116,11 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, s) {
 		t.Errorf("%v != %v", w.c, s)
 	}
-	if !reflect.DeepEqual(*qp, s[:8]) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s[:8]) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
-	if !reflect.DeepEqual(*qp, s[:8]) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s[:8]) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
 	if !reflect.DeepEqual(bs, []bitslice.T{{uint(^n)}, {uint(^n)}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
@@ -117,11 +132,11 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(w.c, z) {
 		t.Errorf("%v != %v", w.c, z)
 	}
-	if !reflect.DeepEqual(*qp, s) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
-	if !reflect.DeepEqual(*sp, s) {
-		t.Errorf("%v != %v", *sp, s)
+	if !reflect.DeepEqual(sbuf, s) {
+		t.Errorf("%v != %v", sbuf, s)
 	}
 	if !reflect.DeepEqual(bs, []bitslice.T{{0}, {0}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{0}, {0}})
@@ -149,11 +164,11 @@ func TestWorkspace(t *testing.T) {
 		t.Errorf("%v != %v", w.c, z)
 	}
 
-	if !reflect.DeepEqual(*qp, s) {
-		t.Errorf("%v != %v", *qp, s)
+	if !reflect.DeepEqual(qbuf, s) {
+		t.Errorf("%v != %v", qbuf, s)
 	}
-	if !reflect.DeepEqual(*sp, s) {
-		t.Errorf("%v != %v", *sp, s)
+	if !reflect.DeepEqual(sbuf, s) {
+		t.Errorf("%v != %v", sbuf, s)
 	}
 	if !reflect.DeepEqual(bs, []bitslice.T{{0}, {0}}) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{0}, {0}})

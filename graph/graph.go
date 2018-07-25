@@ -135,9 +135,8 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 			// children have been fully explored.
 			stack.Push(^u)
 
-			for _, v := range g[u] {
-				stack.Push(v)
-			}
+			// Visit children nodes
+			stack.PushSlice(g[u])
 		}
 	}
 

@@ -77,23 +77,17 @@ func (w *Workspace) selectSlice(field workspaceField) []int {
 
 // makeQueue returns an empty IntQueue with the specified field as a backing slice.
 func (w *Workspace) makeQueue(field workspaceField) impl.IntQueue {
-	buf := w.selectSlice(field)[:w.cap]
-	q := impl.IntQueue{}
-
-	*q.GetSlicePointer() = buf
+	q := *impl.NewIntQueueWithBuffer(w.selectSlice(field)[:w.cap])
+	q.SetAutoGrow(false)
 	q.Reset()
-
 	return q
 }
 
 // makeStack returns an empty IntStack with the specified field as a backing slice.
 func (w *Workspace) makeStack(field workspaceField) impl.IntStack {
-	buf := w.selectSlice(field)[:w.cap]
-	s := impl.IntStack{}
-
-	*s.GetSlicePointer() = buf
+	s := *impl.NewIntStackWithBuffer(w.selectSlice(field)[:w.cap])
+	s.SetAutoGrow(false)
 	s.Reset()
-
 	return s
 }
 
