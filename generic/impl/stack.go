@@ -118,7 +118,7 @@ func (s *IntStack) Grow(n int) {
 	}
 
 	a := make([]int, 1<<uint(bits.Len(uint(len(s.a)+n-1))))
-	copy(a, s.a)
+	copy(a, s.a[:s.next])
 
 	s.a = a
 }

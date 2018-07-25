@@ -82,7 +82,7 @@ func (p *Packed2DIntBuilder) Grow(n int) {
 	}
 
 	buf := make([]int, 1<<uint(bits.Len(uint(len(p.buf)+n-1))))
-	copy(buf, p.buf)
+	copy(buf, p.buf[:p.tail])
 	p.buf = buf
 
 	// Recreate rows

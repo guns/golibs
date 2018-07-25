@@ -78,7 +78,7 @@ func (p *Packed2DGenericTypeBuilder) Grow(n int) {
 	}
 
 	buf := make([]GenericType, 1<<uint(bits.Len(uint(len(p.buf)+n-1))))
-	copy(buf, p.buf)
+	copy(buf, p.buf[:p.tail])
 	p.buf = buf
 
 	// Recreate rows
