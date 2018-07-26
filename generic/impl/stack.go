@@ -124,7 +124,7 @@ func (s *IntStack) Grow(n int) {
 }
 
 // Reset the stack so that its length is zero.
-// Note that the internal slice is NOT cleared.
+// Note that the internal slice is truncated, NOT cleared.
 func (s *IntStack) Reset() {
 	s.next = 0
 }

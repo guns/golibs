@@ -270,7 +270,7 @@ func (q *GenericTypeQueue) Grow(n int) {
 }
 
 // Reset the queue so that its length is zero.
-// Note that the internal slice is NOT cleared.
+// Note that the internal slice is truncated, NOT cleared.
 func (q *GenericTypeQueue) Reset() {
 	q.head = -1
 	q.tail = -1

@@ -114,7 +114,7 @@ func (p *Packed2DIntBuilder) Grow(n int) {
 }
 
 // Reset this Packed2DIntBuilder.
-// Note that the internal buffer is NOT cleared.
+// Note that the internal buffer is truncated, NOT cleared.
 func (p *Packed2DIntBuilder) Reset() {
 	p.head = 0
 	p.tail = 0
