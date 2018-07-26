@@ -120,10 +120,12 @@ func (q *GenericTypeQueue) EnqueueSlice(src []GenericType) {
 		return
 	}
 
-	if q.autoGrow {
-		newlen := q.Len() + len(src)
-		if newlen > len(q.a) {
+	newlen := q.Len() + len(src)
+	if newlen > len(q.a) {
+		if q.autoGrow {
 			q.Grow(newlen - len(q.a))
+		} else {
+			panic("insufficient space for EnqueueSlice")
 		}
 	}
 

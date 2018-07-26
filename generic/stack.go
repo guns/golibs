@@ -73,10 +73,12 @@ func (s *GenericTypeStack) PushSlice(src []GenericType) {
 		return
 	}
 
-	if s.autoGrow {
-		newlen := s.Len() + len(src)
-		if newlen > len(s.a) {
+	newlen := s.Len() + len(src)
+	if newlen > len(s.a) {
+		if s.autoGrow {
 			s.Grow(newlen - len(s.a))
+		} else {
+			panic("insufficient space for PushSlice")
 		}
 	}
 
