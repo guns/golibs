@@ -38,7 +38,7 @@ func (g Graph) AddEdge(u, v int) {
 //
 // The path is written to the path slice, which is grown if necessary.
 //
-// If no path exists, an empty slice is returned.
+// If no path exists, an empty slice (path[:0) is returned.
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
@@ -150,6 +150,7 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 func (g Graph) Transpose(h Graph) Graph {
 	if cap(h) >= len(g) {
 		h = h[:len(g)]
+		h.Reset()
 	} else {
 		h = make(Graph, len(g))
 	}
@@ -254,6 +255,14 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 	}
 
 	return builder.Rows
+}
+
+// Reset all edge slices in the graph.
+// Note that the slices are truncated, NOT cleared.
+func (g Graph) Reset() {
+	for i := range g {
+		g[i] = g[i][:0]
+	}
 }
 
 func writePath(path, pred []int, v int, pathLen int) []int {

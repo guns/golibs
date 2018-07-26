@@ -2,9 +2,8 @@ package graph
 
 import (
 	"reflect"
+	"sort"
 	"testing"
-
-	"github.com/guns/golibs/generic/impl"
 )
 
 func TestGraphLeastEdgesPath(t *testing.T) {
@@ -118,6 +117,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 	}
 
 	w := NewWorkspace(0)
+	var path []int
 
 	for _, row := range data {
 		g := make(Graph, row.size)
@@ -128,7 +128,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 			}
 		}
 
-		path := g.LeastEdgesPath([]int{}, row.u, row.v, w)
+		path = g.LeastEdgesPath(path, row.u, row.v, w)
 
 		if !reflect.DeepEqual(path, row.path) {
 			t.Errorf("%v != %v", path, row.path)
@@ -211,6 +211,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 	}
 
 	w := NewWorkspace(0)
+	var tsort []int
 
 	for _, row := range data {
 		g := make(Graph, row.size)
@@ -221,7 +222,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 			}
 		}
 
-		tsort := g.TopologicalSort(make([]int, 0, row.size), w)
+		tsort = g.TopologicalSort(tsort, w)
 
 		if row.cyclic {
 			if len(tsort) != 0 {
@@ -253,7 +254,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 			t.Errorf("len(tsort) %v != len(g) %v", len(tsort), len(g))
 		}
 
-		impl.QuicksortIntSlice(tsort)
+		sort.Ints(tsort)
 
 		equal := true
 		for u := range g {
@@ -275,10 +276,6 @@ func TestGraphTranspose(t *testing.T) {
 		edges [][]int
 	}{
 		{
-			size:  0,
-			edges: nil,
-		},
-		{
 			size: 2,
 			edges: [][]int{
 				{0, 1},
@@ -296,12 +293,25 @@ func TestGraphTranspose(t *testing.T) {
 				{4, 4},
 			},
 		},
+		{
+			size: 3,
+			edges: [][]int{
+				{0, 1},
+				{1, 2},
+				{2, 0},
+			},
+		},
+		{
+			size:  0,
+			edges: nil,
+		},
 	}
 
-	for _, row := range data {
+	var gT Graph
+
+	for i, row := range data {
 		g := make(Graph, row.size)
 		h := make(Graph, row.size)
-		gT := make(Graph, row.size)
 
 		for _, e := range row.edges {
 			g.AddEdge(e[0], e[1])
@@ -309,8 +319,19 @@ func TestGraphTranspose(t *testing.T) {
 		}
 
 		gT = g.Transpose(gT)
+
+		// Create empty edge lists for equality testing
+		for i := range gT {
+			if h[i] == nil {
+				h[i] = []int{}
+			}
+			if gT[i] == nil {
+				gT[i] = []int{}
+			}
+		}
+
 		if !reflect.DeepEqual(gT, h) {
-			t.Errorf("%v != %v", gT, h)
+			t.Errorf("[%d] %v != %v", i, gT, h)
 		}
 	}
 }
@@ -379,7 +400,7 @@ func TestStronglyConnectedComponents(t *testing.T) {
 		scc = g.StronglyConnectedComponents(scc, w)
 
 		for i := range scc {
-			impl.QuicksortIntSlice(scc[i])
+			sort.Ints(scc[i])
 		}
 
 		if !reflect.DeepEqual(scc, row.scc) {
