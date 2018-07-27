@@ -21,11 +21,12 @@ type Workspace struct {
 // NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	buf := make([]int, 1<<uint(bits.Len(uint(size*3-1))))
+	n := 1 << uint(bits.Len(uint(size*3-1)))
+	buf := make([]int, n)
 
 	return &Workspace{
 		len: size,
-		cap: size,
+		cap: n / 3,
 		a:   buf[:size],
 		b:   buf[size : size*2],
 		c:   buf[size*2 : size*3],
@@ -78,7 +79,7 @@ func (w *Workspace) selectSlice(field workspaceField) []int {
 
 // makeQueue returns an empty IntQueue with the specified field as a backing slice.
 func (w *Workspace) makeQueue(field workspaceField) impl.IntQueue {
-	q := *impl.NewIntQueueWithBuffer(w.selectSlice(field)[:w.cap])
+	q := *impl.NewIntQueueWithBuffer(w.selectSlice(field))
 	q.SetAutoGrow(false)
 	q.Reset()
 	return q
@@ -86,7 +87,7 @@ func (w *Workspace) makeQueue(field workspaceField) impl.IntQueue {
 
 // makeStack returns an empty IntStack with the specified field as a backing slice.
 func (w *Workspace) makeStack(field workspaceField) impl.IntStack {
-	s := *impl.NewIntStackWithBuffer(w.selectSlice(field)[:w.cap])
+	s := *impl.NewIntStackWithBuffer(w.selectSlice(field))
 	s.SetAutoGrow(false)
 	s.Reset()
 	return s

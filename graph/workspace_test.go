@@ -39,8 +39,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 8 {
 		t.Errorf("%v != %v", w.len, 8)
 	}
-	if w.cap != 8 {
-		t.Errorf("%v != %v", w.cap, 8)
+	if w.cap != 10 {
+		t.Errorf("%v != %v", w.cap, 10)
 	}
 
 	// Fill backing slice with a random value and check fields
@@ -103,8 +103,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
 	}
-	if w.cap != 8 {
-		t.Errorf("%v != %v", w.cap, 8)
+	if w.cap != 10 {
+		t.Errorf("%v != %v", w.cap, 10)
 	}
 
 	if !reflect.DeepEqual(w.a, z) {
@@ -150,8 +150,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 16 {
 		t.Errorf("%v != %v", w.len, 16)
 	}
-	if w.cap != 16 {
-		t.Errorf("%v != %v", w.cap, 16)
+	if w.cap != 21 {
+		t.Errorf("%v != %v", w.cap, 21)
 	}
 
 	if !reflect.DeepEqual(w.a, z) {
