@@ -15,6 +15,20 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		u, v int
 		path []int
 	}{
+		// Attempt to overflow queue (should be first case)
+		{
+			size: 4,
+			adj: Adj{
+				0: {0, 1, 2, 3},
+				1: {},
+				2: {},
+				3: {},
+			},
+			u:    0,
+			v:    3,
+			path: []int{0, 3},
+		},
+		// Typical case
 		{
 			size: 4,
 			adj: Adj{
@@ -144,6 +158,18 @@ func TestGraphTopologicalSort(t *testing.T) {
 		adj    Adj
 		cyclic bool
 	}{
+		// Attempt to overflow stack (should be first case)
+		{
+			size: 4,
+			adj: Adj{
+				0: {1},
+				1: {2},
+				2: {0, 1, 2, 3},
+				3: {},
+			},
+			cyclic: true,
+		},
+		// Typical case
 		{
 			size: 8,
 			adj: Adj{
@@ -213,7 +239,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 	w := NewWorkspace(0)
 	var tsort []int
 
-	for _, row := range data {
+	for i, row := range data {
 		g := make(Graph, row.size)
 
 		for u, vs := range row.adj {
@@ -226,7 +252,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 
 		if row.cyclic {
 			if len(tsort) != 0 {
-				t.Errorf("%v != %v", len(tsort), 0)
+				t.Errorf("[%d] %v != %v", i, len(tsort), 0)
 			}
 			continue
 		}
@@ -245,13 +271,13 @@ func TestGraphTopologicalSort(t *testing.T) {
 			for _, v := range g[u] {
 				j := rsort[v]
 				if j <= i {
-					t.Errorf("edge (%v,%v) out of order in %v\n", u, v, tsort)
+					t.Errorf("[%d] edge (%v,%v) out of order in %v\n", i, u, v, tsort)
 				}
 			}
 		}
 
 		if len(tsort) != len(g) {
-			t.Errorf("len(tsort) %v != len(g) %v", len(tsort), len(g))
+			t.Errorf("[%d] len(tsort) %v != len(g) %v", i, len(tsort), len(g))
 		}
 
 		sort.Ints(tsort)
@@ -264,7 +290,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 		}
 
 		if !equal {
-			t.Errorf("tsort: %v does not contain all graph vertices", tsort)
+			t.Errorf("[%d] tsort: %v does not contain all graph vertices", i, tsort)
 		}
 
 	}

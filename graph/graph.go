@@ -94,9 +94,9 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 	w.prepare(len(g), 0)
 
 	bs := w.makeBitsliceN(2, wA)
-	active := bs[0]          // |V|  · Bitslice of vertex -> active?
-	explored := bs[1]        // |V|  · Bitslice of vertex -> fully explored?
-	stack := w.makeStack(wB) // |V|w · DFS stack
+	active := bs[0]                            // |V|   · Bitslice of vertex -> active?
+	explored := bs[1]                          // |V|   · Bitslice of vertex -> fully explored?
+	stack := w.makeAutoPromotingStack(wB | wC) // 2|V|w · DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	idx := len(g)                         // tsort write index + 1
@@ -107,39 +107,35 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
 		}
 
 		// DFS
-		stack.Push(u)
+		stack.PushOrPromote(u)
 
 		for stack.Len() > 0 {
-			u := stack.Pop()
+			u := stack.Peek()
 
-			// Post-order visit nodes whose children have been explored.
-			// These nodes are encoded as their ones' complement.
-			if u < 0 {
-				u = ^u
+			// Finish nodes whose children have been explored.
+			if active.Get(u) {
+				stack.Pop()
 				explored.Set(u)
 				idx--
 				tsort[idx] = u
 				continue
 			}
 
-			if explored.Get(u) {
-				// Ignore fully explored nodes
-				continue
-			} else if active.Get(u) {
-				// This neighboring vertex is active but not yet
-				// fully explored, so we have discovered a cycle!
-				return tsort[:0]
-			}
-
 			// Mark this vertex as visited, but not fully explored.
 			active.Set(u)
 
-			// Post-order visit this parent vertex after all its
-			// children have been fully explored.
-			stack.Push(^u)
-
 			// Visit children nodes
-			stack.PushSlice(g[u])
+			for _, v := range g[u] {
+				if explored.Get(v) {
+					// Ignore fully explored nodes
+					continue
+				} else if active.Get(v) {
+					// This neighboring vertex is active but not yet
+					// fully explored, so we have discovered a cycle!
+					return tsort[:0]
+				}
+				stack.PushOrPromote(v)
+			}
 		}
 	}
 
@@ -221,7 +217,7 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 				// Top of dfs has been visited, so compare it against successors to find a
 				// minimum local root index.
 
-				u = dfs.Pop()
+				dfs.Pop()
 				root := true
 
 				for _, v := range g[u] {
