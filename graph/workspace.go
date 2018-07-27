@@ -118,10 +118,10 @@ func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
 	return bs
 }
 
-// makeSharedStacks returns an autoPromotingStack and nonPromotingStack that
-// share memory and are backed by the given fields. The fields parameter must
-// specify two contiguous internal fields.
-func (w *Workspace) makeSharedStacks(fields workspaceField) (autoPromotingStack, nonPromotingStack) {
+// makeAutoPromotingStack returns an autoPromotingStack with the specified
+// fields as a backing slice. The fields parameter must specify two contiguous
+// internal fields.
+func (w *Workspace) makeAutoPromotingStack(fields workspaceField) autoPromotingStack {
 	var buf []int
 
 	switch fields {
@@ -135,7 +135,7 @@ func (w *Workspace) makeSharedStacks(fields workspaceField) (autoPromotingStack,
 		buf[i] = undefined
 	}
 
-	return *newAutoPromotingStack(buf), *newNonPromotingStack(buf)
+	return *newAutoPromotingStack(makeListNodeSlice(buf))
 }
 
 // reset a Workspace. The fields parameter is a bitfield of workspaceField

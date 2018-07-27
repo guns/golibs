@@ -55,8 +55,8 @@ func TestAutoPromotingStack(t *testing.T) {
 
 	for _, row := range data {
 		buf := make([]int, row.len*2)
-		aps := newAutoPromotingStack(buf)
-		nps := newNonPromotingStack(buf)
+		aps := newAutoPromotingStack(makeListNodeSlice(buf))
+		nps := newNonPromotingStack(aps.s)
 
 		for i := range buf {
 			buf[i] = -1
@@ -71,26 +71,26 @@ func TestAutoPromotingStack(t *testing.T) {
 		for _, n := range row.cmds {
 			switch n {
 			case PEEK:
-				out = append(out, aps.peek())
+				out = append(out, aps.Peek())
 			case POP:
-				out = append(out, aps.pop())
+				out = append(out, aps.Pop())
 			case PEEKNPS:
-				out = append(out, nps.peek())
+				out = append(out, nps.Peek())
 			case POPNPS:
-				out = append(out, nps.pop())
+				out = append(out, nps.Pop())
 			case TRANSFER:
-				nps.push(aps.pop())
+				nps.Push(aps.Pop())
 			default:
-				aps.pushOrPromote(n)
+				aps.PushOrPromote(n)
 			}
 		}
 
-		for aps.len > 0 {
-			nps.push(aps.pop())
+		for aps.Len() > 0 {
+			nps.Push(aps.Pop())
 		}
 
-		for nps.len > 0 {
-			out = append(out, nps.pop())
+		for nps.Len() > 0 {
+			out = append(out, nps.Pop())
 		}
 
 		if !reflect.DeepEqual(out, row.out) {

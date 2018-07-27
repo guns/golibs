@@ -183,8 +183,9 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 	// [1]: http://www.timl.id.au/SCC
 	// [2]: http://homepages.ecs.vuw.ac.nz/~djp/files/IPL15-preprint.pdf
 
-	rindex := w.a                                 // |V|w  · Array of v -> local root index
-	dfs, backtrack := w.makeSharedStacks(wB | wC) // 2|V|w · DFS/backtrack shared stack
+	rindex := w.a                             // |V|w  · Array of v -> local root index
+	dfs := w.makeAutoPromotingStack(wB | wC)  // 2|V|w · Auto-promoting DFS stack
+	backtrack := *newNonPromotingStack(dfs.s) // 0     · Backtrack stack; shares memory with dfs
 
 	builder := impl.NewPacked2DIntBuilderFromRows(scc)
 	builder.Grow(len(g) - builder.Cap())
@@ -199,10 +200,10 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 		}
 
 		// DFS
-		dfs.pushOrPromote(u)
+		dfs.PushOrPromote(u)
 
-		for dfs.len > 0 {
-			u := dfs.peek()
+		for dfs.Len() > 0 {
+			u := dfs.Peek()
 
 			if rindex[u] == undefined {
 				// Top of dfs is unvisited, so assign it an index and push or promote its
@@ -213,14 +214,14 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 
 				for _, v := range g[u] {
 					if rindex[v] == undefined {
-						dfs.pushOrPromote(v)
+						dfs.PushOrPromote(v)
 					}
 				}
 			} else {
 				// Top of dfs has been visited, so compare it against successors to find a
 				// minimum local root index.
 
-				u = dfs.pop()
+				u = dfs.Pop()
 				root := true
 
 				for _, v := range g[u] {
@@ -233,8 +234,8 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 				if root {
 					// u is the local component root, so everything on the backtrack stack
 					// that has an rindex >= u's rindex is part of this component.
-					for backtrack.len > 0 && rindex[u] <= rindex[backtrack.peek()] {
-						v := backtrack.pop()
+					for backtrack.len > 0 && rindex[u] <= rindex[backtrack.Peek()] {
+						v := backtrack.Pop()
 						rindex[v] = component
 						builder.Append(v)
 						i--
@@ -248,7 +249,7 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 					component--
 				} else {
 					// u is not a local root, so push it on the backtrack stack.
-					backtrack.push(u)
+					backtrack.Push(u)
 				}
 			}
 		}

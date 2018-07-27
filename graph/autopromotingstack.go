@@ -49,19 +49,23 @@ type autoPromotingStack struct {
 	len int
 }
 
-func newAutoPromotingStack(buf []int) *autoPromotingStack {
+func newAutoPromotingStack(s []listNode) *autoPromotingStack {
 	return &autoPromotingStack{
-		s:   makeListNodeSlice(buf),
+		s:   s,
 		top: undefined,
 		len: 0,
 	}
 }
 
-func (aps *autoPromotingStack) peek() int {
+func (aps *autoPromotingStack) Len() int {
+	return aps.len
+}
+
+func (aps *autoPromotingStack) Peek() int {
 	return aps.top
 }
 
-func (aps *autoPromotingStack) pop() int {
+func (aps *autoPromotingStack) Pop() int {
 	oldtop := aps.top
 	aps.top = aps.s[oldtop].prev
 
@@ -75,7 +79,7 @@ func (aps *autoPromotingStack) pop() int {
 }
 
 // If index n is on the stack, it is promoted to be the top element.
-func (aps *autoPromotingStack) pushOrPromote(n int) {
+func (aps *autoPromotingStack) PushOrPromote(n int) {
 	if aps.s[n].undefined() {
 		// Standard doubly linked list append
 		if aps.top != undefined {
@@ -117,26 +121,30 @@ type nonPromotingStack struct {
 	len int
 }
 
-func newNonPromotingStack(buf []int) *nonPromotingStack {
+func newNonPromotingStack(s []listNode) *nonPromotingStack {
 	return &nonPromotingStack{
-		s:   makeListNodeSlice(buf),
+		s:   s,
 		top: undefined,
 		len: 0,
 	}
 }
 
-func (nps *nonPromotingStack) peek() int {
+func (nps *nonPromotingStack) Len() int {
+	return nps.len
+}
+
+func (nps *nonPromotingStack) Peek() int {
 	return nps.top
 }
 
-func (nps *nonPromotingStack) pop() int {
+func (nps *nonPromotingStack) Pop() int {
 	top := nps.top
 	nps.top = nps.s[top].prev
 	nps.len--
 	return top
 }
 
-func (nps *nonPromotingStack) push(n int) {
+func (nps *nonPromotingStack) Push(n int) {
 	nps.s[n].prev = nps.top
 	nps.top = n
 	nps.len++

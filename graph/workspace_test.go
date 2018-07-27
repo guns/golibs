@@ -177,10 +177,11 @@ func TestWorkspace(t *testing.T) {
 	// Test shared stacks
 
 	w.reset(wANeg | wBNeg)
-	aps, nps := w.makeSharedStacks(wA | wB)
+	aps := w.makeAutoPromotingStack(wA | wB)
+	nps := newNonPromotingStack(aps.s)
 
 	for i := 0; i < w.len; i++ {
-		aps.pushOrPromote(i)
+		aps.PushOrPromote(i)
 	}
 
 	if !reflect.DeepEqual(aps.s, nps.s) {
