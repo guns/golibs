@@ -6,6 +6,23 @@ import (
 	"testing"
 )
 
+func TestGraphGrow(t *testing.T) {
+	var g Graph
+	var adj [][]int
+
+	for i := 1; i < 41; i++ {
+		g = g.Grow(1)
+		g.AddEdge(i-1, i)
+		adj = append(adj, []int{i})
+	}
+
+	if !reflect.DeepEqual(g, Graph(adj)) {
+		t.Logf("%v !=", g)
+		t.Logf("%v", adj)
+		t.Fail()
+	}
+}
+
 func TestGraphLeastEdgesPath(t *testing.T) {
 	type Adj = map[int][]int
 
@@ -130,11 +147,12 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 		},
 	}
 
+	var g Graph
 	w := NewWorkspace(0)
 	var path []int
 
 	for _, row := range data {
-		g := make(Graph, row.size)
+		g = g.Resize(row.size)
 
 		for u, edges := range row.adj {
 			for _, v := range edges {
@@ -236,11 +254,12 @@ func TestGraphTopologicalSort(t *testing.T) {
 		},
 	}
 
+	var g Graph
 	w := NewWorkspace(0)
 	var tsort []int
 
 	for i, row := range data {
-		g := make(Graph, row.size)
+		g = g.Resize(row.size)
 
 		for u, vs := range row.adj {
 			for _, v := range vs {
@@ -333,11 +352,11 @@ func TestGraphTranspose(t *testing.T) {
 		},
 	}
 
-	var gT Graph
+	var g, h, gT Graph
 
 	for i, row := range data {
-		g := make(Graph, row.size)
-		h := make(Graph, row.size)
+		g = g.Resize(row.size)
+		h = h.Resize(row.size)
 
 		for _, e := range row.edges {
 			g.AddEdge(e[0], e[1])
@@ -362,7 +381,7 @@ func TestGraphTranspose(t *testing.T) {
 	}
 }
 
-func TestStronglyConnectedComponents(t *testing.T) {
+func TestGraphStronglyConnectedComponents(t *testing.T) {
 	data := []struct {
 		size int
 		adj  map[int][]int
@@ -411,11 +430,12 @@ func TestStronglyConnectedComponents(t *testing.T) {
 		},
 	}
 
+	var g Graph
 	w := NewWorkspace(0)
 	var scc [][]int
 
 	for _, row := range data {
-		g := make(Graph, row.size)
+		g = g.Resize(row.size)
 
 		for u, edges := range row.adj {
 			for _, v := range edges {
