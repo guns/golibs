@@ -51,6 +51,11 @@ func TestAutoPromotingStack(t *testing.T) {
 			cmds: []int{0, 1, 2, 3, 0, 1, 2, 3, 2, 1, 0, 0, 1, 2, 3},
 			out:  []int{0, 1, 2, 3},
 		},
+		{
+			len:  4,
+			cmds: []int{0, 0, 1, 1, 2, 2, 3, 3},
+			out:  []int{0, 1, 2, 3},
+		},
 	}
 
 	for _, row := range data {

@@ -13,10 +13,6 @@ type listNode struct {
 	prev, next int
 }
 
-func (node listNode) undefined() bool {
-	return node.prev == undefined && node.next == undefined
-}
-
 func makeListNodeSlice(buf []int) []listNode {
 	s := (*[]listNode)(unsafe.Pointer(&buf))
 
@@ -80,7 +76,10 @@ func (aps *autoPromotingStack) Pop() int {
 
 // If index n is on the stack, it is promoted to be the top element.
 func (aps *autoPromotingStack) PushOrPromote(n int) {
-	if aps.s[n].undefined() {
+	if n == aps.top {
+		// n is already on top
+		return
+	} else if aps.s[n].prev == undefined && aps.s[n].next == undefined {
 		// Standard doubly linked list append
 		if aps.top != undefined {
 			aps.s[aps.top].next = n
@@ -88,9 +87,6 @@ func (aps *autoPromotingStack) PushOrPromote(n int) {
 		aps.s[n].prev = aps.top
 		aps.top = n
 		aps.len++
-		return
-	} else if n == aps.top {
-		// n is already promoted
 		return
 	}
 
