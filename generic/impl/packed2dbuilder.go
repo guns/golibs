@@ -43,8 +43,7 @@ func NewPacked2DIntBuilderFromRows(rows [][]int) *Packed2DIntBuilder {
 	if cap(rows) == 0 {
 		return NewPacked2DIntBuilderWithBuffer(nil)
 	}
-	buf := rows[:1][0]
-	return NewPacked2DIntBuilderWithBuffer(buf[:cap(buf)])
+	return NewPacked2DIntBuilderWithBuffer(rows[0][:cap(rows[0])])
 }
 
 // NewPacked2DIntBuilderWithBuffer returns a new auto-growing

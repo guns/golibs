@@ -39,8 +39,7 @@ func NewPacked2DGenericTypeBuilderFromRows(rows [][]GenericType) *Packed2DGeneri
 	if cap(rows) == 0 {
 		return NewPacked2DGenericTypeBuilderWithBuffer(nil)
 	}
-	buf := rows[:1][0]
-	return NewPacked2DGenericTypeBuilderWithBuffer(buf[:cap(buf)])
+	return NewPacked2DGenericTypeBuilderWithBuffer(rows[0][:cap(rows[0])])
 }
 
 // NewPacked2DGenericTypeBuilderWithBuffer returns a new auto-growing

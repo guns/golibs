@@ -28,7 +28,7 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 		{
 			size: 4,
 			cmds: []T{FINISH},
-			rows: [][]T{{}},
+			rows: [][]T{[]T(nil)},
 		},
 		{
 			size: 4,
@@ -74,9 +74,10 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 		},
 	}
 
-	for _, row := range data {
-		buf := make([]T, row.size)
-		p := NewPacked2DGenericTypeBuilderWithBuffer(buf)
+	var rows [][]T
+
+	for i, row := range data {
+		p := NewPacked2DGenericTypeBuilderFromRows(rows)
 		var out []T
 
 		for _, n := range row.cmds {
@@ -98,26 +99,28 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 			}
 		}
 
-		if !reflect.DeepEqual(p.Rows, row.rows) {
-			t.Errorf("%v != %v", p.Rows, row.rows)
+		rows = p.Rows
+
+		if !reflect.DeepEqual(rows, row.rows) {
+			t.Errorf("[%d] %v != %v", i, rows, row.rows)
 		}
 
 		if !reflect.DeepEqual(out, row.out) {
-			t.Errorf("%v != %v", out, row.out)
+			t.Errorf("[%d] %v != %v", i, out, row.out)
 		}
 
-		for i := range buf {
-			buf[i] = -1
+		for i := range p.buf {
+			p.buf[i] = -1
 		}
 
 		if !row.grow {
 		loop:
-			for i := range p.Rows {
-				for j := range p.Rows[i] {
-					if p.Rows[i][j] != -1 {
-						t.Log("buf and p.Rows should share memory")
-						t.Logf("buf: %v", buf)
-						t.Logf("p.Rows: %v", p.Rows)
+			for i := range rows {
+				for j := range rows[i] {
+					if rows[i][j] != -1 {
+						t.Logf("[%d] p.buf and rows should share memory", i)
+						t.Logf("p.buf: %v", p.buf)
+						t.Logf("rows: %v", rows)
 						t.Fail()
 						break loop
 					}
