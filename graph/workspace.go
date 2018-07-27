@@ -5,6 +5,7 @@
 package graph
 
 import (
+	"math/bits"
 	"unsafe"
 
 	"github.com/guns/golibs/bitslice"
@@ -20,14 +21,14 @@ type Workspace struct {
 // NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	buf := make([]int, size*3)
+	buf := make([]int, 1<<uint(bits.Len(uint(size*3-1))))
 
 	return &Workspace{
 		len: size,
 		cap: size,
 		a:   buf[:size],
 		b:   buf[size : size*2],
-		c:   buf[size*2:],
+		c:   buf[size*2 : size*3],
 	}
 }
 

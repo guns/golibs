@@ -148,7 +148,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 	}
 
 	var g Graph
-	w := NewWorkspace(0)
+	w := &Workspace{}
 	var path []int
 
 	for _, row := range data {
@@ -255,7 +255,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 	}
 
 	var g Graph
-	w := NewWorkspace(0)
+	w := &Workspace{}
 	var tsort []int
 
 	for i, row := range data {
@@ -431,7 +431,7 @@ func TestGraphStronglyConnectedComponents(t *testing.T) {
 	}
 
 	var g Graph
-	w := NewWorkspace(0)
+	w := &Workspace{}
 	var scc [][]int
 
 	for _, row := range data {
