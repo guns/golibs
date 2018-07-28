@@ -6,38 +6,25 @@
 // architectures.
 package optimized
 
-import (
-	"math/big"
-	"math/bits"
-)
-
 // Mul returns the 128-bit unsigned product of a and b as a pair of 64-bit
 // unsigned integers.
 func Mul64(x, y uint64) (lower, upper uint64)
 
 func mul64(x, y uint64) (lower, upper uint64) {
-	a := new(big.Int).SetUint64(x)
-	b := new(big.Int).SetUint64(y)
-	p := new(big.Int).Mul(a, b)
+	const lo = 0xffffffff
 
-	if p.IsUint64() {
-		return p.Uint64(), 0
-	}
+	a, b := x>>32, x&lo
+	c, d := y>>32, y&lo
 
-	w := p.Bits()
+	ac := a * c
+	ad := a * d
+	bc := b * c
+	bd := b * d
 
-	switch bits.UintSize {
-	case 64:
-		lower = uint64(w[0])
-		upper = uint64(w[1])
-	case 32:
-		lower = uint64(w[1])<<32 + uint64(w[0])
-		if len(w) == 3 {
-			upper = uint64(w[2])
-		} else {
-			upper = uint64(w[3])<<32 + uint64(w[2])
-		}
-	}
+	mid := ad&lo + bc&lo + bd>>32 // 34 bits
+
+	lower = (mid&lo)<<32 + bd&lo
+	upper = ac + ad>>32 + bc>>32 + mid>>32
 
 	return lower, upper
 }
