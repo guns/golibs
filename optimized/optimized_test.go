@@ -16,6 +16,8 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+const multiplyRounds = 1000000
+
 func TestMul64(t *testing.T) {
 	data := []struct {
 		x, y, lower, upper uint64
@@ -77,8 +79,7 @@ func TestMul64(t *testing.T) {
 	}
 
 	// Test implementations against each other
-	const rounds = 1000000
-	for i := 0; i < rounds; i++ {
+	for i := 0; i < multiplyRounds; i++ {
 		x, y := rand.Uint64(), rand.Uint64()
 		lo0, hi0 := Mul64(x, y)
 		lo1, hi1 := mul64(x, y)
@@ -154,8 +155,7 @@ func TestMul32(t *testing.T) {
 	}
 
 	// Test implementations against each other
-	const rounds = 1000000
-	for i := 0; i < rounds; i++ {
+	for i := 0; i < multiplyRounds; i++ {
 		x, y := rand.Uint32(), rand.Uint32()
 		lo0, hi0 := Mul32(x, y)
 		lo1, hi1 := mul32(x, y)
