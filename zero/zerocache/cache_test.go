@@ -104,12 +104,10 @@ func TestCacheWithByteReaderError(t *testing.T) {
 	}
 }
 
-const (
-	cacheClear = 0
-	cacheReset = 1
-)
-
 func TestCacheClearAndReset(t *testing.T) {
+	const cacheClear = 0
+	const cacheReset = 1
+
 	data := []struct {
 		method, inits      int
 		data, expectedData []byte
