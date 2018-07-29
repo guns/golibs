@@ -21,11 +21,9 @@ func randGenericNumberSlice(n, max int) []GenericNumber {
 		for i := range v {
 			v[i] = GenericNumber(i)
 		}
-		// Fisher-Yates shuffle
-		for i := len(v) - 1; i >= 0; i-- {
-			j := rand.Intn(i + 1)
+		rand.Shuffle(len(v), func(i, j int) {
 			v[i], v[j] = v[j], v[i]
-		}
+		})
 	}
 	return v
 }

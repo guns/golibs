@@ -1,3 +1,7 @@
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 package genericbenchmarks
 
 import (
@@ -6,15 +10,64 @@ import (
 	"testing"
 )
 
+//	:: go version go1.10.3 linux/amd64
+//	goos: linux
+//	goarch: amd64
+//	pkg: github.com/guns/golibs/generic/genericbenchmarks
+//	BenchmarkSortInts-4                         20000      83534 ns/op       32 B/op        1 allocs/op
+//	BenchmarkQuicksortIntSlice-4                50000      34116 ns/op        0 B/op        0 allocs/op
+//	BenchmarkSortSortPersonSlice-4              10000     203769 ns/op       32 B/op        1 allocs/op
+//	BenchmarkQuicksortPersonSliceMethod-4       10000     169927 ns/op        0 B/op        0 allocs/op
+//	PASS
+//	ok   github.com/guns/golibs/generic/genericbenchmarks 8.338s
+
+const slicelen = 1000
+
+func BenchmarkSortInts(b *testing.B) {
+	r := randslice(slicelen)
+	s := make([]int, len(r))
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		copy(s, r)
+		sort.Ints(s)
+	}
+}
+func BenchmarkQuicksortIntSlice(b *testing.B) {
+	r := randslice(slicelen)
+	s := make([]int, len(r))
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		copy(s, r)
+		QuicksortIntSlice(s)
+	}
+}
+func BenchmarkSortSortPersonSlice(b *testing.B) {
+	r := randPersonSlice(slicelen)
+	s := make([]Person, len(r))
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		copy(s, r)
+		sort.Sort(PersonSlice(s))
+	}
+}
+func BenchmarkQuicksortPersonSliceMethod(b *testing.B) {
+	r := randPersonSlice(slicelen)
+	s := make([]Person, len(r))
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		copy(s, r)
+		QuicksortPersonSlice(s)
+	}
+}
+
 func randslice(n int) []int {
 	v := make([]int, n)
 	for i := range v {
 		v[i] = rand.Intn(i + 1)
-		// Fisher-Yates shuffle
-		for i := len(v) - 1; i >= 0; i-- {
-			j := rand.Intn(i + 1)
-			v[i], v[j] = v[j], v[i]
-		}
 	}
 	return v
 }
@@ -128,57 +181,4 @@ var names = []string{
 	"Vindemiatrix",
 	"Watt",
 	"Zanuck",
-}
-
-// goos: linux
-// goarch: amd64
-// pkg: github.com/guns/golibs/generic/genericbenchmarks
-// BenchmarkSortInts-4                                30000             62906 ns/op              32 B/op          1 allocs/op
-// BenchmarkQuicksortIntSlice-4                       50000             26903 ns/op               0 B/op          0 allocs/op
-// BenchmarkSortSortPersonSlice-4                     10000            203544 ns/op              32 B/op          1 allocs/op
-// BenchmarkQuicksortPersonSliceMethod-4              10000            175966 ns/op               0 B/op          0 allocs/op
-// PASS
-// ok      github.com/guns/golibs/generic/genericbenchmarks        8.186s
-
-const slicelen = 1000
-
-func BenchmarkSortInts(b *testing.B) {
-	r := randslice(slicelen)
-	s := make([]int, len(r))
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		copy(s, r)
-		sort.Ints(s)
-	}
-}
-func BenchmarkQuicksortIntSlice(b *testing.B) {
-	r := randslice(slicelen)
-	s := make([]int, len(r))
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		copy(s, r)
-		QuicksortIntSlice(s)
-	}
-}
-func BenchmarkSortSortPersonSlice(b *testing.B) {
-	r := randPersonSlice(slicelen)
-	s := make([]Person, len(r))
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		copy(s, r)
-		sort.Sort(PersonSlice(s))
-	}
-}
-func BenchmarkQuicksortPersonSliceMethod(b *testing.B) {
-	r := randPersonSlice(slicelen)
-	s := make([]Person, len(r))
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		copy(s, r)
-		QuicksortPersonSlice(s)
-	}
 }
