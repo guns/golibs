@@ -31,14 +31,14 @@ func mul64(x, y uint64) (lower, upper uint64) {
 	return lower, upper
 }
 
-// Int63n is an optimized version of math/rand.Int63n that implements Daniel
-// Lemire's alternative to modulo reduction:
+// RandInt63n is an optimized version of math/rand.Int63n that implements
+// Daniel Lemire's multiplicative alternative to modulo reduction:
 //
 //	https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
 //	https://lemire.me/blog/2016/06/30/fast-random-shuffling/
 //
 // cf. math/rand.int31n
-func Int63n(n int64) int64 {
+func RandInt63n(n int64) int64 {
 	if n <= 0 {
 		return n / (n * 0) // panic() defeats inlining [go1.11]
 	}

@@ -117,15 +117,15 @@ func BenchmarkMul64Fallback(b *testing.B) {
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/optimized
-//	BenchmarkInt63n-4        50000000         23.2 ns/op        0 B/op        0 allocs/op
-//	BenchmarkRandInt63n-4    50000000         36.5 ns/op        0 B/op        0 allocs/op
-//	BenchmarkRandInt31n-4    50000000         27.6 ns/op        0 B/op        0 allocs/op
+//	BenchmarkOptimizedRandInt63n-4    100000000        22.8 ns/op        0 B/op        0 allocs/op
+//	BenchmarkRandInt63n-4             50000000         36.3 ns/op        0 B/op        0 allocs/op
+//	BenchmarkRandInt31n-4             50000000         27.1 ns/op        0 B/op        0 allocs/op
 //	PASS
-//	ok   github.com/guns/golibs/optimized 4.505s
+//	ok   github.com/guns/golibs/optimized 5.588s
 
-func BenchmarkInt63n(b *testing.B) {
+func BenchmarkOptimizedRandInt63n(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = Int63n(int64(i) + 1)
+		_ = RandInt63n(int64(i) + 1)
 	}
 }
 func BenchmarkRandInt63n(b *testing.B) {
