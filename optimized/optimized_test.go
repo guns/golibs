@@ -77,7 +77,8 @@ func TestMul64(t *testing.T) {
 	}
 
 	// Test implementations against each other
-	for i := 0; i < 1000000; i++ {
+	const rounds = 1000000
+	for i := 0; i < rounds; i++ {
 		x, y := rand.Uint64(), rand.Uint64()
 		lo0, hi0 := Mul64(x, y)
 		lo1, hi1 := mul64(x, y)
@@ -109,5 +110,31 @@ func BenchmarkMul64(b *testing.B) {
 func BenchmarkMul64Fallback(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = mul64(0x736b9f3f93cad329, 0x341afaad2b00aaf4)
+	}
+}
+
+//	:: go version go1.10.3 linux/amd64
+//	goos: linux
+//	goarch: amd64
+//	pkg: github.com/guns/golibs/optimized
+//	BenchmarkInt63n-4        50000000         23.2 ns/op        0 B/op        0 allocs/op
+//	BenchmarkRandInt63n-4    50000000         36.5 ns/op        0 B/op        0 allocs/op
+//	BenchmarkRandInt31n-4    50000000         27.6 ns/op        0 B/op        0 allocs/op
+//	PASS
+//	ok   github.com/guns/golibs/optimized 4.505s
+
+func BenchmarkInt63n(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Int63n(int64(i) + 1)
+	}
+}
+func BenchmarkRandInt63n(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = rand.Int63n(int64(i) + 1)
+	}
+}
+func BenchmarkRandInt31n(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = rand.Int31n(int32(i) + 1)
 	}
 }
