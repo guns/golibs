@@ -4,7 +4,7 @@
 
 package graph
 
-// LeastEdgesPath returns a path from vertex u to v with a minimum number of
+// MinEdgesPath returns a path from vertex u to v with a minimum number of
 // edges. The length of the path is the length of the returned path minus one.
 //
 // The path is written to the path slice, which is grown if necessary.
@@ -13,7 +13,7 @@ package graph
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
-func (g Graph) LeastEdgesPath(path []int, u, v int, w *Workspace) []int {
+func (g Graph) MinEdgesPath(path []int, u, v int, w *Workspace) []int {
 	w.prepare(len(g), wA|wBNeg)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u

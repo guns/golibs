@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestGraphLeastEdgesPath(t *testing.T) {
+func TestGraphMinEdgesPath(t *testing.T) {
 	type Adj = map[int][]int
 
 	data := []struct {
@@ -146,7 +146,7 @@ func TestGraphLeastEdgesPath(t *testing.T) {
 			}
 		}
 
-		path = g.LeastEdgesPath(path, row.u, row.v, w)
+		path = g.MinEdgesPath(path, row.u, row.v, w)
 
 		if !reflect.DeepEqual(path, row.path) {
 			t.Errorf("%v != %v", path, row.path)
