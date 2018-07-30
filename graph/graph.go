@@ -28,18 +28,19 @@ func (g Graph) AddEdge(u, v int) {
 
 // Grow returns a graph with n more vertices.
 func (g Graph) Grow(n int) Graph {
-	if n <= 0 {
+	switch {
+	case n <= 0:
 		return g
-	} else if len(g)+n < cap(g) {
+	case len(g)+n < cap(g):
 		i := len(g)
 		g = g[:i+n]
 		g[i:].ResetEdges()
 		return g
+	default:
+		h := make(Graph, 1<<uint(bits.Len(uint(len(g)+n-1))))
+		copy(h, g)
+		return h[:len(g)+n]
 	}
-
-	h := make(Graph, 1<<uint(bits.Len(uint(len(g)+n-1))))
-	copy(h, g)
-	return h[:len(g)+n]
 }
 
 // Reset this graph by resizing it and resetting its edges.
