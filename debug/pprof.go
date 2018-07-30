@@ -11,6 +11,8 @@ import (
 	"runtime/pprof"
 )
 
+// StartCPUProfile starts CPU profiling and returns a stop function that
+// writes the profile to the given path.
 func StartCPUProfile(path string) (stopCPUProfile func()) {
 	f, err := os.Create(path)
 	if err != nil {
@@ -23,10 +25,14 @@ func StartCPUProfile(path string) (stopCPUProfile func()) {
 
 	return func() {
 		pprof.StopCPUProfile()
-		_ = f.Close()
+		if err := f.Close(); err != nil {
+			panic(err)
+		}
 	}
 }
 
+// StartMemProfile starts memory profiling with 100% sampling and returns
+// a stop function that writes the profile to the given path.
 func StartMemProfile(path string) (stopMemProfile func()) {
 	runtime.MemProfileRate = 1
 
@@ -37,11 +43,13 @@ func StartMemProfile(path string) (stopMemProfile func()) {
 		if err != nil {
 			panic(err)
 		}
-		defer func() { _ = f.Close() }()
 
 		runtime.GC() // get up-to-date statistics
 
 		if err := pprof.WriteHeapProfile(f); err != nil {
+			panic(err)
+		}
+		if err := f.Close(); err != nil {
 			panic(err)
 		}
 	}

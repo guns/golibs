@@ -13,18 +13,6 @@ import (
 	"github.com/guns/golibs/bitslice"
 )
 
-type IntQueue struct {
-	a          []int
-	head, tail int
-	autoGrow   bool
-}
-
-type IntStack struct {
-	a        []int
-	next     int
-	autoGrow bool
-}
-
 func TestWorkspace(t *testing.T) {
 	w := NewWorkspace(8)
 
@@ -32,6 +20,18 @@ func TestWorkspace(t *testing.T) {
 	queue := w.makeQueue(wC)
 	stack := w.makeStack(wC)
 	bs := w.makeBitsliceN(2, wC)
+
+	type IntQueue struct {
+		a          []int
+		head, tail int
+		autoGrow   bool
+	}
+
+	type IntStack struct {
+		a        []int
+		next     int
+		autoGrow bool
+	}
 
 	qbuf := (*(*IntQueue)(unsafe.Pointer(&queue))).a
 	sbuf := (*(*IntStack)(unsafe.Pointer(&stack))).a

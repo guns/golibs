@@ -8,12 +8,8 @@ package trigger
 
 import "sync/atomic"
 
-/*
-
-A trigger is a flexible, synchronized way to communicate a single state
-transition. Like sync.Mutex, triggers should never be copied.
-
-*/
+// T is a flexible, synchronized way to communicate a single state transition.
+// Like sync.Mutex, triggers should never be copied.
 type T struct {
 	done uint32
 	ch   chan struct{}

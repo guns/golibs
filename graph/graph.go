@@ -119,7 +119,7 @@ loop:
 		return path[:0]
 	}
 
-	return writePath(path, pred, v, int(dist[v]))
+	return writePath(path, pred, v, dist[v])
 }
 
 // TopologicalSort returns a slice of vertex indices in topologically sorted

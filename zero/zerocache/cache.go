@@ -15,8 +15,8 @@ import (
 	"github.com/guns/golibs/zero"
 )
 
-// A zerocache is a synchronized read-only buffer that is initialized from a
-// constant function and can be zeroed and reset.
+// T is a synchronized read-only buffer that is initialized from a constant
+// function and can be zeroed and reset.
 type T struct {
 	done   uint32
 	mutex  sync.RWMutex
