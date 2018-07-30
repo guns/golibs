@@ -64,7 +64,7 @@ func TestGraphStronglyConnectedComponents(t *testing.T) {
 	var scc [][]int
 
 	for _, row := range data {
-		g = g.Resize(row.size)
+		g = g.Reset(row.size)
 
 		for u, edges := range row.adj {
 			for _, v := range edges {

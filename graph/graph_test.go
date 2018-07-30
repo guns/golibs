@@ -62,8 +62,8 @@ func TestGraphTranspose(t *testing.T) {
 	var g, h, gT Graph
 
 	for i, row := range data {
-		g = g.Resize(row.size)
-		h = h.Resize(row.size)
+		g = g.Reset(row.size)
+		h = h.Reset(row.size)
 
 		for _, e := range row.edges {
 			g.AddEdge(e[0], e[1])

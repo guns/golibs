@@ -36,7 +36,7 @@ func (g Graph) Grow(n int) Graph {
 	} else if len(g)+n < cap(g) {
 		i := len(g)
 		g = g[:i+n]
-		g[i:].Reset()
+		g[i:].ResetEdges()
 		return g
 	}
 
@@ -45,21 +45,21 @@ func (g Graph) Grow(n int) Graph {
 	return h[:len(g)+n]
 }
 
-// Resize this graph, then reset it. Use Grow to enlarge the graph without
-// resetting its state.
-func (g Graph) Resize(n int) Graph {
+// Reset this graph by resizing it and resetting its edges.
+// Use Grow to enlarge the graph without truncating its state.
+func (g Graph) Reset(n int) Graph {
 	if n > cap(g) {
 		return make(Graph, 1<<uint(bits.Len(uint(n-1))))[:n]
 	}
 
 	g = g[:n]
-	g.Reset()
+	g.ResetEdges()
 	return g
 }
 
-// Reset all edge slices in the graph.
-// Note that the slices are truncated, NOT cleared.
-func (g Graph) Reset() {
+// ResetEdges reset all edge slices in the graph.
+// Note that edge slices are NOT cleared.
+func (g Graph) ResetEdges() {
 	for i := range g {
 		g[i] = g[i][:0]
 	}
@@ -67,7 +67,7 @@ func (g Graph) Reset() {
 
 // Transpose writes to h a copy of the current graph with all edges reversed.
 func (g Graph) Transpose(h Graph) Graph {
-	h = h.Resize(len(g))
+	h = h.Reset(len(g))
 
 	for u := range g {
 		for _, v := range g[u] {

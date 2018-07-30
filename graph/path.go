@@ -14,7 +14,7 @@ package graph
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
 func (g Graph) MinEdgesPath(path []int, u, v int, w *Workspace) []int {
-	w.prepare(len(g), wA|wBNeg)
+	w.reset(len(g), wA|wBNeg)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
 	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex

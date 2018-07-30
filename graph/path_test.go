@@ -138,7 +138,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 	var path []int
 
 	for _, row := range data {
-		g = g.Resize(row.size)
+		g = g.Reset(row.size)
 
 		for u, edges := range row.adj {
 			for _, v := range edges {

@@ -33,24 +33,6 @@ func NewWorkspace(size int) *Workspace {
 	}
 }
 
-// resize this workspace. Returns true if a reallocation was necessary, and
-// false if not. Note that all buffers are zeroed on reallocation, so a Reset
-// may not be necessary after a resize that triggers a reallocation.
-func (w *Workspace) resize(size int) bool {
-	if size == w.len {
-		return false
-	} else if size <= w.cap {
-		w.len = size
-		w.a = w.a[:size]
-		w.b = w.b[:size]
-		w.c = w.c[:size]
-		return false
-	}
-
-	*w = *NewWorkspace(size)
-	return true
-}
-
 // workspaceField values represent fields of a Workspace.
 type workspaceField uint
 
@@ -140,9 +122,29 @@ func (w *Workspace) makeAutoPromotingStack(fields workspaceField) autoPromotingS
 	return *newAutoPromotingStack(makeListNodeSlice(buf))
 }
 
-// reset a Workspace. The fields parameter is a bitfield of workspaceField
-// values that specify which fields to reset.
-func (w *Workspace) reset(fields workspaceField) {
+// reset prepares a Workspace for a Graph of a given size. The fields
+// parameter is a bitfield of workspaceField values that specify which
+// fields to clear.
+func (w *Workspace) reset(size int, fields workspaceField) {
+	switch {
+	case size == w.len:
+		// No resize necessary
+	case size <= w.cap:
+		w.len = size
+		w.a = w.a[:size]
+		w.b = w.b[:size]
+		w.c = w.c[:size]
+	default:
+		*w = *NewWorkspace(size)
+		// New workspaces are zero-filled, so avoid unnecessary work.
+		fields &= ^(wA | wB | wC)
+	}
+
+	w.clear(fields)
+}
+
+// clear specific fields a Workspace.
+func (w *Workspace) clear(fields workspaceField) {
 	if fields == 0 {
 		return
 	}
@@ -176,15 +178,4 @@ func (w *Workspace) reset(fields workspaceField) {
 			w.c[i] = undefined
 		}
 	}
-}
-
-// prepare a Workspace for a Graph of a given size. The fields parameter is a
-// bitfield of workspaceField values that specify which fields to reset.
-func (w *Workspace) prepare(size int, fields workspaceField) {
-	if w.resize(size) {
-		// New workspaces are zero-filled, so avoid unnecessary work.
-		fields &= ^(wA | wB | wC)
-	}
-
-	w.reset(fields)
 }

@@ -101,7 +101,7 @@ func (bs T) Popcnt() int {
 	return pop
 }
 
-// Reset clears all bits.
+// Reset this bitslice by clearing all bits.
 func (bs T) Reset() {
 	for i := range bs {
 		bs[i] = 0

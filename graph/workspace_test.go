@@ -98,7 +98,7 @@ func TestWorkspace(t *testing.T) {
 	zneg := []int{-1, -1, -1, -1}
 	s = s[:4]
 
-	w.prepare(4, wA|wBNeg)
+	w.reset(4, wA|wBNeg)
 
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
@@ -126,7 +126,7 @@ func TestWorkspace(t *testing.T) {
 		t.Errorf("%v != %v", bs, []bitslice.T{{uint(^n)}, {uint(^n)}})
 	}
 
-	w.prepare(4, wC)
+	w.reset(4, wC)
 	s = []int{0, 0, 0, 0, ^n, ^n, ^n, ^n}
 
 	if !reflect.DeepEqual(w.c, z) {
@@ -144,7 +144,7 @@ func TestWorkspace(t *testing.T) {
 
 	// Grow the workspace
 
-	w.prepare(16, 0)
+	w.reset(16, 0)
 	z = make([]int, 16)
 
 	if w.len != 16 {
@@ -176,7 +176,7 @@ func TestWorkspace(t *testing.T) {
 
 	// Test shared stacks
 
-	w.reset(wANeg | wBNeg)
+	w.clear(wANeg | wBNeg)
 	aps := w.makeAutoPromotingStack(wA | wB)
 	nps := newNonPromotingStack(aps.s)
 

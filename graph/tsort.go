@@ -9,7 +9,7 @@ package graph
 // necessary. If a topological sort is impossible because there is a cycle in
 // the graph, an empty slice (tsort[:0]) is returned.
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) []int {
-	w.prepare(len(g), 0)
+	w.reset(len(g), 0)
 
 	bs := w.makeBitsliceN(2, wA)
 	active := bs[0]                            // |V|   · Bitslice of vertex -> active?

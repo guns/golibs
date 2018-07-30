@@ -100,7 +100,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 	var tsort []int
 
 	for i, row := range data {
-		g = g.Resize(row.size)
+		g = g.Reset(row.size)
 
 		for u, vs := range row.adj {
 			for _, v := range vs {
