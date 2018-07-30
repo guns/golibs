@@ -21,9 +21,6 @@ import "math/bits"
 //
 type Graph [][]int
 
-// undefined is a sentinel value for the set of Vertex indices.
-const undefined = -1
-
 // AddEdge adds a single directed edge from vertex u to v.
 func (g Graph) AddEdge(u, v int) {
 	g[u] = append(g[u], v)
@@ -76,11 +73,4 @@ func (g Graph) Transpose(h Graph) Graph {
 	}
 
 	return h
-}
-
-func resizeIntSlice(s []int, size int) []int {
-	if cap(s) >= size {
-		return s[:size]
-	}
-	return make([]int, size, 1<<uint(bits.Len(uint(size-1))))
 }
