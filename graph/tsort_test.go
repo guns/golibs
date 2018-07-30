@@ -98,6 +98,7 @@ func TestGraphTopologicalSort(t *testing.T) {
 	var g Graph
 	w := &Workspace{}
 	var tsort []int
+	var err error
 
 	for i, row := range data {
 		g = g.Reset(row.size)
@@ -108,9 +109,12 @@ func TestGraphTopologicalSort(t *testing.T) {
 			}
 		}
 
-		tsort = g.TopologicalSort(tsort, w)
+		tsort, err = g.TopologicalSort(tsort, w)
 
 		if row.cyclic {
+			if err == nil {
+				t.Errorf("expected err to be an error, but got nil")
+			}
 			if len(tsort) != 0 {
 				t.Errorf("[%d] %v != %v", i, len(tsort), 0)
 			}
