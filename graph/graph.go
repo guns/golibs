@@ -14,7 +14,7 @@ import "math/bits"
 //
 // All edges are directed and unweighted. Undirected graphs can be constructed
 // by simply adding the reverse of each edge, and edge weights can be stored
-// in a parallel data structure.
+// in a WeightMapper.
 //
 // Because vertices are represented as signed integers, the maximum size of a
 // graph is machineUintLen/2.

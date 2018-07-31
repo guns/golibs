@@ -4,16 +4,40 @@
 
 package graph
 
+// A Path is a sequence of vertices (v₁, v₂, …, vₙ) that represents a
+// path through a graph from v₁ to vₙ.
+type Path []int
+
+// EdgeCount returns the number of edges in a path.
+func (p Path) EdgeCount() int {
+	if len(p) == 0 {
+		return 0
+	}
+	return len(p) - 1
+}
+
+// Weight returns the combined edge weights of a path.
+func (p Path) Weight(m WeightMapper) float64 {
+	n := p.EdgeCount()
+	if n == 0 {
+		return 0
+	}
+
+	var weight float64
+	for i := 0; i < n; i++ {
+		weight += m.Weight(p[i], p[i+1])
+	}
+	return weight
+}
+
 // MinEdgesPath returns a path from vertex u to v with a minimum number of
-// edges. The length of the path is the length of the returned path minus one.
+// edges. The path is written to Path, which is grown if necessary.
 //
-// The path is written to the path slice, which is grown if necessary.
-//
-// If no path exists, an empty slice (path[:0) is returned.
+// If no path exists, an empty slice (path[:0]) is returned.
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
-func (g Graph) MinEdgesPath(path []int, u, v int, w *Workspace) []int {
+func (g Graph) MinEdgesPath(path Path, u, v int, w *Workspace) Path {
 	w.reset(len(g), wA|wBNeg)
 
 	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
@@ -57,7 +81,7 @@ loop:
 	return writePath(path, pred, v, dist[v])
 }
 
-func writePath(path, pred []int, v int, pathLen int) []int {
+func writePath(path Path, pred []int, v int, pathLen int) Path {
 	path = resizeIntSlice(path, pathLen+1)
 	path[pathLen] = v
 
