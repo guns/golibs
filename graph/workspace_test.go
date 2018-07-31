@@ -98,7 +98,8 @@ func TestWorkspace(t *testing.T) {
 	zneg := []int{-1, -1, -1, -1}
 	s = s[:4]
 
-	w.reset(4, wA|wBNeg)
+	w.reset(4, wA)
+	fillUndefined(w.b)
 
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
@@ -176,7 +177,8 @@ func TestWorkspace(t *testing.T) {
 
 	// Test shared stacks
 
-	w.clear(wANeg | wBNeg)
+	fillUndefined(w.a)
+	fillUndefined(w.b)
 	aps := w.makeAutoPromotingStack(wA | wB)
 	nps := newNonPromotingStack(aps.s)
 

@@ -37,12 +37,9 @@ func NewWorkspace(size int) *Workspace {
 type workspaceField uint
 
 const (
-	wA    workspaceField = 1 << iota // Select or reset (*Workspace).a
-	wB                               // Select or reset (*Workspace).b
-	wC                               // Select or reset (*Workspace).c
-	wANeg                            // Fill (*Workspace).a with undefined
-	wBNeg                            // Fill (*Workspace).b with undefined
-	wCNeg                            // Fill (*Workspace).c with undefined
+	wA workspaceField = 1 << iota // Field (*Workspace).a
+	wB                            // Field (*Workspace).b
+	wC                            // Field (*Workspace).c
 )
 
 func (w *Workspace) selectSlice(field workspaceField) []int {
@@ -137,7 +134,7 @@ func (w *Workspace) reset(size int, fields workspaceField) {
 	default:
 		*w = *NewWorkspace(size)
 		// New workspaces are zero-filled, so avoid unnecessary work.
-		fields &= ^(wA | wB | wC)
+		return
 	}
 
 	w.clear(fields)
@@ -145,37 +142,19 @@ func (w *Workspace) reset(size int, fields workspaceField) {
 
 // clear specific fields a Workspace.
 func (w *Workspace) clear(fields workspaceField) {
-	if fields == 0 {
-		return
-	}
-
 	if fields&wA > 0 {
 		for i := range w.a {
 			w.a[i] = 0
 		}
-	} else if fields&wANeg > 0 {
-		for i := range w.a {
-			w.a[i] = undefined
-		}
 	}
-
 	if fields&wB > 0 {
 		for i := range w.b {
 			w.b[i] = 0
 		}
-	} else if fields&wBNeg > 0 {
-		for i := range w.b {
-			w.b[i] = undefined
-		}
 	}
-
 	if fields&wC > 0 {
 		for i := range w.c {
 			w.c[i] = 0
-		}
-	} else if fields&wCNeg > 0 {
-		for i := range w.c {
-			w.c[i] = undefined
 		}
 	}
 }

@@ -9,6 +9,13 @@ import "math/bits"
 // undefined is a sentinel value for the set of Vertex indices.
 const undefined = -1
 
+func fillUndefined(s []int) []int {
+	for i := range s {
+		s[i] = undefined
+	}
+	return s
+}
+
 func resizeIntSlice(s []int, size int) []int {
 	if cap(s) >= size {
 		return s[:size]

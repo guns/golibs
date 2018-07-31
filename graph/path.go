@@ -38,11 +38,11 @@ func (p Path) Weight(m WeightMapper) float64 {
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
 func (g Graph) MinEdgesPath(path Path, u, v int, w *Workspace) Path {
-	w.reset(len(g), wA|wBNeg)
+	w.reset(len(g), wA)
 
-	dist := w.a              // |V|w · Slice of vertex -> edge distance from u
-	pred := w.b              // |V|w · Slice of vertex -> predecessor vertex
-	queue := w.makeQueue(wC) // |V|w · BFS queue
+	dist := w.a                // |V|w · Slice of vertex -> edge distance from u
+	pred := fillUndefined(w.b) // |V|w · Slice of vertex -> predecessor vertex
+	queue := w.makeQueue(wC)   // |V|w · BFS queue
 
 	// BFS
 	queue.Enqueue(u)

@@ -17,7 +17,7 @@ import "github.com/guns/golibs/generic/impl"
 // Passing the same [][]int returned by this function as the scc parameter
 // reuses memory and can eliminate unnecessary allocations.
 func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
-	w.reset(len(g), wANeg)
+	w.reset(len(g), 0)
 
 	// Tim Leslie's iterative implementation [1] of David Pearce's
 	// memory-efficient strongly connected components algorithm. [2]
@@ -25,7 +25,7 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 	// [1]: http://www.timl.id.au/SCC
 	// [2]: http://homepages.ecs.vuw.ac.nz/~djp/files/IPL15-preprint.pdf
 
-	rindex := w.a                             // |V|w  · Array of v -> local root index
+	rindex := fillUndefined(w.a)              // |V|w  · Array of v -> local root index
 	dfs := w.makeAutoPromotingStack(wB | wC)  // 2|V|w · Auto-promoting DFS stack
 	backtrack := *newNonPromotingStack(dfs.s) // 0     · Backtrack stack; shares memory with dfs
 
