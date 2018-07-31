@@ -32,7 +32,7 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) ([]int, error) {
 		for stack.Len() > 0 {
 			u := stack.Peek()
 
-			// Finish nodes whose children have been explored.
+			// Finish vertices whose children have been explored.
 			if active.Get(u) {
 				stack.Pop()
 				explored.Set(u)
@@ -44,10 +44,10 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) ([]int, error) {
 			// Mark this vertex as visited, but not fully explored.
 			active.Set(u)
 
-			// Visit children nodes
+			// Visit children
 			for _, v := range g[u] {
 				if explored.Get(v) {
-					// Ignore fully explored nodes
+					// Ignore fully explored vertices
 					continue
 				} else if active.Get(v) {
 					// This neighboring vertex is active but not yet

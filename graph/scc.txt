@@ -20,12 +20,12 @@ algorithm tarjan(V, E):
 			strongconnect(u)
 
 	procedure strongconnect(u):
-		// Visit unvisited node u by assigning it the current visit index.
+		// Visit unvisited vertex u by assigning it the current visit index.
 		index[u] = i
 		rindex[u] = i
 		i++
 
-		// Push this node onto the stack of active nodes.
+		// Push this vertex onto the stack of active vertices.
 		S.push(u)
 		onStack[u] = true
 
@@ -35,7 +35,7 @@ algorithm tarjan(V, E):
 				// Visit unvisited successor v.
 				strongconnect(v)
 
-				// rindex[v] now contains lowest visit index of active nodes reachable
+				// rindex[v] now contains lowest visit index of active vertices reachable
 				// from v. Since v is a successor of u, rindex[u] should be adjusted if
 				// rindex[v] is smaller.
 				rindex[u] = min(rindex[u], rindex[v]) // POSTORDER
@@ -45,13 +45,13 @@ algorithm tarjan(V, E):
 				// is the smallest visit index seen so far.
 				rindex[u] = min(rindex[u], index[v])
 
-				// Successor v has been visited and is not on the stack of active nodes.
-				// Therefore v is part of another SCC, and (u, v) is a cross-edge that can
-				// be ignored.
+				// Successor v has been visited and is not on the stack of active
+				// vertices. Therefore v is part of another SCC, and (u, v) is a
+				// cross-edge that can be ignored.
 
 		// POSTORDER
 
-		// If u is a root node, pop the stack and generate an SCC
+		// If u is a root vertex, pop the stack and generate an SCC
 		if rindex[u] == index[u]:
 			start a new strongly connected component
 			repeat
