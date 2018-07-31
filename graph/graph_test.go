@@ -2,6 +2,7 @@ package graph
 
 import (
 	"reflect"
+	"sort"
 	"testing"
 )
 
@@ -19,6 +20,37 @@ func TestGraphGrow(t *testing.T) {
 		t.Logf("%v !=", g)
 		t.Logf("%v", adj)
 		t.Fail()
+	}
+}
+
+func TestGraphRemoveEdge(t *testing.T) {
+	data := []struct {
+		g, h Graph
+		r    []pair
+	}{
+		{
+			g: Graph{{1, 2, 3}, {0, 2, 3}, {0, 1, 3}, {0, 1, 2}},
+			r: []pair{{0, 3}, {3, 0}, {1, 3}, {2, 1}},
+			h: Graph{{1, 2}, {0, 2}, {0, 3}, {1, 2}},
+		},
+	}
+
+	for _, row := range data {
+		g := row.g
+
+		for _, p := range row.r {
+			g.RemoveEdge(p[0], p[1])
+		}
+
+		for u := range g {
+			sort.Ints(g[u])
+			sort.Ints(row.h[u])
+		}
+
+		if !reflect.DeepEqual(g, row.h) {
+			t.Errorf("%v != %v", g, row.h)
+		}
+
 	}
 }
 

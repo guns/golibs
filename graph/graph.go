@@ -26,6 +26,18 @@ func (g Graph) AddEdge(u, v int) {
 	g[u] = append(g[u], v)
 }
 
+// RemoveEdge removes a single directed edge from vertex u to v. Note that
+// this requires a linear search of u's edge list.
+func (g Graph) RemoveEdge(u, v int) {
+	edges := g[u]
+	for i, succ := range edges {
+		if succ == v {
+			edges[i] = edges[len(edges)-1] // Overwrite with last vertex
+			g[u] = edges[:len(edges)-1]    // Exclude last vertex
+		}
+	}
+}
+
 // Grow returns a graph with n more vertices.
 func (g Graph) Grow(n int) Graph {
 	switch {
