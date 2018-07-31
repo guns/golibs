@@ -58,8 +58,8 @@ func (g Graph) Reset(n int) Graph {
 // ResetEdges reset all edge slices in the graph.
 // Note that edge slices are NOT cleared.
 func (g Graph) ResetEdges() {
-	for i := range g {
-		g[i] = g[i][:0]
+	for u := range g {
+		g[u] = g[u][:0]
 	}
 }
 
@@ -67,8 +67,8 @@ func (g Graph) ResetEdges() {
 func (g Graph) Transpose(h Graph) Graph {
 	h = h.Reset(len(g))
 
-	for u := range g {
-		for _, v := range g[u] {
+	for u, vs := range g {
+		for _, v := range vs {
 			h.AddEdge(v, u)
 		}
 	}

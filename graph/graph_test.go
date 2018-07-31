@@ -23,39 +23,39 @@ func TestGraphGrow(t *testing.T) {
 }
 
 func TestGraphTranspose(t *testing.T) {
+	type Adj map[int][]int
+
 	data := []struct {
-		size  int
-		edges [][]int
+		size int
+		adj  Adj
 	}{
 		{
 			size: 2,
-			edges: [][]int{
-				{0, 1},
+			adj: Adj{
+				0: {1},
 			},
 		},
 		{
 			size: 5,
-			edges: [][]int{
-				{0, 1},
-				{1, 2},
-				{2, 0},
-				{2, 3},
-				{3, 2},
-				{3, 1},
-				{4, 4},
+			adj: Adj{
+				0: {1},
+				1: {2},
+				2: {0, 3},
+				3: {1, 2},
+				4: {4},
 			},
 		},
 		{
 			size: 3,
-			edges: [][]int{
-				{0, 1},
-				{1, 2},
-				{2, 0},
+			adj: Adj{
+				0: {1},
+				1: {2},
+				2: {0},
 			},
 		},
 		{
-			size:  0,
-			edges: nil,
+			size: 0,
+			adj:  nil,
 		},
 	}
 
@@ -65,21 +65,26 @@ func TestGraphTranspose(t *testing.T) {
 		g = g.Reset(row.size)
 		h = h.Reset(row.size)
 
-		for _, e := range row.edges {
-			g.AddEdge(e[0], e[1])
-			h.AddEdge(e[1], e[0])
+		for u, vs := range row.adj {
+			for _, v := range vs {
+				g.AddEdge(u, v)
+				h.AddEdge(v, u)
+			}
 		}
 
 		gT = g.Transpose(gT)
 
-		// Create empty edge lists for equality testing
-		for i := range gT {
-			if h[i] == nil {
-				h[i] = []int{}
+		// Prep edge lists for equality testing
+		for u := range gT {
+			if h[u] == nil {
+				h[u] = []int{}
 			}
-			if gT[i] == nil {
-				gT[i] = []int{}
+			if gT[u] == nil {
+				gT[u] = []int{}
 			}
+
+			sort.Ints(h[u])
+			sort.Ints(gT[u])
 		}
 
 		if !reflect.DeepEqual(gT, h) {
