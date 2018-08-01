@@ -8,7 +8,7 @@
 
 package impl
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // Packed2DIntBuilder is a optionally auto-growing [][]int
 // builder that uses a single backing slice to reduce allocations. This is
@@ -99,7 +99,7 @@ func (p *Packed2DIntBuilder) Grow(n int) {
 		return
 	}
 
-	buf := make([]int, 1<<uint(bits.Len(uint(len(p.buf)+n-1))))
+	buf := make([]int, calculate.NextCap(len(p.buf)+n))
 	copy(buf, p.buf[:p.tail])
 	p.buf = buf
 

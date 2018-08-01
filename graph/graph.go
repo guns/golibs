@@ -5,7 +5,7 @@
 // Package graph provides a general-purpose directed graph implementation.
 package graph
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // A Graph is a set { (V, E) : V ⊆ ℕ⁰ and E ⊆ { (u, v) ∈ V } }.
 //
@@ -49,7 +49,7 @@ func (g Graph) Grow(n int) Graph {
 		g[i:].ResetEdges()
 		return g
 	default:
-		h := make(Graph, 1<<uint(bits.Len(uint(len(g)+n-1))))
+		h := make(Graph, calculate.NextCap(len(g)+n))
 		copy(h, g)
 		return h[:len(g)+n]
 	}
@@ -59,7 +59,7 @@ func (g Graph) Grow(n int) Graph {
 // Use Grow to enlarge the graph without truncating its state.
 func (g Graph) Reset(n int) Graph {
 	if n > cap(g) {
-		return make(Graph, 1<<uint(bits.Len(uint(n-1))))[:n]
+		return make(Graph, calculate.NextCap(n))[:n]
 	}
 
 	g = g[:n]

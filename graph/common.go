@@ -4,7 +4,7 @@
 
 package graph
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // undefined is a sentinel value for the set of Vertex indices.
 const undefined = -1
@@ -20,5 +20,5 @@ func resizeIntSlice(s []int, size int) []int {
 	if cap(s) >= size {
 		return s[:size]
 	}
-	return make([]int, size, 1<<uint(bits.Len(uint(size-1))))
+	return make([]int, size, calculate.NextCap(size))
 }

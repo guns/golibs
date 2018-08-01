@@ -4,7 +4,7 @@
 
 package generic
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // Packed2DGenericTypeBuilder is a optionally auto-growing [][]GenericType
 // builder that uses a single backing slice to reduce allocations. This is
@@ -95,7 +95,7 @@ func (p *Packed2DGenericTypeBuilder) Grow(n int) {
 		return
 	}
 
-	buf := make([]GenericType, 1<<uint(bits.Len(uint(len(p.buf)+n-1))))
+	buf := make([]GenericType, calculate.NextCap(len(p.buf)+n))
 	copy(buf, p.buf[:p.tail])
 	p.buf = buf
 

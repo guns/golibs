@@ -8,7 +8,7 @@
 
 package impl
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // IntStack is an optionally auto-growing stack.
 type IntStack struct {
@@ -21,7 +21,7 @@ type IntStack struct {
 // at least size items.
 func NewIntStack(size int) *IntStack {
 	return NewIntStackWithBuffer(
-		make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		make([]int, size),
 	)
 }
 
@@ -119,7 +119,7 @@ func (s *IntStack) Grow(n int) {
 		return
 	}
 
-	a := make([]int, 1<<uint(bits.Len(uint(len(s.a)+n-1))))
+	a := make([]int, calculate.NextCap(len(s.a)+n))
 	copy(a, s.a[:s.next])
 
 	s.a = a

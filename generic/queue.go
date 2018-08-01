@@ -4,7 +4,7 @@
 
 package generic
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // GenericTypeQueue is an optionally auto-growing queue backed by a ring buffer.
 type GenericTypeQueue struct {
@@ -17,7 +17,7 @@ type GenericTypeQueue struct {
 // at least size items.
 func NewGenericTypeQueue(size int) *GenericTypeQueue {
 	return NewGenericTypeQueueWithBuffer(
-		make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		make([]GenericType, size),
 	)
 }
 
@@ -236,7 +236,7 @@ func (q *GenericTypeQueue) Grow(n int) {
 		return
 	}
 
-	a := make([]GenericType, 1<<uint(bits.Len(uint(len(q.a)+n-1))))
+	a := make([]GenericType, calculate.NextCap(len(q.a)+n))
 
 	switch {
 	case q.head == -1:

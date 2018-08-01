@@ -8,7 +8,7 @@
 
 package impl
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // IntQueue is an optionally auto-growing queue backed by a ring buffer.
 type IntQueue struct {
@@ -21,7 +21,7 @@ type IntQueue struct {
 // at least size items.
 func NewIntQueue(size int) *IntQueue {
 	return NewIntQueueWithBuffer(
-		make([]int, 1<<uint(bits.Len(uint(size-1)))),
+		make([]int, size),
 	)
 }
 
@@ -240,7 +240,7 @@ func (q *IntQueue) Grow(n int) {
 		return
 	}
 
-	a := make([]int, 1<<uint(bits.Len(uint(len(q.a)+n-1))))
+	a := make([]int, calculate.NextCap(len(q.a)+n))
 
 	switch {
 	case q.head == -1:

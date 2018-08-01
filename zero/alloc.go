@@ -6,7 +6,8 @@ package zero
 
 import (
 	"bytes"
-	"math/bits"
+
+	"github.com/guns/golibs/calculate"
 )
 
 // Grow returns a byte slice that can accommodate n more bytes, and the index
@@ -18,7 +19,7 @@ func Grow(bs []byte, n int) ([]byte, int) {
 		return bs[:newlen], len(bs)
 	}
 
-	newcap := 1 << uint(bits.Len(uint(newlen-1)))
+	newcap := calculate.NextCap(newlen)
 	if newcap < bytes.MinRead {
 		newcap = bytes.MinRead
 	}

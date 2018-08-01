@@ -5,10 +5,10 @@
 package graph
 
 import (
-	"math/bits"
 	"unsafe"
 
 	"github.com/guns/golibs/bitslice"
+	"github.com/guns/golibs/calculate"
 	"github.com/guns/golibs/generic/impl"
 )
 
@@ -21,15 +21,14 @@ type Workspace struct {
 // NewWorkspace returns a new Workspace for a Graph of a given size.
 func NewWorkspace(size int) *Workspace {
 	// Single shared int buffer
-	n := 1 << uint(bits.Len(uint(size*3-1)))
-	buf := make([]int, n)
+	buf := make([]int, size*3)
 
 	return &Workspace{
 		len: size,
-		cap: n / 3,
+		cap: size,
 		a:   buf[:size],
 		b:   buf[size : size*2],
-		c:   buf[size*2 : size*3],
+		c:   buf[size*2:],
 	}
 }
 
@@ -132,8 +131,16 @@ func (w *Workspace) reset(size int, fields workspaceField) {
 		w.b = w.b[:size]
 		w.c = w.c[:size]
 	default:
-		*w = *NewWorkspace(size)
-		// New workspaces are zero-filled, so avoid unnecessary work.
+		cap := calculate.NextCap(size)
+		buf := make([]int, cap*3)
+
+		w.len = size
+		w.cap = cap
+		w.a = buf[:size]
+		w.b = buf[size : size*2]
+		w.c = buf[size*2 : size*3]
+
+		// New buffers are already clear, so avoid unnecessary work.
 		return
 	}
 

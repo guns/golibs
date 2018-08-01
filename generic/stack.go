@@ -4,7 +4,7 @@
 
 package generic
 
-import "math/bits"
+import "github.com/guns/golibs/calculate"
 
 // GenericTypeStack is an optionally auto-growing stack.
 type GenericTypeStack struct {
@@ -17,7 +17,7 @@ type GenericTypeStack struct {
 // at least size items.
 func NewGenericTypeStack(size int) *GenericTypeStack {
 	return NewGenericTypeStackWithBuffer(
-		make([]GenericType, 1<<uint(bits.Len(uint(size-1)))),
+		make([]GenericType, size),
 	)
 }
 
@@ -115,7 +115,7 @@ func (s *GenericTypeStack) Grow(n int) {
 		return
 	}
 
-	a := make([]GenericType, 1<<uint(bits.Len(uint(len(s.a)+n-1))))
+	a := make([]GenericType, calculate.NextCap(len(s.a)+n))
 	copy(a, s.a[:s.next])
 
 	s.a = a
