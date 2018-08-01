@@ -7,6 +7,7 @@ package generic
 import (
 	"reflect"
 	"testing"
+	"unsafe"
 )
 
 func TestPacked2DGenericTypeBuilder(t *testing.T) {
@@ -28,7 +29,7 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 		{
 			size: 4,
 			cmds: []T{FINISH},
-			rows: [][]T{[]T(nil)},
+			rows: [][]T{{}},
 		},
 		{
 			size: 4,
@@ -74,10 +75,8 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 		},
 	}
 
-	var rows [][]T
-
 	for i, row := range data {
-		p := NewPacked2DGenericTypeBuilderFromRows(rows)
+		p := NewPacked2DGenericTypeBuilder(row.size)
 		var out []T
 
 		for _, n := range row.cmds {
@@ -99,10 +98,8 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 			}
 		}
 
-		rows = p.Rows
-
-		if !reflect.DeepEqual(rows, row.rows) {
-			t.Errorf("[%d] %v != %v", i, rows, row.rows)
+		if !reflect.DeepEqual(p.Rows, row.rows) {
+			t.Errorf("[%d] %v != %v", i, p.Rows, row.rows)
 		}
 
 		if !reflect.DeepEqual(out, row.out) {
@@ -115,18 +112,29 @@ func TestPacked2DGenericTypeBuilder(t *testing.T) {
 
 		if !row.grow {
 		loop:
-			for i := range rows {
-				for j := range rows[i] {
-					if rows[i][j] != -1 {
-						t.Logf("[%d] p.buf and rows should share memory", i)
-						t.Logf("p.buf: %v", p.buf)
-						t.Logf("rows: %v", rows)
+			for i := range p.Rows {
+				for j := range p.Rows[i] {
+					if p.Rows[i][j] != -1 {
+						t.Logf("[%d] p.buf and p.Rows should share memory", i)
+						t.Logf("p.buf:  %v", p.buf)
+						t.Logf("p.Rows: %v", p.Rows)
 						t.Fail()
 						break loop
 					}
 				}
 			}
-
 		}
+	}
+}
+
+func TestPacked2DGenericTypeBuilderFromRows(t *testing.T) {
+	p := NewPacked2DGenericTypeBuilder(8)
+	p.FinishRow()
+	q := NewPacked2DGenericTypeBuilderFromRows(p.Rows)
+	pdata := (*reflect.SliceHeader)(unsafe.Pointer(&p.buf)).Data
+	qdata := (*reflect.SliceHeader)(unsafe.Pointer(&q.buf)).Data
+
+	if pdata != qdata {
+		t.Errorf("%v != %v", pdata, qdata)
 	}
 }
