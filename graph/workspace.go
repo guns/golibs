@@ -77,12 +77,12 @@ func (w *Workspace) makeStack(field workspaceField) impl.IntStack {
 // size of the workspace. The maximum number of bitslices that can be returned
 // is equal to:
 //
-//	currentWorkspaceLen / bitslice.UintLen(currentWorkspaceLen)
+//	currentWorkspaceLen / bitslice.SizeOf(currentWorkspaceLen)
 //
 func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
-	buf := w.selectSlice(field)[:w.cap]
+	buf := w.selectSlice(field)
 	bs := make([]bitslice.T, n)
-	blen := bitslice.UintLen(w.len)
+	blen := bitslice.SizeOf(w.len)
 	offset := 0
 
 	for i := 0; i < n; i++ {

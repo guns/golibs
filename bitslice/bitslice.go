@@ -6,8 +6,8 @@ import "math/bits"
 const shift = 5 + ((^uint(0) >> 32) & 1)
 const mask = 1<<shift - 1
 
-// UintLen returns the minimum number of uints required to cover nbits.
-func UintLen(nbits int) int {
+// SizeOf returns the minimum number of uints required to represent nbits.
+func SizeOf(nbits int) int {
 	return (nbits + mask) >> shift // (nbits + 63)/64
 }
 
@@ -16,7 +16,7 @@ type T []uint
 
 // Make creates a new bitslice that accommodates at least nitems.
 func Make(nitems int) T {
-	return make(T, UintLen(nitems)) // (nitems+63)/64
+	return make(T, SizeOf(nitems)) // (nitems+63)/64
 }
 
 // Get returns true if the bit at offset i is set, and false otherwise.
