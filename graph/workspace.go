@@ -55,30 +55,30 @@ func (w *Workspace) selectSlice(field workspaceField) []int {
 
 }
 
-// makeQueue returns an empty IntQueue with the specified field as a backing slice.
-func (w *Workspace) makeQueue(field workspaceField) impl.IntQueue {
+// queue returns an empty IntQueue with the specified field as a backing slice.
+func (w *Workspace) queue(field workspaceField) impl.IntQueue {
 	q := *impl.NewIntQueueWithBuffer(w.selectSlice(field))
 	q.SetAutoGrow(false)
 	q.Reset()
 	return q
 }
 
-// makeStack returns an empty IntStack with the specified field as a backing slice.
-func (w *Workspace) makeStack(field workspaceField) impl.IntStack {
+// stack returns an empty IntStack with the specified field as a backing slice.
+func (w *Workspace) stack(field workspaceField) impl.IntStack {
 	s := *impl.NewIntStackWithBuffer(w.selectSlice(field))
 	s.SetAutoGrow(false)
 	s.Reset()
 	return s
 }
 
-// makeBitsliceN returns a slice of n empty bitslice.T with the specified
-// field as a backing slice. Each bitslice has a capacity equal to the current
-// size of the workspace. The maximum number of bitslices that can be returned
-// is equal to:
+// bitslices returns a slice of n empty bitslice.T with the specified field
+// as a backing slice. Each bitslice has a capacity equal to the current size
+// of the workspace. The maximum number of bitslices that can be returned is
+// equal to:
 //
 //	currentWorkspaceLen / bitslice.SizeOf(currentWorkspaceLen)
 //
-func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
+func (w *Workspace) bitslices(n int, field workspaceField) []bitslice.T {
 	buf := w.selectSlice(field)
 	bs := make([]bitslice.T, n)
 	blen := bitslice.SizeOf(w.len)
@@ -98,10 +98,10 @@ func (w *Workspace) makeBitsliceN(n int, field workspaceField) []bitslice.T {
 	return bs
 }
 
-// makeAutoPromotingStack returns an autoPromotingStack with the specified
+// autoPromotingStack returns an autoPromotingStack with the specified
 // fields as a backing slice. The fields parameter must specify two contiguous
 // internal fields.
-func (w *Workspace) makeAutoPromotingStack(fields workspaceField) autoPromotingStack {
+func (w *Workspace) autoPromotingStack(fields workspaceField) autoPromotingStack {
 	var buf []int
 
 	switch fields {
@@ -118,10 +118,10 @@ func (w *Workspace) makeAutoPromotingStack(fields workspaceField) autoPromotingS
 	return *newAutoPromotingStack(makeListNodeSlice(buf))
 }
 
-// reset prepares a Workspace for a Graph of a given size. The fields
-// parameter is a bitfield of workspaceField values that specify which
-// fields to clear.
-func (w *Workspace) reset(size int, fields workspaceField) {
+// reset prepares a Workspace for a Graph of a given size. The clearFields
+// parameter is a bitfield of workspaceField values that specify which fields
+// to clear.
+func (w *Workspace) reset(size int, clearFields workspaceField) {
 	switch {
 	case size == w.len:
 		// No resize necessary
@@ -144,7 +144,7 @@ func (w *Workspace) reset(size int, fields workspaceField) {
 		return
 	}
 
-	w.clear(fields)
+	w.clear(clearFields)
 }
 
 // clear specific fields a Workspace.

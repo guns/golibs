@@ -13,10 +13,10 @@ import "errors"
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) ([]int, error) {
 	w.reset(len(g), 0)
 
-	bs := w.makeBitsliceN(2, wA)
-	active := bs[0]                            // |V|   · Bitslice of vertex -> active?
-	explored := bs[1]                          // |V|   · Bitslice of vertex -> fully explored?
-	stack := w.makeAutoPromotingStack(wB | wC) // 2|V|w · DFS stack
+	bs := w.bitslices(2, wA)
+	active := bs[0]                        // |V|   · Bitslice of vertex -> active?
+	explored := bs[1]                      // |V|   · Bitslice of vertex -> fully explored?
+	stack := w.autoPromotingStack(wB | wC) // 2|V|w · DFS stack
 
 	tsort = resizeIntSlice(tsort, len(g)) // Prepare write buffer
 	idx := len(g)                         // tsort write index + 1

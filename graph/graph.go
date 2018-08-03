@@ -17,7 +17,7 @@ import "github.com/guns/golibs/calculate"
 // in a WeightMapper.
 //
 // Because vertices are represented as signed integers, the maximum size of a
-// graph is machineUintLen/2.
+// graph is machineWordSize/2.
 //
 type Graph [][]int
 

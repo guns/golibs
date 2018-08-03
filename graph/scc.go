@@ -26,7 +26,7 @@ func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 	// [2]: http://homepages.ecs.vuw.ac.nz/~djp/files/IPL15-preprint.pdf
 
 	rindex := fillUndefined(w.a)              // |V|w  · Array of v -> local root index
-	dfs := w.makeAutoPromotingStack(wB | wC)  // 2|V|w · Auto-promoting DFS stack
+	dfs := w.autoPromotingStack(wB | wC)      // 2|V|w · Auto-promoting DFS stack
 	backtrack := *newNonPromotingStack(dfs.s) // 0     · Backtrack stack; shares memory with dfs
 
 	builder := impl.NewPacked2DIntBuilderFromRows(scc)

@@ -17,9 +17,9 @@ func TestWorkspace(t *testing.T) {
 	w := NewWorkspace(8)
 
 	buf := w.a[:cap(w.a)] // Backing slice
-	queue := w.makeQueue(wC)
-	stack := w.makeStack(wC)
-	bs := w.makeBitsliceN(2, wC)
+	queue := w.queue(wC)
+	stack := w.stack(wC)
+	bs := w.bitslices(2, wC)
 
 	type IntQueue struct {
 		a          []int
@@ -39,8 +39,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 8 {
 		t.Errorf("%v != %v", w.len, 8)
 	}
-	if w.cap != 10 {
-		t.Errorf("%v != %v", w.cap, 10)
+	if w.cap != 8 {
+		t.Errorf("%v != %v", w.cap, 8)
 	}
 
 	// Fill backing slice with a random value and check fields
@@ -104,8 +104,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 4 {
 		t.Errorf("%v != %v", w.len, 4)
 	}
-	if w.cap != 10 {
-		t.Errorf("%v != %v", w.cap, 10)
+	if w.cap != 8 {
+		t.Errorf("%v != %v", w.cap, 8)
 	}
 
 	if !reflect.DeepEqual(w.a, z) {
@@ -151,8 +151,8 @@ func TestWorkspace(t *testing.T) {
 	if w.len != 16 {
 		t.Errorf("%v != %v", w.len, 16)
 	}
-	if w.cap != 21 {
-		t.Errorf("%v != %v", w.cap, 21)
+	if w.cap != 16 {
+		t.Errorf("%v != %v", w.cap, 16)
 	}
 
 	if !reflect.DeepEqual(w.a, z) {
@@ -179,7 +179,7 @@ func TestWorkspace(t *testing.T) {
 
 	fillUndefined(w.a)
 	fillUndefined(w.b)
-	aps := w.makeAutoPromotingStack(wA | wB)
+	aps := w.autoPromotingStack(wA | wB)
 	nps := newNonPromotingStack(aps.s)
 
 	for i := 0; i < w.len; i++ {
