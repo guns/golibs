@@ -10,56 +10,83 @@ import (
 )
 
 func TestPath(t *testing.T) {
+	type pred map[int]int
 	type edgew struct {
 		u, v int
 		w    float64
 	}
+
 	data := []struct {
-		path          Path
+		size          int
+		pred          pred
 		weights       []edgew
 		defaultWeight float64
-		weight        float64
+		path          []int
 		edgeCount     int
+		pathWeight    float64
 	}{
 		{
-			path:          Path{},
+			size:          0,
+			pred:          nil,
 			weights:       nil,
 			defaultWeight: 0,
-			weight:        0,
+			path:          nil,
 			edgeCount:     0,
+			pathWeight:    0,
 		},
 		{
-			path:          Path{0, 1, 2, 3},
+			size:          4,
+			pred:          pred{1: 0, 2: 1, 3: 2},
 			weights:       nil,
 			defaultWeight: 0.5,
-			weight:        1.5,
+			path:          []int{0, 1, 2, 3},
 			edgeCount:     3,
+			pathWeight:    1.5,
 		},
 		{
-			path: Path{2, 5, 1, 4, 7},
+			size: 8,
+			pred: pred{7: 4, 4: 1, 1: 5, 5: 2},
 			weights: []edgew{
 				{2, 5, 1},
 				{5, 1, 2},
 				{4, 7, 8},
 			},
 			defaultWeight: 4,
-			weight:        15,
+			path:          []int{2, 5, 1, 4, 7},
+			pathWeight:    15,
 			edgeCount:     4,
 		},
 	}
 
 	for _, row := range data {
-		m := MakeWeightMap(row.defaultWeight, row.path.EdgeCount())
+		path := Path{}
+		path.reset(row.size)
+
+		for u, v := range row.pred {
+			path.pred[u] = v
+		}
+
+		if row.edgeCount > 0 {
+			path.finish(row.path[len(row.path)-1], row.edgeCount)
+		}
+
+		m := MakeWeightMap(row.defaultWeight, row.size)
 
 		for _, e := range row.weights {
 			m.SetWeight(e.u, e.v, e.w)
 		}
 
-		if row.path.Weight(m) != row.weight {
-			t.Errorf("%v != %v", row.path.Weight(m), row.weight)
+		if path.EdgeCount() != row.edgeCount {
+			t.Errorf("%v != %v", path.EdgeCount(), row.edgeCount)
 		}
-		if row.path.EdgeCount() != row.edgeCount {
-			t.Errorf("%v != %v", row.path.EdgeCount(), row.edgeCount)
+		if len(path.path) != 0 {
+			t.Errorf("%v != %v", len(path.path), 0)
+		}
+		if !reflect.DeepEqual(path.Path(), row.path) {
+			t.Errorf("%v != %v", path.Path(), row.path)
+		}
+		if path.PathWeight(m) != row.pathWeight {
+			t.Errorf("%v != %v", path.PathWeight(m), row.pathWeight)
 		}
 	}
 }
@@ -71,7 +98,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 		size int
 		adj  Adj
 		u, v int
-		path Path
+		path []int
 	}{
 		// Attempt to overflow queue (should be first case)
 		{
@@ -84,7 +111,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    3,
-			path: Path{0, 3},
+			path: []int{0, 3},
 		},
 		// Typical case
 		{
@@ -97,7 +124,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    3,
-			path: Path{0, 1, 2, 3},
+			path: []int{0, 1, 2, 3},
 		},
 		{
 			size: 4,
@@ -109,7 +136,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    3,
-			path: Path{0, 1, 3},
+			path: []int{0, 1, 3},
 		},
 		// No path
 		{
@@ -122,7 +149,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    3,
-			path: Path{},
+			path: []int{},
 		},
 		// Cycle
 		{
@@ -135,7 +162,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    0,
-			path: Path{0, 1, 0},
+			path: []int{0, 1, 0},
 		},
 		// Self-loop
 		{
@@ -148,7 +175,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    0,
-			path: Path{0, 0},
+			path: []int{0, 0},
 		},
 		{
 			size: 10,
@@ -166,7 +193,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    0,
 			v:    5,
-			path: Path{0, 8, 2, 1, 3, 5},
+			path: []int{0, 8, 2, 1, 3, 5},
 		},
 		{
 			size: 10,
@@ -184,7 +211,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			},
 			u:    1,
 			v:    0,
-			path: Path{1, 9, 8, 0}, // also {1, 2, 8, 0}
+			path: []int{1, 9, 8, 0}, // also {1, 2, 8, 0}
 		},
 	}
 
@@ -203,8 +230,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 
 		path = g.MinEdgesPath(path, row.u, row.v, w)
 
-		if !reflect.DeepEqual(path, row.path) {
-			t.Errorf("%v != %v", path, row.path)
+		if !reflect.DeepEqual(path.Path(), row.path) {
+			t.Errorf("%v != %v", path.Path(), row.path)
 		}
 	}
 }
