@@ -12,8 +12,8 @@ import (
 func TestPath(t *testing.T) {
 	type pred map[int]int
 	type edgew struct {
-		u, v int
-		w    float64
+		src, dst int
+		w        float64
 	}
 
 	data := []struct {
@@ -73,7 +73,7 @@ func TestPath(t *testing.T) {
 		m := MakeWeightMap(row.defaultWeight, row.size)
 
 		for _, e := range row.weights {
-			m.SetWeight(e.u, e.v, e.w)
+			m.SetWeight(e.src, e.dst, e.w)
 		}
 
 		if path.EdgeCount() != row.edgeCount {
@@ -95,10 +95,10 @@ func TestGraphMinEdgesPath(t *testing.T) {
 	type Adj = map[int][]int
 
 	data := []struct {
-		size int
-		adj  Adj
-		u, v int
-		path []int
+		size     int
+		adj      Adj
+		src, dst int
+		path     []int
 	}{
 		// Attempt to overflow queue (should be first case)
 		{
@@ -109,8 +109,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {},
 				3: {},
 			},
-			u:    0,
-			v:    3,
+			src:  0,
+			dst:  3,
 			path: []int{0, 3},
 		},
 		// Typical case
@@ -122,8 +122,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {1, 3},
 				3: {2},
 			},
-			u:    0,
-			v:    3,
+			src:  0,
+			dst:  3,
 			path: []int{0, 1, 2, 3},
 		},
 		{
@@ -134,8 +134,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {1, 3},
 				3: {2},
 			},
-			u:    0,
-			v:    3,
+			src:  0,
+			dst:  3,
 			path: []int{0, 1, 3},
 		},
 		// No path
@@ -147,8 +147,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {},
 				3: {0},
 			},
-			u:    0,
-			v:    3,
+			src:  0,
+			dst:  3,
 			path: []int{},
 		},
 		// Cycle
@@ -160,8 +160,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {1, 3},
 				3: {2},
 			},
-			u:    0,
-			v:    0,
+			src:  0,
+			dst:  0,
 			path: []int{0, 1, 0},
 		},
 		// Self-loop
@@ -173,8 +173,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				2: {1, 3},
 				3: {2},
 			},
-			u:    0,
-			v:    0,
+			src:  0,
+			dst:  0,
 			path: []int{0, 0},
 		},
 		{
@@ -191,8 +191,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				8: {2, 0, 9},
 				9: {1, 8},
 			},
-			u:    0,
-			v:    5,
+			src:  0,
+			dst:  5,
 			path: []int{0, 8, 2, 1, 3, 5},
 		},
 		{
@@ -209,8 +209,8 @@ func TestGraphMinEdgesPath(t *testing.T) {
 				8: {2, 0, 9},
 				9: {1, 8},
 			},
-			u:    1,
-			v:    0,
+			src:  1,
+			dst:  0,
 			path: []int{1, 9, 8, 0}, // also {1, 2, 8, 0}
 		},
 	}
@@ -228,7 +228,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			}
 		}
 
-		err := g.MinEdgesPath(path, row.u, row.v, w)
+		err := g.MinEdgesPath(path, row.src, row.dst, w)
 
 		if !reflect.DeepEqual(path.Path(), row.path) {
 			t.Errorf("%v != %v", path.Path(), row.path)

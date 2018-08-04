@@ -77,29 +77,28 @@ func (p *Path) PathWeight(m WeightMapper) float64 {
 	return weight
 }
 
-// MinEdgesPath searches for a path from vertex u to v with a minimum number
-// of edges. If no such path exists, a non-nil error is returned. The path is
+// MinEdgesPath searches for a path from src to dst with a minimum number of
+// edges. If no such path exists, a non-nil error is returned. The path is
 // written to the path parameter.
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
-// vertex u to itself except through a cycle or self-edge.
+// vertex src to itself except through a cycle or self-edge.
 //
 // Worst-case time: O(|V| + |E|)
-func (g Graph) MinEdgesPath(path *Path, u, v int, w *Workspace) error {
+func (g Graph) MinEdgesPath(path *Path, src, dst int, w *Workspace) error {
 	w.reset(len(g), wB)
 	path.reset(len(g))
 
 	queue := w.queue(wA) // |V|w · BFS queue
-	dist := w.b          // |V|w · Slice of vertex -> edge distance from u
+	dist := w.b          // |V|w · Slice of vertex -> edge distance from src
 	pred := path.pred    // |V|w · Slice of vertex -> predecessor vertex
 
 	// BFS
-	queue.Enqueue(u)
+	queue.Enqueue(src)
 
-	// If u == v, u is the endpoint, so leave it unvisited.
-	target := v
-	if u != target {
-		pred[u] = u
+	// If src == dst, src is the endpoint, so leave it unvisited.
+	if src != dst {
+		pred[src] = src
 	}
 
 loop:
@@ -114,7 +113,7 @@ loop:
 			pred[v] = u
 			dist[v] = dist[u] + 1
 
-			if v == target {
+			if v == dst {
 				break loop
 			}
 
@@ -122,12 +121,12 @@ loop:
 		}
 	}
 
-	if pred[v] == undefined {
+	if pred[dst] == undefined {
 		// No path from u -> v was discovered
 		return errNoPath
 	}
 
-	path.finish(v, dist[v])
+	path.finish(dst, dist[dst])
 
 	return nil
 }
