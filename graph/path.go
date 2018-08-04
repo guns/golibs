@@ -77,14 +77,15 @@ func (p *Path) PathWeight(m WeightMapper) float64 {
 	return weight
 }
 
-// MinEdgesPath returns a Path from vertex u to v with a minimum number of
-// edges. If no path exists, path.EdgeCount() will equal 0.
+// MinEdgesPath searches for a path from vertex u to v with a minimum number
+// of edges. If no such path exists, a non-nil error is returned. The path is
+// written to the path parameter.
 //
 // Note that trivial paths are not considered; i.e. there is no path from a
 // vertex u to itself except through a cycle or self-edge.
 //
 // Worst-case time: O(|V| + |E|)
-func (g Graph) MinEdgesPath(path Path, u, v int, w *Workspace) Path {
+func (g Graph) MinEdgesPath(path *Path, u, v int, w *Workspace) error {
 	w.reset(len(g), wB)
 	path.reset(len(g))
 
@@ -123,9 +124,10 @@ loop:
 
 	if pred[v] == undefined {
 		// No path from u -> v was discovered
-		return path
+		return errNoPath
 	}
 
 	path.finish(v, dist[v])
-	return path
+
+	return nil
 }

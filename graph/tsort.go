@@ -4,8 +4,6 @@
 
 package graph
 
-import "errors"
-
 // TopologicalSort returns a slice of vertex indices in topologically sorted
 // order. The indices are written to the tsort parameter, which is grown if
 // necessary. If a topological sort is impossible because there is a cycle in
@@ -52,7 +50,7 @@ func (g Graph) TopologicalSort(tsort []int, w *Workspace) ([]int, error) {
 				} else if active.Get(v) {
 					// This neighboring vertex is active but not yet
 					// fully explored, so we have discovered a cycle!
-					return tsort[:0], errors.New("graph contains cycle")
+					return tsort[:0], errUnexpectedCycle
 				}
 				stack.PushOrPromote(v)
 			}

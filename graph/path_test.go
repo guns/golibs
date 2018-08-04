@@ -217,7 +217,7 @@ func TestGraphMinEdgesPath(t *testing.T) {
 
 	var g Graph
 	w := &Workspace{}
-	var path Path
+	path := &Path{}
 
 	for _, row := range data {
 		g = g.Reset(row.size)
@@ -228,10 +228,16 @@ func TestGraphMinEdgesPath(t *testing.T) {
 			}
 		}
 
-		path = g.MinEdgesPath(path, row.u, row.v, w)
+		err := g.MinEdgesPath(path, row.u, row.v, w)
 
 		if !reflect.DeepEqual(path.Path(), row.path) {
 			t.Errorf("%v != %v", path.Path(), row.path)
+		}
+
+		if err == nil && path.EdgeCount() == 0 {
+			t.Errorf("expected err to be nil, but have %v", err)
+		} else if err != nil && path.EdgeCount() > 0 {
+			t.Error("expected err to be non-nil")
 		}
 	}
 }

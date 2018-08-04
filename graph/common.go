@@ -4,10 +4,19 @@
 
 package graph
 
-import "github.com/guns/golibs/calculate"
+import (
+	"errors"
+
+	"github.com/guns/golibs/calculate"
+)
 
 // undefined is a sentinel value for the set of Vertex indices.
 const undefined = -1
+
+var (
+	errUnexpectedCycle = errors.New("graph contains unexpected cycle")
+	errNoPath          = errors.New("graph does not contain the specified path")
+)
 
 func fillUndefined(s []int) []int {
 	for i := range s {
