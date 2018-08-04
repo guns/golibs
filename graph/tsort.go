@@ -4,10 +4,12 @@
 
 package graph
 
-// TopologicalSort returns a slice of vertex indices in topologically sorted
-// order. The indices are written to the tsort parameter, which is grown if
-// necessary. If a topological sort is impossible because there is a cycle in
-// the graph, a non-nil error is returned.
+// TopologicalSort computes a topologically sorted order of a graph's
+// vertices. The vertex indices are written to the tsort parameter, which is
+// grown if necessary. If a topological sort is impossible because there is a
+// cycle in the graph, a non-nil error is returned.
+//
+// Worst-case time: O(|V| + |E|)
 func (g Graph) TopologicalSort(tsort []int, w *Workspace) ([]int, error) {
 	w.reset(len(g), 0)
 

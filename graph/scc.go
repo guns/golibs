@@ -16,6 +16,8 @@ import "github.com/guns/golibs/generic/impl"
 //
 // Passing the same [][]int returned by this function as the scc parameter
 // reuses memory and can eliminate unnecessary allocations.
+//
+// Worst-case time: O(|V| + |E|)
 func (g Graph) StronglyConnectedComponents(scc [][]int, w *Workspace) [][]int {
 	w.reset(len(g), 0)
 

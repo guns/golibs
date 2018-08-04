@@ -144,7 +144,9 @@ func (w *Workspace) reset(size int, clearFields workspaceField) {
 		return
 	}
 
-	w.clear(clearFields)
+	if clearFields != 0 {
+		w.clear(clearFields)
+	}
 }
 
 // clear specific fields a Workspace.
