@@ -18,6 +18,3 @@ TEXT ·Mul64(SB), NOSPLIT, $0
 TEXT ·Mul32(SB), NOSPLIT, $0
 	JMP ·mul32(SB)
 
-// func RandIntn(n int) int
-TEXT ·RandIntn(SB), NOSPLIT, $0
-	JMP ·randIntn(SB)

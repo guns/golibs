@@ -30,7 +30,3 @@ TEXT ·Mul32(SB), NOSPLIT, $0
 	MOVL AX, lower+8(FP)
 	MOVL DX, upper+12(FP)
 	RET
-
-// func RandIntn(n int) int
-TEXT ·RandIntn(SB), NOSPLIT, $0
-	JMP ·RandInt63n(SB)
