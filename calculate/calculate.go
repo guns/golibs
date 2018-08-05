@@ -2,6 +2,8 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
+// Package calculate provides functions for common computations like
+// determining the capacity of new slice.
 package calculate
 
 import "math/bits"

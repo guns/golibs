@@ -66,8 +66,8 @@ func (cache *T) WithByteReader(f func(*bytes.Reader)) error {
 	return nil
 }
 
-// ErrReadAfterClear is returned when trying to read from a cleared zerocache.
-var ErrReadAfterClear = errors.New("cannot read cleared zerocache.T")
+// errReadAfterClear is returned when trying to read from a cleared zerocache.
+var errReadAfterClear = errors.New("cannot read cleared zerocache.T")
 
 // Clear zeroes and truncates the underlying buffer without resetting it.
 // Cleared Caches cannot be read. This method is synchronized.
@@ -78,7 +78,7 @@ func (cache *T) Clear() {
 	optimized.MemsetByteSlice(cache.bytes, 0)
 	cache.bytes = cache.bytes[:0]
 	if cache.err == nil {
-		cache.err = ErrReadAfterClear
+		cache.err = errReadAfterClear
 	}
 }
 

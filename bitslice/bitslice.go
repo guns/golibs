@@ -1,3 +1,7 @@
+// Copyright (c) 2018 Sung Pae <self@sungpae.com>
+// Distributed under the MIT license.
+// http://www.opensource.org/licenses/mit-license.php
+
 // Package bitslice provides a bitset implementation.
 package bitslice
 

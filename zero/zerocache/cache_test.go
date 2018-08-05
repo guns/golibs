@@ -119,7 +119,7 @@ func TestCacheClearAndReset(t *testing.T) {
 			append([]byte{}, testBytes...),
 			make([]byte, len(testBytes)),
 			nil,
-			ErrReadAfterClear,
+			errReadAfterClear,
 		},
 		{
 			cacheClear,

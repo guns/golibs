@@ -2,8 +2,6 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-// Package optimized provides functions that are optimized on select
-// architectures.
 package optimized
 
 import "math/rand"
