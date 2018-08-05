@@ -18,8 +18,8 @@ func makeListNodeSlice(buf []int) []listNode {
 
 	// listNode is two ints long
 	header := (*reflect.SliceHeader)(unsafe.Pointer(s))
-	header.Len = len(buf) / 2
-	header.Cap = cap(buf) / 2
+	header.Len /= 2
+	header.Cap /= 2
 
 	return *s
 }

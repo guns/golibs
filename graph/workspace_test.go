@@ -189,4 +189,15 @@ func TestWorkspace(t *testing.T) {
 	if !reflect.DeepEqual(aps.s, nps.s) {
 		t.Errorf("%v != %v", aps.s, nps.s)
 	}
+
+	apsSlice := *(*[]int)(unsafe.Pointer(&aps.s))
+	header := (*reflect.SliceHeader)(unsafe.Pointer(&apsSlice))
+	header.Len *= 2
+	header.Cap *= 2
+
+	if !reflect.DeepEqual(apsSlice, w.a[:w.len*2]) {
+		t.Logf("%v !=", apsSlice)
+		t.Logf("%v", w.a[:w.len*2])
+		t.Fail()
+	}
 }
