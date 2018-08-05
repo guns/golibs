@@ -12,7 +12,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/guns/golibs/zero"
+	"github.com/guns/golibs/optimized"
 )
 
 // T is a synchronized read-only buffer that is initialized from a constant
@@ -75,7 +75,7 @@ func (cache *T) Clear() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 1)
-	zero.ClearBytes(cache.bytes)
+	optimized.MemsetByteSlice(cache.bytes, 0)
 	cache.bytes = cache.bytes[:0]
 	if cache.err == nil {
 		cache.err = ErrReadAfterClear
@@ -89,7 +89,7 @@ func (cache *T) Reset() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
 	atomic.StoreUint32(&cache.done, 0)
-	zero.ClearBytes(cache.bytes)
+	optimized.MemsetByteSlice(cache.bytes, 0)
 	cache.bytes = cache.bytes[:0]
 	cache.err = nil
 }

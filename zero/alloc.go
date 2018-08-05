@@ -8,6 +8,7 @@ import (
 	"bytes"
 
 	"github.com/guns/golibs/calculate"
+	"github.com/guns/golibs/optimized"
 )
 
 // Grow returns a byte slice that can accommodate n more bytes, and the index
@@ -26,7 +27,7 @@ func Grow(bs []byte, n int) ([]byte, int) {
 
 	newslice := make([]byte, len(bs), newcap)
 	copy(newslice, bs)
-	ClearBytes(bs)
+	optimized.MemsetByteSlice(bs, 0)
 	return newslice[:newlen], len(bs)
 }
 

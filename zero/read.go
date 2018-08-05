@@ -7,6 +7,8 @@ package zero
 import (
 	"bytes"
 	"io"
+
+	"github.com/guns/golibs/optimized"
 )
 
 // ReadAll reads data from r until EOF and appends it to buf, growing the
@@ -28,7 +30,7 @@ func ReadAll(buf []byte, r io.Reader) ([]byte, error) {
 		case io.EOF:
 			return buf, nil
 		default:
-			ClearBytes(buf)
+			optimized.MemsetByteSlice(buf, 0)
 			return nil, err
 		}
 	}
