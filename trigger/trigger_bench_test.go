@@ -9,11 +9,15 @@ import (
 	"testing"
 )
 
-//
-// BenchmarkTrigger-4    3000000  578 ns/op  224 B/op  4 allocs/op
-// BenchmarkChan-4       3000000  502 ns/op  192 B/op  2 allocs/op
-// BenchmarkWaitGroup-4  3000000  500 ns/op  32  B/op  2 allocs/op
-//
+//	go version go1.10.3 linux/amd64
+//	goos: linux
+//	goarch: amd64
+//	pkg: github.com/guns/golibs/trigger
+//	BenchmarkTrigger         3000000               452 ns/op             224 B/op          4 allocs/op
+//	BenchmarkChan            5000000               395 ns/op             192 B/op          2 allocs/op
+//	BenchmarkWaitGroup       3000000               407 ns/op              32 B/op          2 allocs/op
+//	PASS
+//	ok      github.com/guns/golibs/trigger  5.830s
 
 func BenchmarkTrigger(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -27,7 +31,6 @@ func BenchmarkTrigger(b *testing.B) {
 		reply.Wait()
 	}
 }
-
 func BenchmarkChan(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		trg := make(chan struct{})
@@ -40,7 +43,6 @@ func BenchmarkChan(b *testing.B) {
 		<-reply
 	}
 }
-
 func BenchmarkWaitGroup(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		trg := sync.WaitGroup{}

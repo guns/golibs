@@ -8,37 +8,37 @@ import "testing"
 
 var numbers = []int{45, 76, 82, 77, 60, 29, 40, 94, 32, 14, 12, 95, 92, 36, 38, 70, 43, 90, 20, 46, 8, 71, 80, 30, 67, 33, 47, 74, 35, 61, 25, 98, 91, 63, 42, 54, 5, 55, 23, 41, 11, 34, 68, 99, 15, 78, 31, 6, 26, 56, 83, 57, 58, 87, 28, 21, 73, 13, 10, 44, 86, 88, 75, 96, 52, 65, 59, 27, 93, 66, 17, 69, 3, 62, 81, 53, 7, 72, 1, 22, 16, 37, 85, 18, 50, 19, 2, 4, 0, 9, 64, 49, 24, 39, 97, 84, 48, 89, 51, 79}
 
-//	:: go version go1.10.3 linux/amd64
+//	go version go1.10.3 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/generic/genericbenchmarks
-//	BenchmarkMinInt2-4        2000000000       0.39 ns/op        0 B/op        0 allocs/op
-//	BenchmarkMinIntV2-4       50000000         23.5 ns/op        0 B/op        0 allocs/op
-//	BenchmarkMinInt3-4        100000000        16.3 ns/op        0 B/op        0 allocs/op
-//	BenchmarkMinIntV3-4       50000000         31.1 ns/op        0 B/op        0 allocs/op
-//	BenchmarkMinIntLoop-4     20000000         91.8 ns/op        0 B/op        0 allocs/op
-//	BenchmarkMinIntSlice-4    20000000          107 ns/op        0 B/op        0 allocs/op
+//	BenchmarkMinInt2        2000000000               0.28 ns/op            0 B/op          0 allocs/op
+//	BenchmarkMinIntV2       300000000                5.02 ns/op            0 B/op          0 allocs/op
+//	BenchmarkMinInt3        2000000000               0.28 ns/op            0 B/op          0 allocs/op
+//	BenchmarkMinIntV3       200000000                6.09 ns/op            0 B/op          0 allocs/op
+//	BenchmarkMinIntLoop     20000000                85.7 ns/op             0 B/op          0 allocs/op
+//	BenchmarkMinIntSlice    20000000               107 ns/op               0 B/op          0 allocs/op
 //	PASS
-//	ok   github.com/guns/golibs/generic/genericbenchmarks 9.442s
+//	ok      github.com/guns/golibs/generic/genericbenchmarks        9.067s
 
 func BenchmarkMinInt2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = MinInt2(i%len(numbers), (i+1)%len(numbers))
+		_ = MinInt2(0xffff, 0xfffe)
 	}
 }
 func BenchmarkMinIntV2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = MinIntV(i%len(numbers), (i+1)%len(numbers))
+		_ = MinIntV(0xffff, 0xfffe)
 	}
 }
 func BenchmarkMinInt3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = MinInt3(i%len(numbers), (i+1)%len(numbers), (i+2)%len(numbers))
+		_ = MinInt3(0xffff, 0xfffe, 0xfffd)
 	}
 }
 func BenchmarkMinIntV3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = MinIntV(i%len(numbers), (i+1)%len(numbers), (i+2)%len(numbers))
+		_ = MinIntV(0xffff, 0xfffe, 0xfffd)
 	}
 }
 func BenchmarkMinIntLoop(b *testing.B) {

@@ -14,8 +14,7 @@ import "math/rand"
 //	https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
 //	https://lemire.me/blog/2016/06/30/fast-random-shuffling/
 //
-func RandIntn(n int) int
-func randIntn(n int) int {
+func RandIntn(n int) int {
 	if uintSize == 32 {
 		return int(RandInt31n(int32(n)))
 	}

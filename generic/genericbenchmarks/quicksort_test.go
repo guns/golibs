@@ -10,16 +10,16 @@ import (
 	"testing"
 )
 
-//	:: go version go1.10.3 linux/amd64
+//	go version go1.10.3 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/generic/genericbenchmarks
-//	BenchmarkSortInts-4                         20000      83534 ns/op       32 B/op        1 allocs/op
-//	BenchmarkQuicksortIntSlice-4                50000      34116 ns/op        0 B/op        0 allocs/op
-//	BenchmarkSortSortPersonSlice-4              10000     203769 ns/op       32 B/op        1 allocs/op
-//	BenchmarkQuicksortPersonSliceMethod-4       10000     169927 ns/op        0 B/op        0 allocs/op
+//	BenchmarkSortInts                          20000             82194 ns/op              32 B/op          1 allocs/op
+//	BenchmarkQuicksortIntSlice                 50000             33767 ns/op               0 B/op          0 allocs/op
+//	BenchmarkSortSortPersonSlice               10000            200657 ns/op              32 B/op          1 allocs/op
+//	BenchmarkQuicksortPersonSliceMethod        10000            168181 ns/op               0 B/op          0 allocs/op
 //	PASS
-//	ok   github.com/guns/golibs/generic/genericbenchmarks 8.338s
+//	ok      github.com/guns/golibs/generic/genericbenchmarks        8.223s
 
 const slicelen = 1000
 
