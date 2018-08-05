@@ -20,14 +20,14 @@ ASM_HEADER = <<EOF
 EOF
 
 PACKAGE = <<EOF
-package optimized
+package memset
 
 EOF
 
 FUNC = <<EOF
-// Memset__Type__Slice fills a []__type__ with value n.
-func Memset__Type__Slice(s []__type__, n __type__)
-func memset__Type__Slice(s []__type__, n __type__) {
+// {{Type}} fills a []{{type}} with value n.
+func {{Type}}(s []{{type}}, n {{type}})
+func _{{Type}}(s []{{type}}, n {{type}}) {
 	for i := range s {
 		s[i] = n
 	}
@@ -35,30 +35,30 @@ func memset__Type__Slice(s []__type__, n __type__) {
 EOF
 
 ASM_AMD64 = <<EOF
-// func Memset__Type__Slice(s []__type__, n __type__)
-TEXT ·Memset__Type__Slice(SB), NOSPLIT, $0
+// func {{Type}}(s []{{type}}, n {{type}})
+TEXT ·{{Type}}(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
-	MOV__width__ n+24(FP), AX
+	MOV{{width}} n+24(FP), AX
 	REP
-	STOS__width__               // memset(data, n, len)
+	STOS{{width}}               // memset(data, n, len)
 	RET
 EOF
 
 ASM_STUB = <<EOF
-// func Memset__Type__Slice(s []__type__, n __type__)
-TEXT ·Memset__Type__Slice(SB), NOSPLIT, $0
-	JMP ·memset__Type__Slice(SB)
+// func {{Type}}(s []{{type}}, n {{type}})
+TEXT ·{{Type}}(SB), NOSPLIT, $0
+	JMP ·_{{Type}}(SB)
 EOF
 
 TEST = <<EOF
-func TestMemset__Type__Slice(t *testing.T) {
-	a := make([]__type__, 1024)
-	b := make([]__type__, len(a))
-	c := make([]__type__, len(a))
+func Test{{Type}}(t *testing.T) {
+	a := make([]{{type}}, 1024)
+	b := make([]{{type}}, len(a))
+	c := make([]{{type}}, len(a))
 
-	Memset__Type__Slice(a, 0x7f)
-	memset__Type__Slice(b, 0x7f)
+	{{Type}}(a, 0x7f)
+	_{{Type}}(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -70,8 +70,8 @@ func TestMemset__Type__Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	Memset__Type__Slice(a, 0)
-	memset__Type__Slice(b, 0)
+	{{Type}}(a, 0)
+	_{{Type}}(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -86,8 +86,8 @@ func TestMemset__Type__Slice(t *testing.T) {
 EOF
 
 BENCH = <<EOF
-func Benchmark03__Type__RangeClear__BenchSize__(b *testing.B) {
-	s := make([]__type__, __benchsize__)
+func Benchmark03Range{{Type}}Clear{{BenchSize}}(b *testing.B) {
+	s := make([]{{type}}, {{benchsize}})
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for j := range s {
@@ -95,15 +95,15 @@ func Benchmark03__Type__RangeClear__BenchSize__(b *testing.B) {
 		}
 	}
 }
-func Benchmark03__Type__MemsetClear__BenchSize__(b *testing.B) {
-	s := make([]__type__, __benchsize__)
+func Benchmark03Memset{{Type}}Clear{{BenchSize}}(b *testing.B) {
+	s := make([]{{type}}, {{benchsize}})
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Memset__Type__Slice(s, 0)
+		{{Type}}(s, 0)
 	}
 }
-func Benchmark03__Type__RangeFill__BenchSize__(b *testing.B) {
-	s := make([]__type__, __benchsize__)
+func Benchmark03Range{{Type}}Fill{{BenchSize}}(b *testing.B) {
+	s := make([]{{type}}, {{benchsize}})
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for j := range s {
@@ -111,11 +111,11 @@ func Benchmark03__Type__RangeFill__BenchSize__(b *testing.B) {
 		}
 	}
 }
-func Benchmark03__Type__MemsetFill__BenchSize__(b *testing.B) {
-	s := make([]__type__, __benchsize__)
+func Benchmark03Memset{{Type}}Fill{{BenchSize}}(b *testing.B) {
+	s := make([]{{type}}, {{benchsize}})
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Memset__Type__Slice(s, 0x7f)
+		{{Type}}(s, 0x7f)
 	}
 }
 EOF
@@ -146,11 +146,11 @@ benchmarks = [
 ]
 
 def gsub text, type, width, benchsize = nil
-  text.gsub('__type__', type)
-      .gsub('__Type__', type.capitalize)
-      .gsub('__BenchSize__', benchsize[0])
-      .gsub('__benchsize__', benchsize[1])
-      .gsub('__width__', width)
+  text.gsub('{{type}}', type)
+      .gsub('{{Type}}', type.capitalize)
+      .gsub('{{BenchSize}}', benchsize[0])
+      .gsub('{{benchsize}}', benchsize[1])
+      .gsub('{{width}}', width)
 end
 
 def expand s
@@ -223,7 +223,7 @@ if ENV['BENCH'] == '1'
     types.each do |type, _|
       f.puts version
 
-      IO.popen ['go', 'test', '-run=NONE', "-bench=#{type.capitalize}(Range|Memset)", '-benchmem'], 'r' do |io|
+      IO.popen ['go', 'test', '-run=NONE', "-bench=#{type.capitalize}[CF]", '-benchmem'], 'r' do |io|
         buf = io.read
         f.puts expand(buf)
       end

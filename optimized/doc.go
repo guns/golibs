@@ -5,5 +5,3 @@
 // Package optimized provides functions that are optimized on select
 // architectures.
 package optimized
-
-//go:generate ./gen_memset.rb

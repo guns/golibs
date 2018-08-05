@@ -4,20 +4,20 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-package optimized
+package memset
 
 import (
 	"reflect"
 	"testing"
 )
 
-func TestMemsetIntSlice(t *testing.T) {
+func TestInt(t *testing.T) {
 	a := make([]int, 1024)
 	b := make([]int, len(a))
 	c := make([]int, len(a))
 
-	MemsetIntSlice(a, 0x7f)
-	memsetIntSlice(b, 0x7f)
+	Int(a, 0x7f)
+	_Int(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -29,8 +29,8 @@ func TestMemsetIntSlice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetIntSlice(a, 0)
-	memsetIntSlice(b, 0)
+	Int(a, 0)
+	_Int(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -43,13 +43,13 @@ func TestMemsetIntSlice(t *testing.T) {
 	}
 }
 
-func TestMemsetInt8Slice(t *testing.T) {
+func TestInt8(t *testing.T) {
 	a := make([]int8, 1024)
 	b := make([]int8, len(a))
 	c := make([]int8, len(a))
 
-	MemsetInt8Slice(a, 0x7f)
-	memsetInt8Slice(b, 0x7f)
+	Int8(a, 0x7f)
+	_Int8(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -61,8 +61,8 @@ func TestMemsetInt8Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetInt8Slice(a, 0)
-	memsetInt8Slice(b, 0)
+	Int8(a, 0)
+	_Int8(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -75,13 +75,13 @@ func TestMemsetInt8Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetInt16Slice(t *testing.T) {
+func TestInt16(t *testing.T) {
 	a := make([]int16, 1024)
 	b := make([]int16, len(a))
 	c := make([]int16, len(a))
 
-	MemsetInt16Slice(a, 0x7f)
-	memsetInt16Slice(b, 0x7f)
+	Int16(a, 0x7f)
+	_Int16(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -93,8 +93,8 @@ func TestMemsetInt16Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetInt16Slice(a, 0)
-	memsetInt16Slice(b, 0)
+	Int16(a, 0)
+	_Int16(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -107,13 +107,13 @@ func TestMemsetInt16Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetInt32Slice(t *testing.T) {
+func TestInt32(t *testing.T) {
 	a := make([]int32, 1024)
 	b := make([]int32, len(a))
 	c := make([]int32, len(a))
 
-	MemsetInt32Slice(a, 0x7f)
-	memsetInt32Slice(b, 0x7f)
+	Int32(a, 0x7f)
+	_Int32(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -125,8 +125,8 @@ func TestMemsetInt32Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetInt32Slice(a, 0)
-	memsetInt32Slice(b, 0)
+	Int32(a, 0)
+	_Int32(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -139,13 +139,13 @@ func TestMemsetInt32Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetInt64Slice(t *testing.T) {
+func TestInt64(t *testing.T) {
 	a := make([]int64, 1024)
 	b := make([]int64, len(a))
 	c := make([]int64, len(a))
 
-	MemsetInt64Slice(a, 0x7f)
-	memsetInt64Slice(b, 0x7f)
+	Int64(a, 0x7f)
+	_Int64(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -157,8 +157,8 @@ func TestMemsetInt64Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetInt64Slice(a, 0)
-	memsetInt64Slice(b, 0)
+	Int64(a, 0)
+	_Int64(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -171,13 +171,13 @@ func TestMemsetInt64Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetUintSlice(t *testing.T) {
+func TestUint(t *testing.T) {
 	a := make([]uint, 1024)
 	b := make([]uint, len(a))
 	c := make([]uint, len(a))
 
-	MemsetUintSlice(a, 0x7f)
-	memsetUintSlice(b, 0x7f)
+	Uint(a, 0x7f)
+	_Uint(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -189,8 +189,8 @@ func TestMemsetUintSlice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetUintSlice(a, 0)
-	memsetUintSlice(b, 0)
+	Uint(a, 0)
+	_Uint(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -203,13 +203,13 @@ func TestMemsetUintSlice(t *testing.T) {
 	}
 }
 
-func TestMemsetByteSlice(t *testing.T) {
+func TestByte(t *testing.T) {
 	a := make([]byte, 1024)
 	b := make([]byte, len(a))
 	c := make([]byte, len(a))
 
-	MemsetByteSlice(a, 0x7f)
-	memsetByteSlice(b, 0x7f)
+	Byte(a, 0x7f)
+	_Byte(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -221,8 +221,8 @@ func TestMemsetByteSlice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetByteSlice(a, 0)
-	memsetByteSlice(b, 0)
+	Byte(a, 0)
+	_Byte(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -235,13 +235,13 @@ func TestMemsetByteSlice(t *testing.T) {
 	}
 }
 
-func TestMemsetUint16Slice(t *testing.T) {
+func TestUint16(t *testing.T) {
 	a := make([]uint16, 1024)
 	b := make([]uint16, len(a))
 	c := make([]uint16, len(a))
 
-	MemsetUint16Slice(a, 0x7f)
-	memsetUint16Slice(b, 0x7f)
+	Uint16(a, 0x7f)
+	_Uint16(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -253,8 +253,8 @@ func TestMemsetUint16Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetUint16Slice(a, 0)
-	memsetUint16Slice(b, 0)
+	Uint16(a, 0)
+	_Uint16(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -267,13 +267,13 @@ func TestMemsetUint16Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetUint32Slice(t *testing.T) {
+func TestUint32(t *testing.T) {
 	a := make([]uint32, 1024)
 	b := make([]uint32, len(a))
 	c := make([]uint32, len(a))
 
-	MemsetUint32Slice(a, 0x7f)
-	memsetUint32Slice(b, 0x7f)
+	Uint32(a, 0x7f)
+	_Uint32(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -285,8 +285,8 @@ func TestMemsetUint32Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetUint32Slice(a, 0)
-	memsetUint32Slice(b, 0)
+	Uint32(a, 0)
+	_Uint32(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -299,13 +299,13 @@ func TestMemsetUint32Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetUint64Slice(t *testing.T) {
+func TestUint64(t *testing.T) {
 	a := make([]uint64, 1024)
 	b := make([]uint64, len(a))
 	c := make([]uint64, len(a))
 
-	MemsetUint64Slice(a, 0x7f)
-	memsetUint64Slice(b, 0x7f)
+	Uint64(a, 0x7f)
+	_Uint64(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -317,8 +317,8 @@ func TestMemsetUint64Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetUint64Slice(a, 0)
-	memsetUint64Slice(b, 0)
+	Uint64(a, 0)
+	_Uint64(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -331,13 +331,13 @@ func TestMemsetUint64Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetUintptrSlice(t *testing.T) {
+func TestUintptr(t *testing.T) {
 	a := make([]uintptr, 1024)
 	b := make([]uintptr, len(a))
 	c := make([]uintptr, len(a))
 
-	MemsetUintptrSlice(a, 0x7f)
-	memsetUintptrSlice(b, 0x7f)
+	Uintptr(a, 0x7f)
+	_Uintptr(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -349,8 +349,8 @@ func TestMemsetUintptrSlice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetUintptrSlice(a, 0)
-	memsetUintptrSlice(b, 0)
+	Uintptr(a, 0)
+	_Uintptr(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -363,13 +363,13 @@ func TestMemsetUintptrSlice(t *testing.T) {
 	}
 }
 
-func TestMemsetFloat32Slice(t *testing.T) {
+func TestFloat32(t *testing.T) {
 	a := make([]float32, 1024)
 	b := make([]float32, len(a))
 	c := make([]float32, len(a))
 
-	MemsetFloat32Slice(a, 0x7f)
-	memsetFloat32Slice(b, 0x7f)
+	Float32(a, 0x7f)
+	_Float32(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -381,8 +381,8 @@ func TestMemsetFloat32Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetFloat32Slice(a, 0)
-	memsetFloat32Slice(b, 0)
+	Float32(a, 0)
+	_Float32(b, 0)
 	for i := range c {
 		c[i] = 0
 	}
@@ -395,13 +395,13 @@ func TestMemsetFloat32Slice(t *testing.T) {
 	}
 }
 
-func TestMemsetFloat64Slice(t *testing.T) {
+func TestFloat64(t *testing.T) {
 	a := make([]float64, 1024)
 	b := make([]float64, len(a))
 	c := make([]float64, len(a))
 
-	MemsetFloat64Slice(a, 0x7f)
-	memsetFloat64Slice(b, 0x7f)
+	Float64(a, 0x7f)
+	_Float64(b, 0x7f)
 	for i := range c {
 		c[i] = 0x7f
 	}
@@ -413,8 +413,8 @@ func TestMemsetFloat64Slice(t *testing.T) {
 		t.Errorf("%v != %v", b, c)
 	}
 
-	MemsetFloat64Slice(a, 0)
-	memsetFloat64Slice(b, 0)
+	Float64(a, 0)
+	_Float64(b, 0)
 	for i := range c {
 		c[i] = 0
 	}

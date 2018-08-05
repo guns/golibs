@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	"github.com/guns/golibs/calculate"
+	"github.com/guns/golibs/memset"
 )
 
 // undefined is a sentinel value for the set of Vertex indices.
@@ -19,9 +20,7 @@ var (
 )
 
 func fillUndefined(s []int) []int {
-	for i := range s {
-		s[i] = undefined
-	}
+	memset.Int(s, undefined)
 	return s
 }
 

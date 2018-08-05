@@ -10,6 +10,7 @@ import (
 	"github.com/guns/golibs/bitslice"
 	"github.com/guns/golibs/calculate"
 	"github.com/guns/golibs/generic/impl"
+	"github.com/guns/golibs/memset"
 )
 
 // A Workspace provides general-purpose scratch storage for Graph methods.
@@ -52,7 +53,6 @@ func (w *Workspace) selectSlice(field workspaceField) []int {
 	default:
 		return nil // panic() defeats inlining [go1.11]
 	}
-
 }
 
 // queue returns an empty IntQueue with the specified field as a backing slice.
@@ -90,16 +90,13 @@ func (w *Workspace) bitslices(n int, field workspaceField) []bitslice.T {
 		offset += blen
 	}
 
-	s := buf[:offset]
-	for i := range s {
-		s[i] = 0
-	}
+	memset.Int(buf[:offset], 0)
 
 	return bs
 }
 
-// autoPromotingStack returns an autoPromotingStack with the specified
-// fields as a backing slice. The fields parameter must specify two contiguous
+// autoPromotingStack returns an autoPromotingStack with the specified fields
+// as a backing slice. The fields parameter must specify two contiguous
 // internal fields.
 func (w *Workspace) autoPromotingStack(fields workspaceField) autoPromotingStack {
 	var buf []int
@@ -111,9 +108,7 @@ func (w *Workspace) autoPromotingStack(fields workspaceField) autoPromotingStack
 		buf = w.b[:w.len*2]
 	}
 
-	for i := range buf {
-		buf[i] = undefined
-	}
+	memset.Int(buf, undefined)
 
 	return *newAutoPromotingStack(makeListNodeSlice(buf))
 }
@@ -152,18 +147,12 @@ func (w *Workspace) reset(size int, clearFields workspaceField) {
 // clear specific fields a Workspace.
 func (w *Workspace) clear(fields workspaceField) {
 	if fields&wA > 0 {
-		for i := range w.a {
-			w.a[i] = 0
-		}
+		memset.Int(w.a, 0)
 	}
 	if fields&wB > 0 {
-		for i := range w.b {
-			w.b[i] = 0
-		}
+		memset.Int(w.b, 0)
 	}
 	if fields&wC > 0 {
-		for i := range w.c {
-			w.c[i] = 0
-		}
+		memset.Int(w.c, 0)
 	}
 }

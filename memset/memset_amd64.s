@@ -6,8 +6,8 @@
 
 #include "textflag.h"
 
-// func MemsetIntSlice(s []int, n int)
-TEXT ·MemsetIntSlice(SB), NOSPLIT, $0
+// func Int(s []int, n int)
+TEXT ·Int(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX
@@ -15,8 +15,8 @@ TEXT ·MemsetIntSlice(SB), NOSPLIT, $0
 	STOSQ               // memset(data, n, len)
 	RET
 
-// func MemsetInt8Slice(s []int8, n int8)
-TEXT ·MemsetInt8Slice(SB), NOSPLIT, $0
+// func Int8(s []int8, n int8)
+TEXT ·Int8(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVB n+24(FP), AX
@@ -24,8 +24,8 @@ TEXT ·MemsetInt8Slice(SB), NOSPLIT, $0
 	STOSB               // memset(data, n, len)
 	RET
 
-// func MemsetInt16Slice(s []int16, n int16)
-TEXT ·MemsetInt16Slice(SB), NOSPLIT, $0
+// func Int16(s []int16, n int16)
+TEXT ·Int16(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVW n+24(FP), AX
@@ -33,8 +33,8 @@ TEXT ·MemsetInt16Slice(SB), NOSPLIT, $0
 	STOSW               // memset(data, n, len)
 	RET
 
-// func MemsetInt32Slice(s []int32, n int32)
-TEXT ·MemsetInt32Slice(SB), NOSPLIT, $0
+// func Int32(s []int32, n int32)
+TEXT ·Int32(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVL n+24(FP), AX
@@ -42,8 +42,8 @@ TEXT ·MemsetInt32Slice(SB), NOSPLIT, $0
 	STOSL               // memset(data, n, len)
 	RET
 
-// func MemsetInt64Slice(s []int64, n int64)
-TEXT ·MemsetInt64Slice(SB), NOSPLIT, $0
+// func Int64(s []int64, n int64)
+TEXT ·Int64(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX
@@ -51,8 +51,8 @@ TEXT ·MemsetInt64Slice(SB), NOSPLIT, $0
 	STOSQ               // memset(data, n, len)
 	RET
 
-// func MemsetUintSlice(s []uint, n uint)
-TEXT ·MemsetUintSlice(SB), NOSPLIT, $0
+// func Uint(s []uint, n uint)
+TEXT ·Uint(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX
@@ -60,8 +60,8 @@ TEXT ·MemsetUintSlice(SB), NOSPLIT, $0
 	STOSQ               // memset(data, n, len)
 	RET
 
-// func MemsetByteSlice(s []byte, n byte)
-TEXT ·MemsetByteSlice(SB), NOSPLIT, $0
+// func Byte(s []byte, n byte)
+TEXT ·Byte(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVB n+24(FP), AX
@@ -69,8 +69,8 @@ TEXT ·MemsetByteSlice(SB), NOSPLIT, $0
 	STOSB               // memset(data, n, len)
 	RET
 
-// func MemsetUint16Slice(s []uint16, n uint16)
-TEXT ·MemsetUint16Slice(SB), NOSPLIT, $0
+// func Uint16(s []uint16, n uint16)
+TEXT ·Uint16(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVW n+24(FP), AX
@@ -78,8 +78,8 @@ TEXT ·MemsetUint16Slice(SB), NOSPLIT, $0
 	STOSW               // memset(data, n, len)
 	RET
 
-// func MemsetUint32Slice(s []uint32, n uint32)
-TEXT ·MemsetUint32Slice(SB), NOSPLIT, $0
+// func Uint32(s []uint32, n uint32)
+TEXT ·Uint32(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVL n+24(FP), AX
@@ -87,8 +87,8 @@ TEXT ·MemsetUint32Slice(SB), NOSPLIT, $0
 	STOSL               // memset(data, n, len)
 	RET
 
-// func MemsetUint64Slice(s []uint64, n uint64)
-TEXT ·MemsetUint64Slice(SB), NOSPLIT, $0
+// func Uint64(s []uint64, n uint64)
+TEXT ·Uint64(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX
@@ -96,8 +96,8 @@ TEXT ·MemsetUint64Slice(SB), NOSPLIT, $0
 	STOSQ               // memset(data, n, len)
 	RET
 
-// func MemsetUintptrSlice(s []uintptr, n uintptr)
-TEXT ·MemsetUintptrSlice(SB), NOSPLIT, $0
+// func Uintptr(s []uintptr, n uintptr)
+TEXT ·Uintptr(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX
@@ -105,8 +105,8 @@ TEXT ·MemsetUintptrSlice(SB), NOSPLIT, $0
 	STOSQ               // memset(data, n, len)
 	RET
 
-// func MemsetFloat32Slice(s []float32, n float32)
-TEXT ·MemsetFloat32Slice(SB), NOSPLIT, $0
+// func Float32(s []float32, n float32)
+TEXT ·Float32(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVL n+24(FP), AX
@@ -114,8 +114,8 @@ TEXT ·MemsetFloat32Slice(SB), NOSPLIT, $0
 	STOSL               // memset(data, n, len)
 	RET
 
-// func MemsetFloat64Slice(s []float64, n float64)
-TEXT ·MemsetFloat64Slice(SB), NOSPLIT, $0
+// func Float64(s []float64, n float64)
+TEXT ·Float64(SB), NOSPLIT, $0
 	MOVQ data+0(FP), DI
 	MOVQ len+8(FP), CX
 	MOVQ n+24(FP), AX

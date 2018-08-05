@@ -4,11 +4,11 @@
 // Distributed under the MIT license.
 // http://www.opensource.org/licenses/mit-license.php
 
-package optimized
+package memset
 
 import "testing"
 
-func Benchmark03IntRangeClear8(b *testing.B) {
+func Benchmark03RangeIntClear8(b *testing.B) {
 	s := make([]int, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -17,14 +17,14 @@ func Benchmark03IntRangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear8(b *testing.B) {
+func Benchmark03MemsetIntClear8(b *testing.B) {
 	s := make([]int, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill8(b *testing.B) {
+func Benchmark03RangeIntFill8(b *testing.B) {
 	s := make([]int, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -33,14 +33,14 @@ func Benchmark03IntRangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill8(b *testing.B) {
+func Benchmark03MemsetIntFill8(b *testing.B) {
 	s := make([]int, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
-func Benchmark03IntRangeClear64(b *testing.B) {
+func Benchmark03RangeIntClear64(b *testing.B) {
 	s := make([]int, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -49,14 +49,14 @@ func Benchmark03IntRangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear64(b *testing.B) {
+func Benchmark03MemsetIntClear64(b *testing.B) {
 	s := make([]int, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill64(b *testing.B) {
+func Benchmark03RangeIntFill64(b *testing.B) {
 	s := make([]int, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -65,14 +65,14 @@ func Benchmark03IntRangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill64(b *testing.B) {
+func Benchmark03MemsetIntFill64(b *testing.B) {
 	s := make([]int, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
-func Benchmark03IntRangeClear1K(b *testing.B) {
+func Benchmark03RangeIntClear1K(b *testing.B) {
 	s := make([]int, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -81,14 +81,14 @@ func Benchmark03IntRangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear1K(b *testing.B) {
+func Benchmark03MemsetIntClear1K(b *testing.B) {
 	s := make([]int, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill1K(b *testing.B) {
+func Benchmark03RangeIntFill1K(b *testing.B) {
 	s := make([]int, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -97,14 +97,14 @@ func Benchmark03IntRangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill1K(b *testing.B) {
+func Benchmark03MemsetIntFill1K(b *testing.B) {
 	s := make([]int, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
-func Benchmark03IntRangeClear4K(b *testing.B) {
+func Benchmark03RangeIntClear4K(b *testing.B) {
 	s := make([]int, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -113,14 +113,14 @@ func Benchmark03IntRangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear4K(b *testing.B) {
+func Benchmark03MemsetIntClear4K(b *testing.B) {
 	s := make([]int, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill4K(b *testing.B) {
+func Benchmark03RangeIntFill4K(b *testing.B) {
 	s := make([]int, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -129,14 +129,14 @@ func Benchmark03IntRangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill4K(b *testing.B) {
+func Benchmark03MemsetIntFill4K(b *testing.B) {
 	s := make([]int, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
-func Benchmark03IntRangeClear64K(b *testing.B) {
+func Benchmark03RangeIntClear64K(b *testing.B) {
 	s := make([]int, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -145,14 +145,14 @@ func Benchmark03IntRangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear64K(b *testing.B) {
+func Benchmark03MemsetIntClear64K(b *testing.B) {
 	s := make([]int, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill64K(b *testing.B) {
+func Benchmark03RangeIntFill64K(b *testing.B) {
 	s := make([]int, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -161,14 +161,14 @@ func Benchmark03IntRangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill64K(b *testing.B) {
+func Benchmark03MemsetIntFill64K(b *testing.B) {
 	s := make([]int, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
-func Benchmark03IntRangeClear1M(b *testing.B) {
+func Benchmark03RangeIntClear1M(b *testing.B) {
 	s := make([]int, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -177,14 +177,14 @@ func Benchmark03IntRangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetClear1M(b *testing.B) {
+func Benchmark03MemsetIntClear1M(b *testing.B) {
 	s := make([]int, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0)
+		Int(s, 0)
 	}
 }
-func Benchmark03IntRangeFill1M(b *testing.B) {
+func Benchmark03RangeIntFill1M(b *testing.B) {
 	s := make([]int, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -193,15 +193,15 @@ func Benchmark03IntRangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03IntMemsetFill1M(b *testing.B) {
+func Benchmark03MemsetIntFill1M(b *testing.B) {
 	s := make([]int, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetIntSlice(s, 0x7f)
+		Int(s, 0x7f)
 	}
 }
 
-func Benchmark03Int8RangeClear8(b *testing.B) {
+func Benchmark03RangeInt8Clear8(b *testing.B) {
 	s := make([]int8, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -210,14 +210,14 @@ func Benchmark03Int8RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear8(b *testing.B) {
+func Benchmark03MemsetInt8Clear8(b *testing.B) {
 	s := make([]int8, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill8(b *testing.B) {
+func Benchmark03RangeInt8Fill8(b *testing.B) {
 	s := make([]int8, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -226,14 +226,14 @@ func Benchmark03Int8RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill8(b *testing.B) {
+func Benchmark03MemsetInt8Fill8(b *testing.B) {
 	s := make([]int8, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
-func Benchmark03Int8RangeClear64(b *testing.B) {
+func Benchmark03RangeInt8Clear64(b *testing.B) {
 	s := make([]int8, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -242,14 +242,14 @@ func Benchmark03Int8RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear64(b *testing.B) {
+func Benchmark03MemsetInt8Clear64(b *testing.B) {
 	s := make([]int8, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill64(b *testing.B) {
+func Benchmark03RangeInt8Fill64(b *testing.B) {
 	s := make([]int8, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -258,14 +258,14 @@ func Benchmark03Int8RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill64(b *testing.B) {
+func Benchmark03MemsetInt8Fill64(b *testing.B) {
 	s := make([]int8, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
-func Benchmark03Int8RangeClear1K(b *testing.B) {
+func Benchmark03RangeInt8Clear1K(b *testing.B) {
 	s := make([]int8, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -274,14 +274,14 @@ func Benchmark03Int8RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetInt8Clear1K(b *testing.B) {
 	s := make([]int8, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill1K(b *testing.B) {
+func Benchmark03RangeInt8Fill1K(b *testing.B) {
 	s := make([]int8, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -290,14 +290,14 @@ func Benchmark03Int8RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetInt8Fill1K(b *testing.B) {
 	s := make([]int8, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
-func Benchmark03Int8RangeClear4K(b *testing.B) {
+func Benchmark03RangeInt8Clear4K(b *testing.B) {
 	s := make([]int8, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -306,14 +306,14 @@ func Benchmark03Int8RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetInt8Clear4K(b *testing.B) {
 	s := make([]int8, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill4K(b *testing.B) {
+func Benchmark03RangeInt8Fill4K(b *testing.B) {
 	s := make([]int8, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -322,14 +322,14 @@ func Benchmark03Int8RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetInt8Fill4K(b *testing.B) {
 	s := make([]int8, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
-func Benchmark03Int8RangeClear64K(b *testing.B) {
+func Benchmark03RangeInt8Clear64K(b *testing.B) {
 	s := make([]int8, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -338,14 +338,14 @@ func Benchmark03Int8RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetInt8Clear64K(b *testing.B) {
 	s := make([]int8, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill64K(b *testing.B) {
+func Benchmark03RangeInt8Fill64K(b *testing.B) {
 	s := make([]int8, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -354,14 +354,14 @@ func Benchmark03Int8RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetInt8Fill64K(b *testing.B) {
 	s := make([]int8, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
-func Benchmark03Int8RangeClear1M(b *testing.B) {
+func Benchmark03RangeInt8Clear1M(b *testing.B) {
 	s := make([]int8, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -370,14 +370,14 @@ func Benchmark03Int8RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetInt8Clear1M(b *testing.B) {
 	s := make([]int8, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0)
+		Int8(s, 0)
 	}
 }
-func Benchmark03Int8RangeFill1M(b *testing.B) {
+func Benchmark03RangeInt8Fill1M(b *testing.B) {
 	s := make([]int8, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -386,15 +386,15 @@ func Benchmark03Int8RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int8MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetInt8Fill1M(b *testing.B) {
 	s := make([]int8, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt8Slice(s, 0x7f)
+		Int8(s, 0x7f)
 	}
 }
 
-func Benchmark03Int16RangeClear8(b *testing.B) {
+func Benchmark03RangeInt16Clear8(b *testing.B) {
 	s := make([]int16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -403,14 +403,14 @@ func Benchmark03Int16RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear8(b *testing.B) {
+func Benchmark03MemsetInt16Clear8(b *testing.B) {
 	s := make([]int16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill8(b *testing.B) {
+func Benchmark03RangeInt16Fill8(b *testing.B) {
 	s := make([]int16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -419,14 +419,14 @@ func Benchmark03Int16RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill8(b *testing.B) {
+func Benchmark03MemsetInt16Fill8(b *testing.B) {
 	s := make([]int16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
-func Benchmark03Int16RangeClear64(b *testing.B) {
+func Benchmark03RangeInt16Clear64(b *testing.B) {
 	s := make([]int16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -435,14 +435,14 @@ func Benchmark03Int16RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear64(b *testing.B) {
+func Benchmark03MemsetInt16Clear64(b *testing.B) {
 	s := make([]int16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill64(b *testing.B) {
+func Benchmark03RangeInt16Fill64(b *testing.B) {
 	s := make([]int16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -451,14 +451,14 @@ func Benchmark03Int16RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill64(b *testing.B) {
+func Benchmark03MemsetInt16Fill64(b *testing.B) {
 	s := make([]int16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
-func Benchmark03Int16RangeClear1K(b *testing.B) {
+func Benchmark03RangeInt16Clear1K(b *testing.B) {
 	s := make([]int16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -467,14 +467,14 @@ func Benchmark03Int16RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetInt16Clear1K(b *testing.B) {
 	s := make([]int16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill1K(b *testing.B) {
+func Benchmark03RangeInt16Fill1K(b *testing.B) {
 	s := make([]int16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -483,14 +483,14 @@ func Benchmark03Int16RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetInt16Fill1K(b *testing.B) {
 	s := make([]int16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
-func Benchmark03Int16RangeClear4K(b *testing.B) {
+func Benchmark03RangeInt16Clear4K(b *testing.B) {
 	s := make([]int16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -499,14 +499,14 @@ func Benchmark03Int16RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetInt16Clear4K(b *testing.B) {
 	s := make([]int16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill4K(b *testing.B) {
+func Benchmark03RangeInt16Fill4K(b *testing.B) {
 	s := make([]int16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -515,14 +515,14 @@ func Benchmark03Int16RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetInt16Fill4K(b *testing.B) {
 	s := make([]int16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
-func Benchmark03Int16RangeClear64K(b *testing.B) {
+func Benchmark03RangeInt16Clear64K(b *testing.B) {
 	s := make([]int16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -531,14 +531,14 @@ func Benchmark03Int16RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetInt16Clear64K(b *testing.B) {
 	s := make([]int16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill64K(b *testing.B) {
+func Benchmark03RangeInt16Fill64K(b *testing.B) {
 	s := make([]int16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -547,14 +547,14 @@ func Benchmark03Int16RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetInt16Fill64K(b *testing.B) {
 	s := make([]int16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
-func Benchmark03Int16RangeClear1M(b *testing.B) {
+func Benchmark03RangeInt16Clear1M(b *testing.B) {
 	s := make([]int16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -563,14 +563,14 @@ func Benchmark03Int16RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetInt16Clear1M(b *testing.B) {
 	s := make([]int16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0)
+		Int16(s, 0)
 	}
 }
-func Benchmark03Int16RangeFill1M(b *testing.B) {
+func Benchmark03RangeInt16Fill1M(b *testing.B) {
 	s := make([]int16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -579,15 +579,15 @@ func Benchmark03Int16RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int16MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetInt16Fill1M(b *testing.B) {
 	s := make([]int16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt16Slice(s, 0x7f)
+		Int16(s, 0x7f)
 	}
 }
 
-func Benchmark03Int32RangeClear8(b *testing.B) {
+func Benchmark03RangeInt32Clear8(b *testing.B) {
 	s := make([]int32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -596,14 +596,14 @@ func Benchmark03Int32RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear8(b *testing.B) {
+func Benchmark03MemsetInt32Clear8(b *testing.B) {
 	s := make([]int32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill8(b *testing.B) {
+func Benchmark03RangeInt32Fill8(b *testing.B) {
 	s := make([]int32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -612,14 +612,14 @@ func Benchmark03Int32RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill8(b *testing.B) {
+func Benchmark03MemsetInt32Fill8(b *testing.B) {
 	s := make([]int32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
-func Benchmark03Int32RangeClear64(b *testing.B) {
+func Benchmark03RangeInt32Clear64(b *testing.B) {
 	s := make([]int32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -628,14 +628,14 @@ func Benchmark03Int32RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear64(b *testing.B) {
+func Benchmark03MemsetInt32Clear64(b *testing.B) {
 	s := make([]int32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill64(b *testing.B) {
+func Benchmark03RangeInt32Fill64(b *testing.B) {
 	s := make([]int32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -644,14 +644,14 @@ func Benchmark03Int32RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill64(b *testing.B) {
+func Benchmark03MemsetInt32Fill64(b *testing.B) {
 	s := make([]int32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
-func Benchmark03Int32RangeClear1K(b *testing.B) {
+func Benchmark03RangeInt32Clear1K(b *testing.B) {
 	s := make([]int32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -660,14 +660,14 @@ func Benchmark03Int32RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetInt32Clear1K(b *testing.B) {
 	s := make([]int32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill1K(b *testing.B) {
+func Benchmark03RangeInt32Fill1K(b *testing.B) {
 	s := make([]int32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -676,14 +676,14 @@ func Benchmark03Int32RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetInt32Fill1K(b *testing.B) {
 	s := make([]int32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
-func Benchmark03Int32RangeClear4K(b *testing.B) {
+func Benchmark03RangeInt32Clear4K(b *testing.B) {
 	s := make([]int32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -692,14 +692,14 @@ func Benchmark03Int32RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetInt32Clear4K(b *testing.B) {
 	s := make([]int32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill4K(b *testing.B) {
+func Benchmark03RangeInt32Fill4K(b *testing.B) {
 	s := make([]int32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -708,14 +708,14 @@ func Benchmark03Int32RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetInt32Fill4K(b *testing.B) {
 	s := make([]int32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
-func Benchmark03Int32RangeClear64K(b *testing.B) {
+func Benchmark03RangeInt32Clear64K(b *testing.B) {
 	s := make([]int32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -724,14 +724,14 @@ func Benchmark03Int32RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetInt32Clear64K(b *testing.B) {
 	s := make([]int32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill64K(b *testing.B) {
+func Benchmark03RangeInt32Fill64K(b *testing.B) {
 	s := make([]int32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -740,14 +740,14 @@ func Benchmark03Int32RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetInt32Fill64K(b *testing.B) {
 	s := make([]int32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
-func Benchmark03Int32RangeClear1M(b *testing.B) {
+func Benchmark03RangeInt32Clear1M(b *testing.B) {
 	s := make([]int32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -756,14 +756,14 @@ func Benchmark03Int32RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetInt32Clear1M(b *testing.B) {
 	s := make([]int32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0)
+		Int32(s, 0)
 	}
 }
-func Benchmark03Int32RangeFill1M(b *testing.B) {
+func Benchmark03RangeInt32Fill1M(b *testing.B) {
 	s := make([]int32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -772,15 +772,15 @@ func Benchmark03Int32RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int32MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetInt32Fill1M(b *testing.B) {
 	s := make([]int32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt32Slice(s, 0x7f)
+		Int32(s, 0x7f)
 	}
 }
 
-func Benchmark03Int64RangeClear8(b *testing.B) {
+func Benchmark03RangeInt64Clear8(b *testing.B) {
 	s := make([]int64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -789,14 +789,14 @@ func Benchmark03Int64RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear8(b *testing.B) {
+func Benchmark03MemsetInt64Clear8(b *testing.B) {
 	s := make([]int64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill8(b *testing.B) {
+func Benchmark03RangeInt64Fill8(b *testing.B) {
 	s := make([]int64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -805,14 +805,14 @@ func Benchmark03Int64RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill8(b *testing.B) {
+func Benchmark03MemsetInt64Fill8(b *testing.B) {
 	s := make([]int64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
-func Benchmark03Int64RangeClear64(b *testing.B) {
+func Benchmark03RangeInt64Clear64(b *testing.B) {
 	s := make([]int64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -821,14 +821,14 @@ func Benchmark03Int64RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear64(b *testing.B) {
+func Benchmark03MemsetInt64Clear64(b *testing.B) {
 	s := make([]int64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill64(b *testing.B) {
+func Benchmark03RangeInt64Fill64(b *testing.B) {
 	s := make([]int64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -837,14 +837,14 @@ func Benchmark03Int64RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill64(b *testing.B) {
+func Benchmark03MemsetInt64Fill64(b *testing.B) {
 	s := make([]int64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
-func Benchmark03Int64RangeClear1K(b *testing.B) {
+func Benchmark03RangeInt64Clear1K(b *testing.B) {
 	s := make([]int64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -853,14 +853,14 @@ func Benchmark03Int64RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetInt64Clear1K(b *testing.B) {
 	s := make([]int64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill1K(b *testing.B) {
+func Benchmark03RangeInt64Fill1K(b *testing.B) {
 	s := make([]int64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -869,14 +869,14 @@ func Benchmark03Int64RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetInt64Fill1K(b *testing.B) {
 	s := make([]int64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
-func Benchmark03Int64RangeClear4K(b *testing.B) {
+func Benchmark03RangeInt64Clear4K(b *testing.B) {
 	s := make([]int64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -885,14 +885,14 @@ func Benchmark03Int64RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetInt64Clear4K(b *testing.B) {
 	s := make([]int64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill4K(b *testing.B) {
+func Benchmark03RangeInt64Fill4K(b *testing.B) {
 	s := make([]int64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -901,14 +901,14 @@ func Benchmark03Int64RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetInt64Fill4K(b *testing.B) {
 	s := make([]int64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
-func Benchmark03Int64RangeClear64K(b *testing.B) {
+func Benchmark03RangeInt64Clear64K(b *testing.B) {
 	s := make([]int64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -917,14 +917,14 @@ func Benchmark03Int64RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetInt64Clear64K(b *testing.B) {
 	s := make([]int64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill64K(b *testing.B) {
+func Benchmark03RangeInt64Fill64K(b *testing.B) {
 	s := make([]int64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -933,14 +933,14 @@ func Benchmark03Int64RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetInt64Fill64K(b *testing.B) {
 	s := make([]int64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
-func Benchmark03Int64RangeClear1M(b *testing.B) {
+func Benchmark03RangeInt64Clear1M(b *testing.B) {
 	s := make([]int64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -949,14 +949,14 @@ func Benchmark03Int64RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetInt64Clear1M(b *testing.B) {
 	s := make([]int64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0)
+		Int64(s, 0)
 	}
 }
-func Benchmark03Int64RangeFill1M(b *testing.B) {
+func Benchmark03RangeInt64Fill1M(b *testing.B) {
 	s := make([]int64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -965,15 +965,15 @@ func Benchmark03Int64RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Int64MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetInt64Fill1M(b *testing.B) {
 	s := make([]int64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetInt64Slice(s, 0x7f)
+		Int64(s, 0x7f)
 	}
 }
 
-func Benchmark03UintRangeClear8(b *testing.B) {
+func Benchmark03RangeUintClear8(b *testing.B) {
 	s := make([]uint, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -982,14 +982,14 @@ func Benchmark03UintRangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear8(b *testing.B) {
+func Benchmark03MemsetUintClear8(b *testing.B) {
 	s := make([]uint, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill8(b *testing.B) {
+func Benchmark03RangeUintFill8(b *testing.B) {
 	s := make([]uint, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -998,14 +998,14 @@ func Benchmark03UintRangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill8(b *testing.B) {
+func Benchmark03MemsetUintFill8(b *testing.B) {
 	s := make([]uint, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
-func Benchmark03UintRangeClear64(b *testing.B) {
+func Benchmark03RangeUintClear64(b *testing.B) {
 	s := make([]uint, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1014,14 +1014,14 @@ func Benchmark03UintRangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear64(b *testing.B) {
+func Benchmark03MemsetUintClear64(b *testing.B) {
 	s := make([]uint, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill64(b *testing.B) {
+func Benchmark03RangeUintFill64(b *testing.B) {
 	s := make([]uint, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1030,14 +1030,14 @@ func Benchmark03UintRangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill64(b *testing.B) {
+func Benchmark03MemsetUintFill64(b *testing.B) {
 	s := make([]uint, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
-func Benchmark03UintRangeClear1K(b *testing.B) {
+func Benchmark03RangeUintClear1K(b *testing.B) {
 	s := make([]uint, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1046,14 +1046,14 @@ func Benchmark03UintRangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear1K(b *testing.B) {
+func Benchmark03MemsetUintClear1K(b *testing.B) {
 	s := make([]uint, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill1K(b *testing.B) {
+func Benchmark03RangeUintFill1K(b *testing.B) {
 	s := make([]uint, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1062,14 +1062,14 @@ func Benchmark03UintRangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill1K(b *testing.B) {
+func Benchmark03MemsetUintFill1K(b *testing.B) {
 	s := make([]uint, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
-func Benchmark03UintRangeClear4K(b *testing.B) {
+func Benchmark03RangeUintClear4K(b *testing.B) {
 	s := make([]uint, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1078,14 +1078,14 @@ func Benchmark03UintRangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear4K(b *testing.B) {
+func Benchmark03MemsetUintClear4K(b *testing.B) {
 	s := make([]uint, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill4K(b *testing.B) {
+func Benchmark03RangeUintFill4K(b *testing.B) {
 	s := make([]uint, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1094,14 +1094,14 @@ func Benchmark03UintRangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill4K(b *testing.B) {
+func Benchmark03MemsetUintFill4K(b *testing.B) {
 	s := make([]uint, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
-func Benchmark03UintRangeClear64K(b *testing.B) {
+func Benchmark03RangeUintClear64K(b *testing.B) {
 	s := make([]uint, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1110,14 +1110,14 @@ func Benchmark03UintRangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear64K(b *testing.B) {
+func Benchmark03MemsetUintClear64K(b *testing.B) {
 	s := make([]uint, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill64K(b *testing.B) {
+func Benchmark03RangeUintFill64K(b *testing.B) {
 	s := make([]uint, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1126,14 +1126,14 @@ func Benchmark03UintRangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill64K(b *testing.B) {
+func Benchmark03MemsetUintFill64K(b *testing.B) {
 	s := make([]uint, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
-func Benchmark03UintRangeClear1M(b *testing.B) {
+func Benchmark03RangeUintClear1M(b *testing.B) {
 	s := make([]uint, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1142,14 +1142,14 @@ func Benchmark03UintRangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetClear1M(b *testing.B) {
+func Benchmark03MemsetUintClear1M(b *testing.B) {
 	s := make([]uint, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0)
+		Uint(s, 0)
 	}
 }
-func Benchmark03UintRangeFill1M(b *testing.B) {
+func Benchmark03RangeUintFill1M(b *testing.B) {
 	s := make([]uint, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1158,15 +1158,15 @@ func Benchmark03UintRangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintMemsetFill1M(b *testing.B) {
+func Benchmark03MemsetUintFill1M(b *testing.B) {
 	s := make([]uint, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintSlice(s, 0x7f)
+		Uint(s, 0x7f)
 	}
 }
 
-func Benchmark03ByteRangeClear8(b *testing.B) {
+func Benchmark03RangeByteClear8(b *testing.B) {
 	s := make([]byte, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1175,14 +1175,14 @@ func Benchmark03ByteRangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear8(b *testing.B) {
+func Benchmark03MemsetByteClear8(b *testing.B) {
 	s := make([]byte, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill8(b *testing.B) {
+func Benchmark03RangeByteFill8(b *testing.B) {
 	s := make([]byte, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1191,14 +1191,14 @@ func Benchmark03ByteRangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill8(b *testing.B) {
+func Benchmark03MemsetByteFill8(b *testing.B) {
 	s := make([]byte, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
-func Benchmark03ByteRangeClear64(b *testing.B) {
+func Benchmark03RangeByteClear64(b *testing.B) {
 	s := make([]byte, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1207,14 +1207,14 @@ func Benchmark03ByteRangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear64(b *testing.B) {
+func Benchmark03MemsetByteClear64(b *testing.B) {
 	s := make([]byte, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill64(b *testing.B) {
+func Benchmark03RangeByteFill64(b *testing.B) {
 	s := make([]byte, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1223,14 +1223,14 @@ func Benchmark03ByteRangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill64(b *testing.B) {
+func Benchmark03MemsetByteFill64(b *testing.B) {
 	s := make([]byte, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
-func Benchmark03ByteRangeClear1K(b *testing.B) {
+func Benchmark03RangeByteClear1K(b *testing.B) {
 	s := make([]byte, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1239,14 +1239,14 @@ func Benchmark03ByteRangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear1K(b *testing.B) {
+func Benchmark03MemsetByteClear1K(b *testing.B) {
 	s := make([]byte, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill1K(b *testing.B) {
+func Benchmark03RangeByteFill1K(b *testing.B) {
 	s := make([]byte, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1255,14 +1255,14 @@ func Benchmark03ByteRangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill1K(b *testing.B) {
+func Benchmark03MemsetByteFill1K(b *testing.B) {
 	s := make([]byte, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
-func Benchmark03ByteRangeClear4K(b *testing.B) {
+func Benchmark03RangeByteClear4K(b *testing.B) {
 	s := make([]byte, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1271,14 +1271,14 @@ func Benchmark03ByteRangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear4K(b *testing.B) {
+func Benchmark03MemsetByteClear4K(b *testing.B) {
 	s := make([]byte, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill4K(b *testing.B) {
+func Benchmark03RangeByteFill4K(b *testing.B) {
 	s := make([]byte, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1287,14 +1287,14 @@ func Benchmark03ByteRangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill4K(b *testing.B) {
+func Benchmark03MemsetByteFill4K(b *testing.B) {
 	s := make([]byte, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
-func Benchmark03ByteRangeClear64K(b *testing.B) {
+func Benchmark03RangeByteClear64K(b *testing.B) {
 	s := make([]byte, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1303,14 +1303,14 @@ func Benchmark03ByteRangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear64K(b *testing.B) {
+func Benchmark03MemsetByteClear64K(b *testing.B) {
 	s := make([]byte, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill64K(b *testing.B) {
+func Benchmark03RangeByteFill64K(b *testing.B) {
 	s := make([]byte, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1319,14 +1319,14 @@ func Benchmark03ByteRangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill64K(b *testing.B) {
+func Benchmark03MemsetByteFill64K(b *testing.B) {
 	s := make([]byte, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
-func Benchmark03ByteRangeClear1M(b *testing.B) {
+func Benchmark03RangeByteClear1M(b *testing.B) {
 	s := make([]byte, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1335,14 +1335,14 @@ func Benchmark03ByteRangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetClear1M(b *testing.B) {
+func Benchmark03MemsetByteClear1M(b *testing.B) {
 	s := make([]byte, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0)
+		Byte(s, 0)
 	}
 }
-func Benchmark03ByteRangeFill1M(b *testing.B) {
+func Benchmark03RangeByteFill1M(b *testing.B) {
 	s := make([]byte, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1351,15 +1351,15 @@ func Benchmark03ByteRangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03ByteMemsetFill1M(b *testing.B) {
+func Benchmark03MemsetByteFill1M(b *testing.B) {
 	s := make([]byte, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetByteSlice(s, 0x7f)
+		Byte(s, 0x7f)
 	}
 }
 
-func Benchmark03Uint16RangeClear8(b *testing.B) {
+func Benchmark03RangeUint16Clear8(b *testing.B) {
 	s := make([]uint16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1368,14 +1368,14 @@ func Benchmark03Uint16RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear8(b *testing.B) {
+func Benchmark03MemsetUint16Clear8(b *testing.B) {
 	s := make([]uint16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill8(b *testing.B) {
+func Benchmark03RangeUint16Fill8(b *testing.B) {
 	s := make([]uint16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1384,14 +1384,14 @@ func Benchmark03Uint16RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill8(b *testing.B) {
+func Benchmark03MemsetUint16Fill8(b *testing.B) {
 	s := make([]uint16, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
-func Benchmark03Uint16RangeClear64(b *testing.B) {
+func Benchmark03RangeUint16Clear64(b *testing.B) {
 	s := make([]uint16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1400,14 +1400,14 @@ func Benchmark03Uint16RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear64(b *testing.B) {
+func Benchmark03MemsetUint16Clear64(b *testing.B) {
 	s := make([]uint16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill64(b *testing.B) {
+func Benchmark03RangeUint16Fill64(b *testing.B) {
 	s := make([]uint16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1416,14 +1416,14 @@ func Benchmark03Uint16RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill64(b *testing.B) {
+func Benchmark03MemsetUint16Fill64(b *testing.B) {
 	s := make([]uint16, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
-func Benchmark03Uint16RangeClear1K(b *testing.B) {
+func Benchmark03RangeUint16Clear1K(b *testing.B) {
 	s := make([]uint16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1432,14 +1432,14 @@ func Benchmark03Uint16RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetUint16Clear1K(b *testing.B) {
 	s := make([]uint16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill1K(b *testing.B) {
+func Benchmark03RangeUint16Fill1K(b *testing.B) {
 	s := make([]uint16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1448,14 +1448,14 @@ func Benchmark03Uint16RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetUint16Fill1K(b *testing.B) {
 	s := make([]uint16, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
-func Benchmark03Uint16RangeClear4K(b *testing.B) {
+func Benchmark03RangeUint16Clear4K(b *testing.B) {
 	s := make([]uint16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1464,14 +1464,14 @@ func Benchmark03Uint16RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetUint16Clear4K(b *testing.B) {
 	s := make([]uint16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill4K(b *testing.B) {
+func Benchmark03RangeUint16Fill4K(b *testing.B) {
 	s := make([]uint16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1480,14 +1480,14 @@ func Benchmark03Uint16RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetUint16Fill4K(b *testing.B) {
 	s := make([]uint16, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
-func Benchmark03Uint16RangeClear64K(b *testing.B) {
+func Benchmark03RangeUint16Clear64K(b *testing.B) {
 	s := make([]uint16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1496,14 +1496,14 @@ func Benchmark03Uint16RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetUint16Clear64K(b *testing.B) {
 	s := make([]uint16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill64K(b *testing.B) {
+func Benchmark03RangeUint16Fill64K(b *testing.B) {
 	s := make([]uint16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1512,14 +1512,14 @@ func Benchmark03Uint16RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetUint16Fill64K(b *testing.B) {
 	s := make([]uint16, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
-func Benchmark03Uint16RangeClear1M(b *testing.B) {
+func Benchmark03RangeUint16Clear1M(b *testing.B) {
 	s := make([]uint16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1528,14 +1528,14 @@ func Benchmark03Uint16RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetUint16Clear1M(b *testing.B) {
 	s := make([]uint16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0)
+		Uint16(s, 0)
 	}
 }
-func Benchmark03Uint16RangeFill1M(b *testing.B) {
+func Benchmark03RangeUint16Fill1M(b *testing.B) {
 	s := make([]uint16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1544,15 +1544,15 @@ func Benchmark03Uint16RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint16MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetUint16Fill1M(b *testing.B) {
 	s := make([]uint16, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint16Slice(s, 0x7f)
+		Uint16(s, 0x7f)
 	}
 }
 
-func Benchmark03Uint32RangeClear8(b *testing.B) {
+func Benchmark03RangeUint32Clear8(b *testing.B) {
 	s := make([]uint32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1561,14 +1561,14 @@ func Benchmark03Uint32RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear8(b *testing.B) {
+func Benchmark03MemsetUint32Clear8(b *testing.B) {
 	s := make([]uint32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill8(b *testing.B) {
+func Benchmark03RangeUint32Fill8(b *testing.B) {
 	s := make([]uint32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1577,14 +1577,14 @@ func Benchmark03Uint32RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill8(b *testing.B) {
+func Benchmark03MemsetUint32Fill8(b *testing.B) {
 	s := make([]uint32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
-func Benchmark03Uint32RangeClear64(b *testing.B) {
+func Benchmark03RangeUint32Clear64(b *testing.B) {
 	s := make([]uint32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1593,14 +1593,14 @@ func Benchmark03Uint32RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear64(b *testing.B) {
+func Benchmark03MemsetUint32Clear64(b *testing.B) {
 	s := make([]uint32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill64(b *testing.B) {
+func Benchmark03RangeUint32Fill64(b *testing.B) {
 	s := make([]uint32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1609,14 +1609,14 @@ func Benchmark03Uint32RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill64(b *testing.B) {
+func Benchmark03MemsetUint32Fill64(b *testing.B) {
 	s := make([]uint32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
-func Benchmark03Uint32RangeClear1K(b *testing.B) {
+func Benchmark03RangeUint32Clear1K(b *testing.B) {
 	s := make([]uint32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1625,14 +1625,14 @@ func Benchmark03Uint32RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetUint32Clear1K(b *testing.B) {
 	s := make([]uint32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill1K(b *testing.B) {
+func Benchmark03RangeUint32Fill1K(b *testing.B) {
 	s := make([]uint32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1641,14 +1641,14 @@ func Benchmark03Uint32RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetUint32Fill1K(b *testing.B) {
 	s := make([]uint32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
-func Benchmark03Uint32RangeClear4K(b *testing.B) {
+func Benchmark03RangeUint32Clear4K(b *testing.B) {
 	s := make([]uint32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1657,14 +1657,14 @@ func Benchmark03Uint32RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetUint32Clear4K(b *testing.B) {
 	s := make([]uint32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill4K(b *testing.B) {
+func Benchmark03RangeUint32Fill4K(b *testing.B) {
 	s := make([]uint32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1673,14 +1673,14 @@ func Benchmark03Uint32RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetUint32Fill4K(b *testing.B) {
 	s := make([]uint32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
-func Benchmark03Uint32RangeClear64K(b *testing.B) {
+func Benchmark03RangeUint32Clear64K(b *testing.B) {
 	s := make([]uint32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1689,14 +1689,14 @@ func Benchmark03Uint32RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetUint32Clear64K(b *testing.B) {
 	s := make([]uint32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill64K(b *testing.B) {
+func Benchmark03RangeUint32Fill64K(b *testing.B) {
 	s := make([]uint32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1705,14 +1705,14 @@ func Benchmark03Uint32RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetUint32Fill64K(b *testing.B) {
 	s := make([]uint32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
-func Benchmark03Uint32RangeClear1M(b *testing.B) {
+func Benchmark03RangeUint32Clear1M(b *testing.B) {
 	s := make([]uint32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1721,14 +1721,14 @@ func Benchmark03Uint32RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetUint32Clear1M(b *testing.B) {
 	s := make([]uint32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0)
+		Uint32(s, 0)
 	}
 }
-func Benchmark03Uint32RangeFill1M(b *testing.B) {
+func Benchmark03RangeUint32Fill1M(b *testing.B) {
 	s := make([]uint32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1737,15 +1737,15 @@ func Benchmark03Uint32RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint32MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetUint32Fill1M(b *testing.B) {
 	s := make([]uint32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint32Slice(s, 0x7f)
+		Uint32(s, 0x7f)
 	}
 }
 
-func Benchmark03Uint64RangeClear8(b *testing.B) {
+func Benchmark03RangeUint64Clear8(b *testing.B) {
 	s := make([]uint64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1754,14 +1754,14 @@ func Benchmark03Uint64RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear8(b *testing.B) {
+func Benchmark03MemsetUint64Clear8(b *testing.B) {
 	s := make([]uint64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill8(b *testing.B) {
+func Benchmark03RangeUint64Fill8(b *testing.B) {
 	s := make([]uint64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1770,14 +1770,14 @@ func Benchmark03Uint64RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill8(b *testing.B) {
+func Benchmark03MemsetUint64Fill8(b *testing.B) {
 	s := make([]uint64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
-func Benchmark03Uint64RangeClear64(b *testing.B) {
+func Benchmark03RangeUint64Clear64(b *testing.B) {
 	s := make([]uint64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1786,14 +1786,14 @@ func Benchmark03Uint64RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear64(b *testing.B) {
+func Benchmark03MemsetUint64Clear64(b *testing.B) {
 	s := make([]uint64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill64(b *testing.B) {
+func Benchmark03RangeUint64Fill64(b *testing.B) {
 	s := make([]uint64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1802,14 +1802,14 @@ func Benchmark03Uint64RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill64(b *testing.B) {
+func Benchmark03MemsetUint64Fill64(b *testing.B) {
 	s := make([]uint64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
-func Benchmark03Uint64RangeClear1K(b *testing.B) {
+func Benchmark03RangeUint64Clear1K(b *testing.B) {
 	s := make([]uint64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1818,14 +1818,14 @@ func Benchmark03Uint64RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetUint64Clear1K(b *testing.B) {
 	s := make([]uint64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill1K(b *testing.B) {
+func Benchmark03RangeUint64Fill1K(b *testing.B) {
 	s := make([]uint64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1834,14 +1834,14 @@ func Benchmark03Uint64RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetUint64Fill1K(b *testing.B) {
 	s := make([]uint64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
-func Benchmark03Uint64RangeClear4K(b *testing.B) {
+func Benchmark03RangeUint64Clear4K(b *testing.B) {
 	s := make([]uint64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1850,14 +1850,14 @@ func Benchmark03Uint64RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetUint64Clear4K(b *testing.B) {
 	s := make([]uint64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill4K(b *testing.B) {
+func Benchmark03RangeUint64Fill4K(b *testing.B) {
 	s := make([]uint64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1866,14 +1866,14 @@ func Benchmark03Uint64RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetUint64Fill4K(b *testing.B) {
 	s := make([]uint64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
-func Benchmark03Uint64RangeClear64K(b *testing.B) {
+func Benchmark03RangeUint64Clear64K(b *testing.B) {
 	s := make([]uint64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1882,14 +1882,14 @@ func Benchmark03Uint64RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetUint64Clear64K(b *testing.B) {
 	s := make([]uint64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill64K(b *testing.B) {
+func Benchmark03RangeUint64Fill64K(b *testing.B) {
 	s := make([]uint64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1898,14 +1898,14 @@ func Benchmark03Uint64RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetUint64Fill64K(b *testing.B) {
 	s := make([]uint64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
-func Benchmark03Uint64RangeClear1M(b *testing.B) {
+func Benchmark03RangeUint64Clear1M(b *testing.B) {
 	s := make([]uint64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1914,14 +1914,14 @@ func Benchmark03Uint64RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetUint64Clear1M(b *testing.B) {
 	s := make([]uint64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0)
+		Uint64(s, 0)
 	}
 }
-func Benchmark03Uint64RangeFill1M(b *testing.B) {
+func Benchmark03RangeUint64Fill1M(b *testing.B) {
 	s := make([]uint64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1930,15 +1930,15 @@ func Benchmark03Uint64RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Uint64MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetUint64Fill1M(b *testing.B) {
 	s := make([]uint64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUint64Slice(s, 0x7f)
+		Uint64(s, 0x7f)
 	}
 }
 
-func Benchmark03UintptrRangeClear8(b *testing.B) {
+func Benchmark03RangeUintptrClear8(b *testing.B) {
 	s := make([]uintptr, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1947,14 +1947,14 @@ func Benchmark03UintptrRangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear8(b *testing.B) {
+func Benchmark03MemsetUintptrClear8(b *testing.B) {
 	s := make([]uintptr, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill8(b *testing.B) {
+func Benchmark03RangeUintptrFill8(b *testing.B) {
 	s := make([]uintptr, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1963,14 +1963,14 @@ func Benchmark03UintptrRangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill8(b *testing.B) {
+func Benchmark03MemsetUintptrFill8(b *testing.B) {
 	s := make([]uintptr, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
-func Benchmark03UintptrRangeClear64(b *testing.B) {
+func Benchmark03RangeUintptrClear64(b *testing.B) {
 	s := make([]uintptr, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1979,14 +1979,14 @@ func Benchmark03UintptrRangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear64(b *testing.B) {
+func Benchmark03MemsetUintptrClear64(b *testing.B) {
 	s := make([]uintptr, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill64(b *testing.B) {
+func Benchmark03RangeUintptrFill64(b *testing.B) {
 	s := make([]uintptr, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -1995,14 +1995,14 @@ func Benchmark03UintptrRangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill64(b *testing.B) {
+func Benchmark03MemsetUintptrFill64(b *testing.B) {
 	s := make([]uintptr, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
-func Benchmark03UintptrRangeClear1K(b *testing.B) {
+func Benchmark03RangeUintptrClear1K(b *testing.B) {
 	s := make([]uintptr, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2011,14 +2011,14 @@ func Benchmark03UintptrRangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear1K(b *testing.B) {
+func Benchmark03MemsetUintptrClear1K(b *testing.B) {
 	s := make([]uintptr, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill1K(b *testing.B) {
+func Benchmark03RangeUintptrFill1K(b *testing.B) {
 	s := make([]uintptr, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2027,14 +2027,14 @@ func Benchmark03UintptrRangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill1K(b *testing.B) {
+func Benchmark03MemsetUintptrFill1K(b *testing.B) {
 	s := make([]uintptr, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
-func Benchmark03UintptrRangeClear4K(b *testing.B) {
+func Benchmark03RangeUintptrClear4K(b *testing.B) {
 	s := make([]uintptr, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2043,14 +2043,14 @@ func Benchmark03UintptrRangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear4K(b *testing.B) {
+func Benchmark03MemsetUintptrClear4K(b *testing.B) {
 	s := make([]uintptr, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill4K(b *testing.B) {
+func Benchmark03RangeUintptrFill4K(b *testing.B) {
 	s := make([]uintptr, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2059,14 +2059,14 @@ func Benchmark03UintptrRangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill4K(b *testing.B) {
+func Benchmark03MemsetUintptrFill4K(b *testing.B) {
 	s := make([]uintptr, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
-func Benchmark03UintptrRangeClear64K(b *testing.B) {
+func Benchmark03RangeUintptrClear64K(b *testing.B) {
 	s := make([]uintptr, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2075,14 +2075,14 @@ func Benchmark03UintptrRangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear64K(b *testing.B) {
+func Benchmark03MemsetUintptrClear64K(b *testing.B) {
 	s := make([]uintptr, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill64K(b *testing.B) {
+func Benchmark03RangeUintptrFill64K(b *testing.B) {
 	s := make([]uintptr, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2091,14 +2091,14 @@ func Benchmark03UintptrRangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill64K(b *testing.B) {
+func Benchmark03MemsetUintptrFill64K(b *testing.B) {
 	s := make([]uintptr, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
-func Benchmark03UintptrRangeClear1M(b *testing.B) {
+func Benchmark03RangeUintptrClear1M(b *testing.B) {
 	s := make([]uintptr, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2107,14 +2107,14 @@ func Benchmark03UintptrRangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetClear1M(b *testing.B) {
+func Benchmark03MemsetUintptrClear1M(b *testing.B) {
 	s := make([]uintptr, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0)
+		Uintptr(s, 0)
 	}
 }
-func Benchmark03UintptrRangeFill1M(b *testing.B) {
+func Benchmark03RangeUintptrFill1M(b *testing.B) {
 	s := make([]uintptr, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2123,15 +2123,15 @@ func Benchmark03UintptrRangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03UintptrMemsetFill1M(b *testing.B) {
+func Benchmark03MemsetUintptrFill1M(b *testing.B) {
 	s := make([]uintptr, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetUintptrSlice(s, 0x7f)
+		Uintptr(s, 0x7f)
 	}
 }
 
-func Benchmark03Float32RangeClear8(b *testing.B) {
+func Benchmark03RangeFloat32Clear8(b *testing.B) {
 	s := make([]float32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2140,14 +2140,14 @@ func Benchmark03Float32RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear8(b *testing.B) {
+func Benchmark03MemsetFloat32Clear8(b *testing.B) {
 	s := make([]float32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill8(b *testing.B) {
+func Benchmark03RangeFloat32Fill8(b *testing.B) {
 	s := make([]float32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2156,14 +2156,14 @@ func Benchmark03Float32RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill8(b *testing.B) {
+func Benchmark03MemsetFloat32Fill8(b *testing.B) {
 	s := make([]float32, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
-func Benchmark03Float32RangeClear64(b *testing.B) {
+func Benchmark03RangeFloat32Clear64(b *testing.B) {
 	s := make([]float32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2172,14 +2172,14 @@ func Benchmark03Float32RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear64(b *testing.B) {
+func Benchmark03MemsetFloat32Clear64(b *testing.B) {
 	s := make([]float32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill64(b *testing.B) {
+func Benchmark03RangeFloat32Fill64(b *testing.B) {
 	s := make([]float32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2188,14 +2188,14 @@ func Benchmark03Float32RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill64(b *testing.B) {
+func Benchmark03MemsetFloat32Fill64(b *testing.B) {
 	s := make([]float32, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
-func Benchmark03Float32RangeClear1K(b *testing.B) {
+func Benchmark03RangeFloat32Clear1K(b *testing.B) {
 	s := make([]float32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2204,14 +2204,14 @@ func Benchmark03Float32RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetFloat32Clear1K(b *testing.B) {
 	s := make([]float32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill1K(b *testing.B) {
+func Benchmark03RangeFloat32Fill1K(b *testing.B) {
 	s := make([]float32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2220,14 +2220,14 @@ func Benchmark03Float32RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetFloat32Fill1K(b *testing.B) {
 	s := make([]float32, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
-func Benchmark03Float32RangeClear4K(b *testing.B) {
+func Benchmark03RangeFloat32Clear4K(b *testing.B) {
 	s := make([]float32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2236,14 +2236,14 @@ func Benchmark03Float32RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetFloat32Clear4K(b *testing.B) {
 	s := make([]float32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill4K(b *testing.B) {
+func Benchmark03RangeFloat32Fill4K(b *testing.B) {
 	s := make([]float32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2252,14 +2252,14 @@ func Benchmark03Float32RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetFloat32Fill4K(b *testing.B) {
 	s := make([]float32, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
-func Benchmark03Float32RangeClear64K(b *testing.B) {
+func Benchmark03RangeFloat32Clear64K(b *testing.B) {
 	s := make([]float32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2268,14 +2268,14 @@ func Benchmark03Float32RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetFloat32Clear64K(b *testing.B) {
 	s := make([]float32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill64K(b *testing.B) {
+func Benchmark03RangeFloat32Fill64K(b *testing.B) {
 	s := make([]float32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2284,14 +2284,14 @@ func Benchmark03Float32RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetFloat32Fill64K(b *testing.B) {
 	s := make([]float32, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
-func Benchmark03Float32RangeClear1M(b *testing.B) {
+func Benchmark03RangeFloat32Clear1M(b *testing.B) {
 	s := make([]float32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2300,14 +2300,14 @@ func Benchmark03Float32RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetFloat32Clear1M(b *testing.B) {
 	s := make([]float32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0)
+		Float32(s, 0)
 	}
 }
-func Benchmark03Float32RangeFill1M(b *testing.B) {
+func Benchmark03RangeFloat32Fill1M(b *testing.B) {
 	s := make([]float32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2316,15 +2316,15 @@ func Benchmark03Float32RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float32MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetFloat32Fill1M(b *testing.B) {
 	s := make([]float32, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat32Slice(s, 0x7f)
+		Float32(s, 0x7f)
 	}
 }
 
-func Benchmark03Float64RangeClear8(b *testing.B) {
+func Benchmark03RangeFloat64Clear8(b *testing.B) {
 	s := make([]float64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2333,14 +2333,14 @@ func Benchmark03Float64RangeClear8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear8(b *testing.B) {
+func Benchmark03MemsetFloat64Clear8(b *testing.B) {
 	s := make([]float64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill8(b *testing.B) {
+func Benchmark03RangeFloat64Fill8(b *testing.B) {
 	s := make([]float64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2349,14 +2349,14 @@ func Benchmark03Float64RangeFill8(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill8(b *testing.B) {
+func Benchmark03MemsetFloat64Fill8(b *testing.B) {
 	s := make([]float64, 1<<3)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }
-func Benchmark03Float64RangeClear64(b *testing.B) {
+func Benchmark03RangeFloat64Clear64(b *testing.B) {
 	s := make([]float64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2365,14 +2365,14 @@ func Benchmark03Float64RangeClear64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear64(b *testing.B) {
+func Benchmark03MemsetFloat64Clear64(b *testing.B) {
 	s := make([]float64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill64(b *testing.B) {
+func Benchmark03RangeFloat64Fill64(b *testing.B) {
 	s := make([]float64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2381,14 +2381,14 @@ func Benchmark03Float64RangeFill64(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill64(b *testing.B) {
+func Benchmark03MemsetFloat64Fill64(b *testing.B) {
 	s := make([]float64, 1<<6)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }
-func Benchmark03Float64RangeClear1K(b *testing.B) {
+func Benchmark03RangeFloat64Clear1K(b *testing.B) {
 	s := make([]float64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2397,14 +2397,14 @@ func Benchmark03Float64RangeClear1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear1K(b *testing.B) {
+func Benchmark03MemsetFloat64Clear1K(b *testing.B) {
 	s := make([]float64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill1K(b *testing.B) {
+func Benchmark03RangeFloat64Fill1K(b *testing.B) {
 	s := make([]float64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2413,14 +2413,14 @@ func Benchmark03Float64RangeFill1K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill1K(b *testing.B) {
+func Benchmark03MemsetFloat64Fill1K(b *testing.B) {
 	s := make([]float64, 1<<10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }
-func Benchmark03Float64RangeClear4K(b *testing.B) {
+func Benchmark03RangeFloat64Clear4K(b *testing.B) {
 	s := make([]float64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2429,14 +2429,14 @@ func Benchmark03Float64RangeClear4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear4K(b *testing.B) {
+func Benchmark03MemsetFloat64Clear4K(b *testing.B) {
 	s := make([]float64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill4K(b *testing.B) {
+func Benchmark03RangeFloat64Fill4K(b *testing.B) {
 	s := make([]float64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2445,14 +2445,14 @@ func Benchmark03Float64RangeFill4K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill4K(b *testing.B) {
+func Benchmark03MemsetFloat64Fill4K(b *testing.B) {
 	s := make([]float64, 1<<12)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }
-func Benchmark03Float64RangeClear64K(b *testing.B) {
+func Benchmark03RangeFloat64Clear64K(b *testing.B) {
 	s := make([]float64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2461,14 +2461,14 @@ func Benchmark03Float64RangeClear64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear64K(b *testing.B) {
+func Benchmark03MemsetFloat64Clear64K(b *testing.B) {
 	s := make([]float64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill64K(b *testing.B) {
+func Benchmark03RangeFloat64Fill64K(b *testing.B) {
 	s := make([]float64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2477,14 +2477,14 @@ func Benchmark03Float64RangeFill64K(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill64K(b *testing.B) {
+func Benchmark03MemsetFloat64Fill64K(b *testing.B) {
 	s := make([]float64, 1<<16)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }
-func Benchmark03Float64RangeClear1M(b *testing.B) {
+func Benchmark03RangeFloat64Clear1M(b *testing.B) {
 	s := make([]float64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2493,14 +2493,14 @@ func Benchmark03Float64RangeClear1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetClear1M(b *testing.B) {
+func Benchmark03MemsetFloat64Clear1M(b *testing.B) {
 	s := make([]float64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0)
+		Float64(s, 0)
 	}
 }
-func Benchmark03Float64RangeFill1M(b *testing.B) {
+func Benchmark03RangeFloat64Fill1M(b *testing.B) {
 	s := make([]float64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -2509,10 +2509,10 @@ func Benchmark03Float64RangeFill1M(b *testing.B) {
 		}
 	}
 }
-func Benchmark03Float64MemsetFill1M(b *testing.B) {
+func Benchmark03MemsetFloat64Fill1M(b *testing.B) {
 	s := make([]float64, 1<<20)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MemsetFloat64Slice(s, 0x7f)
+		Float64(s, 0x7f)
 	}
 }

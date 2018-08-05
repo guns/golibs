@@ -11,7 +11,7 @@ import (
 	"unicode/utf8"
 	"unsafe"
 
-	"github.com/guns/golibs/optimized"
+	"github.com/guns/golibs/memset"
 )
 
 const (
@@ -76,32 +76,32 @@ func ClearBuffer(bbuf *bytes.Buffer) {
 	switch goBufferVersion {
 	case go1_10:
 		b := (*go1_10BytesBuffer)(unsafe.Pointer(bbuf))
-		optimized.MemsetByteSlice(b.buf, 0)
+		memset.Byte(b.buf, 0)
 		b.buf = b.buf[:0]
 		b.off = 0
-		optimized.MemsetByteSlice(b.bootstrap[:], 0)
+		memset.Byte(b.bootstrap[:], 0)
 		b.lastRead = 0
 	case go1_9:
 		b := (*go1_9BytesBuffer)(unsafe.Pointer(bbuf))
-		optimized.MemsetByteSlice(b.buf, 0)
+		memset.Byte(b.buf, 0)
 		b.buf = b.buf[:0]
 		b.off = 0
-		optimized.MemsetByteSlice(b.bootstrap[:], 0)
+		memset.Byte(b.bootstrap[:], 0)
 		b.lastRead = 0
 	case go1_8:
 		b := (*go1_8BytesBuffer)(unsafe.Pointer(bbuf))
-		optimized.MemsetByteSlice(b.buf, 0)
+		memset.Byte(b.buf, 0)
 		b.buf = b.buf[:0]
 		b.off = 0
-		optimized.MemsetByteSlice(b.bootstrap[:], 0)
+		memset.Byte(b.bootstrap[:], 0)
 		b.lastRead = 0
 	case go1_0:
 		b := (*go1_0BytesBuffer)(unsafe.Pointer(bbuf))
-		optimized.MemsetByteSlice(b.buf, 0)
+		memset.Byte(b.buf, 0)
 		b.buf = b.buf[:0]
 		b.off = 0
-		optimized.MemsetByteSlice(b.runeBytes[:], 0)
-		optimized.MemsetByteSlice(b.bootstrap[:], 0)
+		memset.Byte(b.runeBytes[:], 0)
+		memset.Byte(b.bootstrap[:], 0)
 		b.lastRead = 0
 	default:
 		panic(errors.New("unable to determine go version in ClearBuffer"))
