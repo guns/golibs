@@ -11,7 +11,7 @@ import "sync/atomic"
 // T is a flexible, synchronized way to communicate a single state transition.
 // Like sync.Mutex, triggers should never be copied.
 type T struct {
-	done uint32
+	done int32
 	ch   chan struct{}
 }
 
@@ -22,12 +22,12 @@ func New() *T {
 
 // Activated quickly checks to see if this trigger has been activated.
 func (t *T) Activated() bool {
-	return atomic.LoadUint32(&t.done) != 0
+	return atomic.LoadInt32(&t.done) != 0
 }
 
 // Trigger communicates a state transition. This method is idempotent.
 func (t *T) Trigger() {
-	if atomic.CompareAndSwapUint32(&t.done, 0, 1) {
+	if atomic.CompareAndSwapInt32(&t.done, 0, 1) {
 		close(t.ch)
 	}
 }
@@ -41,7 +41,7 @@ func (t *T) Channel() <-chan struct{} {
 // Wait blocks the current goroutine until this trigger is activated.
 func (t *T) Wait() {
 	// Check fast path first
-	if atomic.LoadUint32(&t.done) == 0 {
+	if atomic.LoadInt32(&t.done) == 0 {
 		<-t.ch
 	}
 }

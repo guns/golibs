@@ -18,7 +18,7 @@ import (
 // T is a synchronized read-only buffer that is initialized from a constant
 // function and can be zeroed and reset.
 type T struct {
-	done   uint32
+	done   int32
 	mutex  sync.RWMutex
 	bytes  []byte
 	err    error
@@ -37,7 +37,7 @@ func (cache *T) Init() {
 	// cf. sync.once.Do()
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
-	if atomic.CompareAndSwapUint32(&cache.done, 0, 1) {
+	if atomic.CompareAndSwapInt32(&cache.done, 0, 1) {
 		cache.bytes, cache.err = cache.initFn()
 	}
 }
@@ -51,7 +51,7 @@ func (cache *T) Init() {
 // from multiple goroutines. The immutability of the underlying buffer is only
 // guaranteed during the lifetime of f.
 func (cache *T) WithByteReader(f func(*bytes.Reader)) error {
-	if atomic.LoadUint32(&cache.done) == 0 {
+	if atomic.LoadInt32(&cache.done) == 0 {
 		cache.Init()
 	}
 	// Assertion:
@@ -74,7 +74,7 @@ var errReadAfterClear = errors.New("cannot read cleared zerocache.T")
 func (cache *T) Clear() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
-	atomic.StoreUint32(&cache.done, 1)
+	atomic.StoreInt32(&cache.done, 1)
 	memset.Byte(cache.bytes, 0)
 	cache.bytes = cache.bytes[:0]
 	if cache.err == nil {
@@ -88,7 +88,7 @@ func (cache *T) Clear() {
 func (cache *T) Reset() {
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
-	atomic.StoreUint32(&cache.done, 0)
+	atomic.StoreInt32(&cache.done, 0)
 	memset.Byte(cache.bytes, 0)
 	cache.bytes = cache.bytes[:0]
 	cache.err = nil
