@@ -223,7 +223,8 @@ if ENV['BENCH'] == '1'
     types.each do |type, _|
       f.puts version
 
-      IO.popen ['go', 'test', '-run=NONE', "-bench=#{type.capitalize}[CF]", '-benchmem'], 'r' do |io|
+      IO.popen ['taskset', '--cpu-list', '0',
+                'go', 'test', '-run=NONE', "-bench=#{type.capitalize}[CF]", '-benchmem'], 'r' do |io|
         buf = io.read
         f.puts expand(buf)
       end
