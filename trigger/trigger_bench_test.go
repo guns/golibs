@@ -9,15 +9,15 @@ import (
 	"testing"
 )
 
-//	go version go1.10.3 linux/amd64
+//	go version go1.11 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/trigger
-//	BenchmarkTrigger         3000000               452 ns/op             224 B/op          4 allocs/op
-//	BenchmarkChan            5000000               395 ns/op             192 B/op          2 allocs/op
-//	BenchmarkWaitGroup       3000000               407 ns/op              32 B/op          2 allocs/op
+//	BenchmarkTrigger         3000000               496 ns/op             224 B/op          4 allocs/op
+//	BenchmarkChan            3000000               436 ns/op             192 B/op          2 allocs/op
+//	BenchmarkWaitGroup       3000000               449 ns/op              32 B/op          2 allocs/op
 //	PASS
-//	ok      github.com/guns/golibs/trigger  5.830s
+//	ok      github.com/guns/golibs/trigger  5.546s
 
 func BenchmarkTrigger(b *testing.B) {
 	for i := 0; i < b.N; i++ {

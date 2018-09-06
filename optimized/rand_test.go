@@ -9,18 +9,18 @@ import (
 	"testing"
 )
 
-//	go version go1.10.3 linux/amd64
+//	go version go1.11 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/optimized
-//	Benchmark02RandIntn             50000000                27.8 ns/op             0 B/op          0 allocs/op
+//	Benchmark02RandIntn             50000000                27.6 ns/op             0 B/op          0 allocs/op
 //	Benchmark02OptimizedRandIntn    100000000               23.7 ns/op             0 B/op          0 allocs/op
-//	Benchmark02RandInt63n           50000000                35.9 ns/op             0 B/op          0 allocs/op
+//	Benchmark02RandInt63n           50000000                35.7 ns/op             0 B/op          0 allocs/op
 //	Benchmark02OptimizedRandInt63n  100000000               22.6 ns/op             0 B/op          0 allocs/op
-//	Benchmark02RandInt31n           50000000                26.1 ns/op             0 B/op          0 allocs/op
-//	Benchmark02OptimizedRandInt31n  100000000               23.9 ns/op             0 B/op          0 allocs/op
+//	Benchmark02RandInt31n           50000000                25.9 ns/op             0 B/op          0 allocs/op
+//	Benchmark02OptimizedRandInt31n  50000000                24.1 ns/op             0 B/op          0 allocs/op
 //	PASS
-//	ok      github.com/guns/golibs/optimized        11.682s
+//	ok      github.com/guns/golibs/optimized        10.464s
 
 func Benchmark02RandIntn(b *testing.B) {
 	for i := 0; i < b.N; i++ {

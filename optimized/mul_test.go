@@ -170,18 +170,18 @@ func TestMul32(t *testing.T) {
 	}
 }
 
-//	go version go1.10.3 linux/amd64
+//	go version go1.11 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/optimized
-//	Benchmark01Mul                  2000000000               1.84 ns/op            0 B/op          0 allocs/op
+//	Benchmark01Mul                  2000000000               1.86 ns/op            0 B/op          0 allocs/op
 //	Benchmark01MulFallback          500000000                3.77 ns/op            0 B/op          0 allocs/op
 //	Benchmark01Mul64                2000000000               1.95 ns/op            0 B/op          0 allocs/op
-//	Benchmark01Mul64Fallback        500000000                3.90 ns/op            0 B/op          0 allocs/op
-//	Benchmark01Mul32                2000000000               1.85 ns/op            0 B/op          0 allocs/op
+//	Benchmark01Mul64Fallback        500000000                3.82 ns/op            0 B/op          0 allocs/op
+//	Benchmark01Mul32                2000000000               1.95 ns/op            0 B/op          0 allocs/op
 //	Benchmark01Mul32Fallback        500000000                3.76 ns/op            0 B/op          0 allocs/op
 //	PASS
-//	ok      github.com/guns/golibs/optimized        18.719s
+//	ok      github.com/guns/golibs/optimized        18.929s
 
 func Benchmark01Mul(b *testing.B) {
 	for i := 0; i < b.N; i++ {

@@ -1,35 +1,35 @@
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
 Benchmark03RangeIntClear8       1000000000               2.79 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetIntClear8      100000000               11.1 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeIntFill8        1000000000               2.68 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetIntFill8       100000000               11.1 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetIntClear8      100000000               11.4 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeIntFill8        1000000000               2.51 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetIntFill8       100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeIntClear64      100000000               12.3 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetIntClear64     50000000                25.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeIntFill64       50000000                35.4 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetIntFill64      50000000                25.9 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeIntFill64       50000000                26.6 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetIntFill64      50000000                25.6 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeIntClear1K      10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetIntClear1K     20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeIntFill1K        5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntFill1K        5000000               290 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetIntFill1K      20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeIntClear4K       3000000               574 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetIntClear4K      5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeIntFill4K        1000000              1439 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntFill4K        1000000              1150 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetIntFill4K       5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeIntClear64K       100000             19453 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetIntClear64K      100000             14965 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeIntFill64K        100000             22864 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetIntFill64K       100000             14991 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeIntClear1M          1000           1432225 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetIntClear1M         3000            503996 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeIntFill1M           1000           1444468 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetIntFill1M          3000            504059 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntClear64K       100000             19406 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetIntClear64K      100000             14982 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntFill64K        100000             22863 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetIntFill64K       100000             14927 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntClear1M          1000           1526102 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetIntClear1M         2000            708354 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeIntFill1M           1000           1526789 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetIntFill1M          2000            708372 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   43.028s
+ok      github.com/guns/golibs/memset   41.707s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
@@ -39,28 +39,28 @@ Benchmark03RangeInt8Fill8       1000000000               2.51 ns/op            0
 Benchmark03MemsetInt8Fill8      100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt8Clear64     1000000000               2.79 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt8Clear64    100000000               12.0 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt8Fill64      50000000                23.7 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeInt8Fill64      100000000               23.4 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt8Fill64     100000000               12.0 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt8Clear1K     100000000               21.2 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetInt8Clear1K    100000000               18.7 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt8Fill1K       5000000               306 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt8Clear1K    100000000               18.5 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeInt8Fill1K       5000000               296 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt8Fill1K     100000000               18.7 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt8Clear4K     20000000                74.7 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt8Clear4K    30000000                43.5 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt8Fill4K       1000000              1576 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt8Fill4K       1000000              1151 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt8Fill4K     30000000                43.5 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt8Clear64K     1000000              1789 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt8Clear64K    1000000              1802 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt8Fill64K       100000             21268 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt8Fill64K     1000000              1803 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt8Clear1M        50000             38919 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt8Clear1M       50000             30669 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt8Fill1M          5000            371965 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt8Fill1M        50000             30683 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt8Clear64K     1000000              1788 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt8Clear64K    1000000              1808 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt8Fill64K        50000             34022 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt8Fill64K     1000000              1806 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt8Clear1M        50000             38918 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt8Clear1M       50000             30751 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt8Fill1M          5000            350234 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt8Fill1M        50000             30799 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   43.342s
+ok      github.com/guns/golibs/memset   43.596s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
@@ -70,214 +70,214 @@ Benchmark03RangeInt16Fill8      1000000000               2.51 ns/op            0
 Benchmark03MemsetInt16Fill8     100000000               11.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt16Clear64    300000000                4.46 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt16Clear64   50000000                25.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt16Fill64     50000000                29.0 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeInt16Fill64     100000000               23.4 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt16Fill64    50000000                25.6 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt16Clear1K    50000000                39.0 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt16Clear1K   50000000                34.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt16Fill1K      5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt16Fill1K      5000000               310 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt16Fill1K    50000000                34.6 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt16Clear4K    10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt16Clear4K   20000000                86.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt16Fill4K      1000000              1527 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt16Fill4K      1000000              1149 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt16Fill4K    20000000                86.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt16Clear64K     500000              3576 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt16Clear64K    500000              3618 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt16Fill64K      100000             21694 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt16Fill64K     500000              3619 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt16Clear1M       20000             92351 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt16Clear1M      20000             65983 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt16Fill1M         5000            353494 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt16Fill1M       20000             62992 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt16Clear64K    500000              3624 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt16Fill64K      100000             21687 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt16Fill64K     500000              3615 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt16Clear1M       20000             82122 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt16Clear1M      20000             64075 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt16Fill1M         5000            353088 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt16Fill1M       20000             63934 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   44.580s
+ok      github.com/guns/golibs/memset   44.398s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
-Benchmark03RangeInt32Clear8     1000000000               2.80 ns/op            0 B/op          0 allocs/op
+Benchmark03RangeInt32Clear8     1000000000               2.81 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt32Clear8    100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt32Fill8      1000000000               2.51 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt32Fill8     100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt32Clear64    200000000                7.80 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt32Clear64   50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt32Fill64     50000000                35.1 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeInt32Fill64     100000000               23.4 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt32Fill64    50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt32Clear1K    20000000                74.7 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt32Clear1K   30000000                48.5 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt32Fill1K      5000000               394 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Fill1K      5000000               294 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt32Fill1K    30000000                48.5 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt32Clear4K     5000000               288 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt32Clear4K   10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt32Fill4K      1000000              1723 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Fill4K      1000000              1151 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt32Fill4K    10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt32Clear64K     200000              8248 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt32Clear64K    200000              7311 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt32Fill64K      100000             20149 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt32Fill64K     200000              7312 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt32Clear1M        5000            362013 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt32Clear1M      10000            139408 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt32Fill1M         3000            413186 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt32Fill1M       10000            139131 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Clear64K     200000              8147 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt32Clear64K    200000              7304 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Fill64K       50000             36108 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt32Fill64K     200000              7311 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Clear1M        5000            348985 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt32Clear1M      10000            138590 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt32Fill1M         3000            407020 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt32Fill1M       10000            138587 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   41.761s
+ok      github.com/guns/golibs/memset   40.997s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
 Benchmark03RangeInt64Clear8     1000000000               2.79 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt64Clear8    100000000               11.1 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill8      1000000000               2.56 ns/op            0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill8      1000000000               2.55 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetInt64Fill8     100000000               11.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt64Clear64    100000000               12.3 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetInt64Clear64   50000000                25.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill64     50000000                35.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetInt64Clear64   50000000                25.9 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill64     50000000                30.5 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetInt64Fill64    50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt64Clear1K    10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt64Clear1K   20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill1K      5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill1K      5000000               294 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt64Fill1K    20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeInt64Clear4K     3000000               574 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetInt64Clear4K    5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill4K      1000000              1439 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt64Fill4K     5000000               304 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt64Clear64K     100000             19147 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt64Clear64K    100000             14920 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill64K       50000             22845 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt64Fill64K     100000             14922 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt64Clear1M        1000           1430241 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt64Clear1M       3000            503479 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeInt64Fill1M         1000           1442844 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetInt64Fill1M        3000            503707 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill4K      1000000              1163 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt64Fill4K     5000000               305 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Clear64K     100000             19471 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt64Clear64K    100000             14988 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill64K      100000             22863 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt64Fill64K     100000             14958 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Clear1M        1000           1528335 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt64Clear1M       3000            504490 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeInt64Fill1M         1000           1528851 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetInt64Fill1M        3000            504132 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   41.747s
+ok      github.com/guns/golibs/memset   42.133s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
-Benchmark03RangeUintClear8      500000000                3.16 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetUintClear8     100000000               11.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintFill8       1000000000               2.57 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetUintFill8      100000000               11.4 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUintClear8      1000000000               2.79 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetUintClear8     100000000               11.1 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUintFill8       1000000000               2.51 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetUintFill8      100000000               11.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintClear64     100000000               12.3 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetUintClear64    50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintFill64      50000000                35.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetUintClear64    50000000                25.6 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUintFill64      100000000               23.4 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUintFill64     50000000                25.6 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintClear1K     10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintClear1K    20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintFill1K       5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintFill1K       5000000               309 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintFill1K     20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintClear4K      3000000               574 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintClear4K     5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintFill4K       1000000              1439 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintFill4K       1000000              1220 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintFill4K      5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintClear64K      100000             19467 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintClear64K     100000             14984 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintFill64K       100000             22865 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintFill64K      100000             14947 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintClear1M         1000           1430247 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintClear1M        3000            504655 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintFill1M          1000           1442062 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintFill1M         3000            503731 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintClear64K      100000             19487 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintClear64K     100000             14954 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintFill64K        50000             24976 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintFill64K      100000             14975 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintClear1M         1000           1433536 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintClear1M        3000            505211 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintFill1M          1000           1445560 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintFill1M         3000            504893 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   41.791s
+ok      github.com/guns/golibs/memset   41.800s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
-Benchmark03RangeByteClear8      1000000000               2.03 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetByteClear8     100000000               12.0 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeByteClear8      1000000000               2.23 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetByteClear8     100000000               11.7 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeByteFill8       1000000000               2.51 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetByteFill8      100000000               12.0 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetByteFill8      100000000               11.7 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeByteClear64     1000000000               2.79 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetByteClear64    100000000               11.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeByteFill64      50000000                28.1 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetByteFill64     100000000               11.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetByteClear64    100000000               12.0 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeByteFill64      50000000                29.1 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetByteFill64     100000000               12.0 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeByteClear1K     100000000               21.2 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetByteClear1K    100000000               18.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeByteFill1K       5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetByteFill1K     100000000               18.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetByteClear1K    100000000               18.1 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeByteFill1K       5000000               323 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetByteFill1K     100000000               18.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeByteClear4K     20000000                74.7 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetByteClear4K    30000000                43.5 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeByteFill4K       1000000              1180 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeByteFill4K       1000000              1148 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetByteFill4K     30000000                43.5 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeByteClear64K     1000000              1789 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetByteClear64K    1000000              1802 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeByteFill64K       100000             22480 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetByteFill64K     1000000              1803 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeByteClear1M        50000             38919 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetByteClear1M       50000             30750 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeByteFill1M          3000            354318 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetByteFill1M        50000             30741 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetByteClear64K    1000000              1803 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeByteFill64K       100000             19983 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetByteFill64K     1000000              1804 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeByteClear1M        50000             38895 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetByteClear1M       50000             30656 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeByteFill1M          5000            324087 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetByteFill1M        50000             30683 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   42.435s
+ok      github.com/guns/golibs/memset   43.090s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
-Benchmark03RangeUint16Clear8            1000000000               2.51 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetUint16Clear8           100000000               11.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill8             1000000000               2.58 ns/op            0 B/op          0 allocs/op
-Benchmark03MemsetUint16Fill8            100000000               11.4 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUint16Clear8            1000000000               2.24 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetUint16Clear8           100000000               11.1 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill8             1000000000               2.51 ns/op            0 B/op          0 allocs/op
+Benchmark03MemsetUint16Fill8            100000000               11.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint16Clear64           300000000                4.46 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUint16Clear64          50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill64            50000000                29.0 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill64            50000000                23.1 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUint16Fill64           50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint16Clear1K           50000000                39.0 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUint16Clear1K          50000000                34.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill1K             5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill1K             5000000               321 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint16Fill1K           50000000                34.6 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint16Clear4K           10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint16Clear4K          20000000                86.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill4K             1000000              1554 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill4K             1000000              1148 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint16Fill4K           20000000                86.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint16Clear64K            500000              3579 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint16Clear64K           500000              3636 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill64K             100000             21694 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint16Fill64K            500000              3633 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint16Clear1M              20000             82153 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint16Clear1M             20000             63938 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint16Fill1M                5000            353061 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint16Fill1M              20000             63897 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Clear64K            500000              3580 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint16Clear64K           500000              3616 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill64K             100000             21697 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint16Fill64K            500000              3623 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Clear1M              20000             84829 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint16Clear1M             20000             63073 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint16Fill1M                5000            353416 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint16Fill1M              20000             63020 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   44.447s
+ok      github.com/guns/golibs/memset   43.074s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
 Benchmark03RangeUint32Clear8            1000000000               2.80 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUint32Clear8           100000000               11.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill8             1000000000               2.72 ns/op            0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill8             1000000000               2.51 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUint32Fill8            100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint32Clear64           200000000                7.80 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUint32Clear64          50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill64            50000000                35.1 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill64            100000000               21.9 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUint32Fill64           50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint32Clear1K           20000000                74.7 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUint32Clear1K          30000000                48.5 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill1K             5000000               375 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill1K             5000000               333 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint32Fill1K           30000000                48.5 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint32Clear4K            5000000               288 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint32Clear4K          10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill4K             1000000              1439 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill4K             1000000              1148 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint32Fill4K           10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint32Clear64K            200000              8317 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint32Clear64K           200000              7309 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill64K             100000             20244 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint32Fill64K            200000              7312 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint32Clear1M               5000            357954 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint32Clear1M             10000            138974 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint32Fill1M                3000            409006 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint32Fill1M              10000            138936 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Clear64K            200000              8057 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint32Clear64K           200000              7312 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill64K             100000             20105 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint32Fill64K            200000              7301 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Clear1M               3000            503451 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint32Clear1M             10000            138092 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint32Fill1M                3000            514797 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint32Fill1M              10000            138238 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   41.568s
+ok      github.com/guns/golibs/memset   41.220s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
@@ -287,59 +287,59 @@ Benchmark03RangeUint64Fill8             1000000000               2.51 ns/op     
 Benchmark03MemsetUint64Fill8            100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint64Clear64           100000000               12.3 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUint64Clear64          50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint64Fill64            50000000                35.4 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetUint64Fill64           50000000                25.6 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUint64Fill64            100000000               24.0 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetUint64Fill64           50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint64Clear1K           10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint64Clear1K          20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUint64Fill1K             5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Fill1K             5000000               293 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint64Fill1K           20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUint64Clear4K            3000000               574 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint64Clear4K           5000000               304 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint64Fill4K             1000000              1439 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint64Clear4K           5000000               305 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Fill4K             1000000              1151 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUint64Fill4K            5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint64Clear64K            100000             19372 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint64Clear64K           100000             14983 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint64Fill64K             100000             22864 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint64Fill64K            100000             14952 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint64Clear1M               1000           1437046 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint64Clear1M              3000            504857 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUint64Fill1M                1000           1448775 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUint64Fill1M               3000            504675 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Clear64K            100000             19196 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint64Clear64K           100000             14943 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Fill64K             100000             22827 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint64Fill64K            100000             15013 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Clear1M               1000           1428401 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint64Clear1M              3000            503975 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUint64Fill1M                1000           1440104 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUint64Fill1M               3000            503832 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   42.904s
+ok      github.com/guns/golibs/memset   42.746s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
 Benchmark03RangeUintptrClear8           1000000000               2.79 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUintptrClear8          100000000               11.1 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill8            1000000000               2.51 ns/op            0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill8            1000000000               3.03 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetUintptrFill8           100000000               11.1 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintptrClear64          100000000               12.3 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetUintptrClear64         50000000                25.6 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill64           50000000                35.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetUintptrClear64         50000000                25.9 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill64           50000000                26.4 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetUintptrFill64          50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintptrClear1K          10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintptrClear1K         20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill1K            5000000               369 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill1K            5000000               293 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintptrFill1K          20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeUintptrClear4K           3000000               574 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintptrClear4K          5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill4K            1000000              1439 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill4K            1000000              1153 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetUintptrFill4K           5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintptrClear64K           100000             19442 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintptrClear64K          100000             14911 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill64K            100000             22829 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintptrFill64K           100000             14946 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintptrClear1M              1000           1428568 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintptrClear1M             3000            504784 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeUintptrFill1M               1000           1441164 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetUintptrFill1M              3000            504221 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrClear64K           100000             19466 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintptrClear64K          100000             14951 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill64K            100000             22864 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintptrFill64K           100000             14960 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrClear1M              1000           1430645 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintptrClear1M             3000            504598 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeUintptrFill1M               1000           1443219 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetUintptrFill1M              3000            504499 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   42.825s
+ok      github.com/guns/golibs/memset   42.227s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
@@ -349,28 +349,28 @@ Benchmark03RangeFloat32Fill8            1000000000               2.51 ns/op     
 Benchmark03MemsetFloat32Fill8           100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat32Clear64          200000000                7.80 ns/op            0 B/op          0 allocs/op
 Benchmark03MemsetFloat32Clear64         50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeFloat32Fill64           50000000                36.8 ns/op             0 B/op          0 allocs/op
-Benchmark03MemsetFloat32Fill64          50000000                25.6 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeFloat32Fill64           50000000                28.4 ns/op             0 B/op          0 allocs/op
+Benchmark03MemsetFloat32Fill64          50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat32Clear1K          20000000                74.7 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetFloat32Clear1K         30000000                48.8 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeFloat32Fill1K            3000000               438 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Fill1K            5000000               295 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetFloat32Fill1K          30000000                48.8 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat32Clear4K           5000000               288 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetFloat32Clear4K         10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat32Fill4K            1000000              1723 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Fill4K            1000000              1157 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetFloat32Fill4K          10000000               155 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat32Clear64K           200000              7807 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat32Clear64K          200000              7335 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat32Fill64K            100000             19867 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat32Fill64K           200000              7288 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat32Clear1M              5000            352532 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat32Clear1M            10000            138971 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat32Fill1M               3000            403892 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat32Fill1M             10000            139531 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Clear64K           200000              8109 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat32Clear64K          200000              7295 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Fill64K            100000             22669 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat32Fill64K           200000              7301 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Clear1M              5000            362697 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat32Clear1M            10000            140188 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat32Fill1M               3000            411917 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat32Fill1M             10000            140129 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   41.056s
+ok      github.com/guns/golibs/memset   40.554s
 
-go version go1.10.3 linux/amd64
+go version go1.11 linux/amd64
 goos: linux
 goarch: amd64
 pkg: github.com/guns/golibs/memset
@@ -380,24 +380,24 @@ Benchmark03RangeFloat64Fill8            1000000000               2.51 ns/op     
 Benchmark03MemsetFloat64Fill8           100000000               11.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat64Clear64          100000000               12.3 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetFloat64Clear64         50000000                25.9 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeFloat64Fill64           50000000                36.8 ns/op             0 B/op          0 allocs/op
+Benchmark03RangeFloat64Fill64           100000000               23.8 ns/op             0 B/op          0 allocs/op
 Benchmark03MemsetFloat64Fill64          50000000                25.9 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat64Clear1K          10000000               146 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetFloat64Clear1K         20000000                84.4 ns/op             0 B/op          0 allocs/op
-Benchmark03RangeFloat64Fill1K            3000000               438 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Fill1K            5000000               290 ns/op               0 B/op          0 allocs/op
 Benchmark03MemsetFloat64Fill1K          20000000                84.4 ns/op             0 B/op          0 allocs/op
 Benchmark03RangeFloat64Clear4K           3000000               574 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Clear4K          5000000               305 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat64Fill4K            1000000              1723 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Fill4K           5000000               306 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat64Clear64K           100000             19496 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Clear64K          100000             14937 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat64Fill64K            100000             23849 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Fill64K           100000             14985 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat64Clear1M              1000           1429834 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Clear1M             3000            503931 ns/op               0 B/op          0 allocs/op
-Benchmark03RangeFloat64Fill1M               1000           1444776 ns/op               0 B/op          0 allocs/op
-Benchmark03MemsetFloat64Fill1M              3000            503916 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Clear4K          5000000               306 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Fill4K            1000000              1177 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Fill4K           5000000               311 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Clear64K           100000             19238 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Clear64K          100000             14938 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Fill64K            100000             23645 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Fill64K           100000             14975 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Clear1M              1000           1428678 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Clear1M             3000            504729 ns/op               0 B/op          0 allocs/op
+Benchmark03RangeFloat64Fill1M               1000           1443783 ns/op               0 B/op          0 allocs/op
+Benchmark03MemsetFloat64Fill1M              3000            504718 ns/op               0 B/op          0 allocs/op
 PASS
-ok      github.com/guns/golibs/memset   42.925s
+ok      github.com/guns/golibs/memset   42.875s
 

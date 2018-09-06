@@ -6,14 +6,14 @@ package genericbenchmarks
 
 import "testing"
 
-//	go version go1.10.3 linux/amd64
+//	go version go1.11 linux/amd64
 //	goos: linux
 //	goarch: amd64
 //	pkg: github.com/guns/golibs/generic/genericbenchmarks
-//	BenchmarkChannelQueue      20000             77802 ns/op               0 B/op          0 allocs/op
-//	BenchmarkIntQueue         200000              8176 ns/op               0 B/op          0 allocs/op
+//	BenchmarkChannelQueue      20000             77818 ns/op               0 B/op          0 allocs/op
+//	BenchmarkIntQueue         200000              8218 ns/op               0 B/op          0 allocs/op
 //	PASS
-//	ok      github.com/guns/golibs/generic/genericbenchmarks        4.062s
+//	ok      github.com/guns/golibs/generic/genericbenchmarks        4.072s
 
 const queuedepth = 1000
 
